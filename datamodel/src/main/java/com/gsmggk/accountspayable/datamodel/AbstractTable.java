@@ -2,7 +2,7 @@ package com.gsmggk.accountspayable.datamodel;
 
 public class AbstractTable {
 	
-	private Integer id;
+	protected Integer id;
 
 	public Integer getId() {
 		return id;

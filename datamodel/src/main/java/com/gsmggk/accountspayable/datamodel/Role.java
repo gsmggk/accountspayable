@@ -1,16 +1,8 @@
 package com.gsmggk.accountspayable.datamodel;
 
-public class Role {
-	private Integer id;
+public class Role extends AbstractTable {
+
 	private String roleName;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getRoleName() {
 		return roleName;
@@ -20,4 +12,9 @@ public class Role {
 		this.roleName = roleName;
 	}
 
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", roleName=" + roleName + "]";
+
+	}
 }

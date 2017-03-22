@@ -15,19 +15,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.gsmggk.accountspayable.dao.impl.db.IRoleDao;
-import com.gsmggk.accountspayable.datamodel.Role;
+import com.gsmggk.accountspayable.dao.impl.db.IActionDao;
+import com.gsmggk.accountspayable.datamodel.Action;
 
 @Repository
-public class RoleDaoImpl implements IRoleDao {
-
+public class ActionDaoImpl implements IActionDao {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Role insert(Role role) {
-
-		final String INSERT_SQL = "insert into role (role_name) values(?)";
+	public Action insert(Action action) {
+		final String INSERT_SQL = "insert into action (action_name) values(?)";
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -35,55 +33,55 @@ public class RoleDaoImpl implements IRoleDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, role.getRoleName());
+				ps.setString(1, action.getActionName());
 				return ps;
 			}
 		}, keyHolder);
 
-		role.setId(keyHolder.getKey().intValue());
+		action.setId(keyHolder.getKey().intValue());
 
-		return role;
-
+		return action;
 	}
 
 	@Override
-	public void update(Role role) {
-		final String UPDATE_SQL = "update role set role_name=? where id=?";
+	public Action read(Integer id) {
+		try {
+			return jdbcTemplate.queryForObject("select * from action where id = ? ", new Object[] { id },
+					new BeanPropertyRowMapper<Action>(Action.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public void update(Action action) {
+		final String UPDATE_SQL = "update action set action_name=? where id=?";
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "role_name", "id" });
-				ps.setString(1, role.getRoleName());
-				ps.setInt(2, role.getId());
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "action_name", "id" });
+				ps.setString(1, action.getActionName());
+				ps.setInt(2, action.getId());
 				return ps;
 			}
 		});
 
+
 	}
 
 	@Override
-	public void delete(Role role) {
-		final String DELETE_SQL = "delete from role where id=";
-		jdbcTemplate.update(DELETE_SQL + role.getId());
+	public void delete(Action action) {
+		final String DELETE_SQL = "delete from action where id=";
+		jdbcTemplate.update(DELETE_SQL + action.getId());
+
 	}
 
 	@Override
-	public Role read(Integer id) {
+	public List<Action> getAll() {
 		try {
-			return jdbcTemplate.queryForObject("select * from role where id = ? ", new Object[] { id },
-					new BeanPropertyRowMapper<Role>(Role.class));
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-
-	}
-
-	@Override
-	public List<Role> getAll() {
-		try {
-			List<Role> rs = jdbcTemplate.query("select * from role ", new BeanPropertyRowMapper<Role>(Role.class));
+			List<Action> rs = jdbcTemplate.query("select * from action ", new BeanPropertyRowMapper<Action>(Action.class));
 			return rs;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

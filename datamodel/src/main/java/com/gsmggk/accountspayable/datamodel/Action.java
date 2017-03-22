@@ -1,18 +1,11 @@
 package com.gsmggk.accountspayable.datamodel;
 
-public class Action {
-	private Integer id;
+public class Action extends AbstractTable{
+	
 	private String actionName;
 	private Integer duration;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
+	
 	public String getActionName() {
 		return actionName;
 	}
@@ -29,4 +22,9 @@ public class Action {
 		this.duration = duration;
 	}
 
+	@Override
+	public String toString() {
+		return "Action [id=" + id + ", actionName=" + actionName  + ", duration=" + duration + "]";
+
+	}
 }
