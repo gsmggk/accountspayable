@@ -1,18 +1,21 @@
 package com.gsmggk.accountspayable.datamodel;
 
-public class Clerk {
-	private Integer id;
+public class Clerk extends AbstractTable {
+
+	
+	
+	
+
+	@Override
+	public String toString() {
+		String result = null;
+		result = "Clerk [id=" + id + ", clerkName=" + clerkName + ", password=" + password + ", roleId=" + roleId + "]";
+		return result;
+	}
+
 	private String clerkName;
 	private String password;
 	private Integer roleId;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getClerkName() {
 		return clerkName;

@@ -13,7 +13,7 @@ import com.gsmggk.accountspayable.services.IActionService;
 public class ActionServiceImpl implements IActionService {
 	@Inject
 	private IActionDao actionDao;
-
+// TO DO почистить println-ы
 	@Override
 	public void save(Action action) {
 		if (action.getId() == null) {

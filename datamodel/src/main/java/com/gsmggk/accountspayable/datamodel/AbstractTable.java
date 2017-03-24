@@ -11,6 +11,8 @@ public class AbstractTable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	
+
 
 }
