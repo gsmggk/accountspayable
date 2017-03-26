@@ -15,7 +15,7 @@
 	    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 	<import resource="classpath:services-context.xml" />
 	<bean id="dataSource"
-		class="com.epam.training.library2017.dao.impl.db.util.SchemaNameAwareBasicDataSource"
+		class="com.gsmggk.accountspayable.dao.impl.db.util.SchemaNameAwareBasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="org.postgresql.Driver" />
 		<property name="url" value="${jdbc.url}" />

@@ -1,4 +1,4 @@
-package services;
+package com.gsmggk.accountspayable.services;
 
 
 import org.junit.runner.RunWith;
