@@ -20,9 +20,9 @@ public class GenericDaoImpl<T> implements IGenericDao<T> {
 	public void delete(T model) {
 
 		String arg0 = model.getClass().getSimpleName();
-	//	System.out.println(arg0);
-		 String DELETE_SQL = "delete from "+arg0+" where id=";
-		 jdbcTemplate.update(DELETE_SQL + ((AbstractTable) model).getId());
+		// System.out.println(arg0);
+		String DELETE_SQL = "delete from " + arg0 + " where id=";
+		jdbcTemplate.update(DELETE_SQL + ((AbstractTable) model).getId());
 
 	}
 

@@ -6,48 +6,48 @@ import java.sql.Statement;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
-public class SchemaNameAwareBasicDataSource extends BasicDataSource{
-	
-	 private String schema;
+public class SchemaNameAwareBasicDataSource extends BasicDataSource {
 
-	    /**
-	     * @return the schema
-	     */
-	    public String getSchema() {
-	        return schema;
-	    }
+	private String schema;
 
-	    /**
-	     * @param schema
-	     *            the schema to set
-	     */
-	    public void setSchema(final String schema) {
-	        if (schema == null) {
-	            throw new IllegalArgumentException("Schema name must be not null");
-	        }
+	/**
+	 * @return the schema
+	 */
+	public String getSchema() {
+		return schema;
+	}
 
-	        this.schema = schema;
-	    }
+	/**
+	 * @param schema
+	 *            the schema to set
+	 */
+	public void setSchema(final String schema) {
+		if (schema == null) {
+			throw new IllegalArgumentException("Schema name must be not null");
+		}
 
-	    @Override
-	    public Connection getConnection() throws SQLException {
-	        return switchSchema(super.getConnection());
-	    }
+		this.schema = schema;
+	}
 
-	    @Override
-	    public Connection getConnection(final String username, final String password) throws SQLException {
-	        return switchSchema(super.getConnection(username, password));
-	    }
+	@Override
+	public Connection getConnection() throws SQLException {
+		return switchSchema(super.getConnection());
+	}
 
-	    private Connection switchSchema(final Connection connection) throws SQLException {
-	        final Statement stmt = connection.createStatement();
-	        try {
-	            stmt.execute("SET search_path TO " + schema);
-	        } finally {
-	            stmt.close();
-	        }
+	@Override
+	public Connection getConnection(final String username, final String password) throws SQLException {
+		return switchSchema(super.getConnection(username, password));
+	}
 
-	        return connection;
-	    }
+	private Connection switchSchema(final Connection connection) throws SQLException {
+		final Statement stmt = connection.createStatement();
+		try {
+			stmt.execute("SET search_path TO " + schema);
+		} finally {
+			stmt.close();
+		}
+
+		return connection;
+	}
 
 }

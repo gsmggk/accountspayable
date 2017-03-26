@@ -11,15 +11,15 @@ import com.gsmggk.accountspayable.dao.impl.db.IGenericDao;
 import com.gsmggk.accountspayable.services.IGenericService;
 
 @Service
-public  class GenericServiceImpl<T> implements IGenericService<T>{
-	
+public class GenericServiceImpl<T> implements IGenericService<T> {
+
 	@Inject
-	private IGenericDao<T>  genericDao;
+	private IGenericDao<T> genericDao;
 
 	@Override
 	public void save(T model) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public  class GenericServiceImpl<T> implements IGenericService<T>{
 	@Override
 	public void delete(T model) {
 		genericDao.delete(model);
-		
+
 	}
 
 	@Override
@@ -39,6 +39,5 @@ public  class GenericServiceImpl<T> implements IGenericService<T>{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }

@@ -68,7 +68,6 @@ public class ActionDaoImpl implements IActionDao {
 			}
 		});
 
-
 	}
 
 	@Override
@@ -81,7 +80,8 @@ public class ActionDaoImpl implements IActionDao {
 	@Override
 	public List<Action> getAll() {
 		try {
-			List<Action> rs = jdbcTemplate.query("select * from action ", new BeanPropertyRowMapper<Action>(Action.class));
+			List<Action> rs = jdbcTemplate.query("select * from action ",
+					new BeanPropertyRowMapper<Action>(Action.class));
 			return rs;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

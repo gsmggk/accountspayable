@@ -1,6 +1,6 @@
 package com.gsmggk.accountspayable.datamodel;
 
-public class Debtor extends AbstractTable{
+public class Debtor extends AbstractTable {
 
 	@Override
 	public Integer getId() {
@@ -13,6 +13,5 @@ public class Debtor extends AbstractTable{
 		// TODO Auto-generated method stub
 		super.setId(id);
 	}
-
 
 }

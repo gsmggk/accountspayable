@@ -2,9 +2,9 @@ package com.gsmggk.accountspayable.datamodel;
 
 public class Clerk extends AbstractTable {
 
-	
-	
-	
+	private String clerkName;
+	private String password;
+	private Integer roleId;
 
 	@Override
 	public String toString() {
@@ -12,10 +12,6 @@ public class Clerk extends AbstractTable {
 		result = "Clerk [id=" + id + ", clerkName=" + clerkName + ", password=" + password + ", roleId=" + roleId + "]";
 		return result;
 	}
-
-	private String clerkName;
-	private String password;
-	private Integer roleId;
 
 	public String getClerkName() {
 		return clerkName;

@@ -1,11 +1,10 @@
 package com.gsmggk.accountspayable.datamodel;
 
-public class Action extends AbstractTable{
-	
+public class Action extends AbstractTable {
+
 	private String actionName;
 	private Integer duration;
 
-	
 	public String getActionName() {
 		return actionName;
 	}
@@ -24,7 +23,7 @@ public class Action extends AbstractTable{
 
 	@Override
 	public String toString() {
-		return "Action [id=" + id + ", actionName=" + actionName  + ", duration=" + duration + "]";
+		return "Action [id=" + id + ", actionName=" + actionName + ", duration=" + duration + "]";
 
 	}
 }

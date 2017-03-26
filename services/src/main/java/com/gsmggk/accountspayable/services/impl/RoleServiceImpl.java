@@ -27,7 +27,7 @@ public class RoleServiceImpl implements IRoleService {
 			System.out.println("Insert new Role");
 			roleDao.insert(role);
 		} else {
-			System.out.println("Update Role id "+role.getId());
+			System.out.println("Update Role id " + role.getId());
 			roleDao.update(role);
 		}
 
