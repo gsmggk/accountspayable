@@ -11,12 +11,17 @@ import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IAccountDao;
 import com.gsmggk.accountspayable.datamodel.Account;
+import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class AccountDaoImpl implements IAccountDao {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
+
+	private BeanPropertyRowMapper<Account> rowMapper = new BeanPropertyRowMapper<Account>(Account.class);
+
+	private String psc;
 
 	@Override
 	public Account insert(Account account) {
@@ -27,8 +32,7 @@ public class AccountDaoImpl implements IAccountDao {
 	@Override
 	public Account read(Integer id) {
 		try {
-			return jdbcTemplate.queryForObject("select * from account where id = ? ", new Object[] { id },
-					new BeanPropertyRowMapper<Account>(Account.class));
+			return jdbcTemplate.queryForObject("select * from account where id = ? ", new Object[] { id }, rowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -36,8 +40,9 @@ public class AccountDaoImpl implements IAccountDao {
 
 	@Override
 	public void update(Account account) {
-		// TODO Auto-generated method stub
+		final String UPDATE_SQL = "update account set account_name=?, summ=?,debtor_id=?  where id=?";
 
+		jdbcTemplate.update(psc);
 	}
 
 	@Override
@@ -49,8 +54,12 @@ public class AccountDaoImpl implements IAccountDao {
 
 	@Override
 	public List<Account> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			List<Account> rs = jdbcTemplate.query("select * from action ", rowMapper);
+			return rs;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 }
