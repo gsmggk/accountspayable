@@ -1,5 +1,5 @@
 package com.gsmggk.accountspayable.services;
 
-public interface IClerkService extends IAbstractService {
+public interface IClerkService  {
 
 }

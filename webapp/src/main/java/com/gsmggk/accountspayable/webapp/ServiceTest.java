@@ -7,7 +7,6 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IActionService;
 import com.gsmggk.accountspayable.services.IClerkService;
-import com.gsmggk.accountspayable.services.IAbstractService;
 import com.gsmggk.accountspayable.services.IRoleService;
 
 public class ServiceTest {
@@ -52,7 +51,7 @@ public class ServiceTest {
 		// IAbstractService<Clerk> iClerkService = (IAbstractService<Clerk>)
 		// context.getBean(IAbstractService.class);
 		Clerk clerk = new Clerk();
-		iClerkService.delete(clerk);
+	//	iClerkService.delete(clerk);
 
 		context.close();
 	}
