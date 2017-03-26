@@ -24,10 +24,10 @@ public class RoleServiceImpl implements IRoleService {
 	@Override
 	public void save(Role role) {
 		if (role.getId() == null) {
-			System.out.println("Insert new Role");
+
 			roleDao.insert(role);
 		} else {
-			System.out.println("Update Role id " + role.getId());
+
 			roleDao.update(role);
 		}
 

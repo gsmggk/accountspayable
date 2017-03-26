@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IGenericService<T> {
+public interface IAbstractService {
 	@Transactional
-	void save(T model);
+	void save(Object objekt);
 
-	T get(Integer id);
+	Object get(Integer id);
 
 	@Transactional
-	void delete(T model);
+	void delete(Object object);
 
-	List<T> getAll();
+	List<Object> getAll();
 }

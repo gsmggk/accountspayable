@@ -15,14 +15,13 @@ public class ActionServiceImpl implements IActionService {
 	@Inject
 	private IActionDao actionDao;
 
-	// TO DO почистить println-ы
 	@Override
 	public void save(Action action) {
 		if (action.getId() == null) {
-			System.out.println("Insert new Role");
+
 			actionDao.insert(action);
 		} else {
-			System.out.println("Update Role id " + action.getId());
+
 			actionDao.update(action);
 		}
 
