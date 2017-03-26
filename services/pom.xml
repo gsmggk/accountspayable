@@ -11,10 +11,19 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-	<dependency>
+		<dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
 			<artifactId>dao-impl-db</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>
