@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.services.IClerkService;
+
 @Service
 public class ClerkServiceImpl implements IClerkService {
 	@Inject
@@ -23,24 +24,31 @@ public class ClerkServiceImpl implements IClerkService {
 
 			clerkDao.update(clerk);
 		}
-		
+
 	}
 
 	@Override
 	public List<Clerk> getAll() {
-		
+
 		return clerkDao.getAll();
 	}
 
 	@Override
 	public Clerk get(Integer id) {
-		
+
 		return clerkDao.read(id);
 	}
 
 	@Override
 	public void delete(Clerk clerk) {
 		clerkDao.delete(clerk);
-		
+
+	}
+
+	@Override
+	public Boolean loginClerk(String login, String password) {
+		if (login.isEmpty()){};
+		if (password.isEmpty()){};
+		return null;
 	}
 }

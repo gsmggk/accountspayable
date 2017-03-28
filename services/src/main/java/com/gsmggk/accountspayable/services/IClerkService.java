@@ -17,4 +17,6 @@ public interface IClerkService {
 
 	@Transactional
 	void delete(Clerk clerk);
+	
+	Boolean loginClerk(String login,String password);
 }

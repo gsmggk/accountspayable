@@ -1,5 +1,8 @@
 package com.gsmggk.accountspayable.dao.impl.db.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -7,6 +10,12 @@ import javax.inject.Inject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IAccountDao;
@@ -21,12 +30,27 @@ public class AccountDaoImpl implements IAccountDao {
 
 	private BeanPropertyRowMapper<Account> rowMapper = new BeanPropertyRowMapper<Account>(Account.class);
 
-	private String psc;
-
 	@Override
 	public Account insert(Account account) {
+		final String INSERT_SQL = "insert into account (" + "account_name," + "summ," + "debtor_id" + ") values(?,?,?)";
 
-		return null;
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
+
+				ps.setString(1, account.getAccountName());
+				ps.setBigDecimal(2, account.getMoney());
+				ps.setInt(3, account.getDebtorId());
+				return ps;
+			}
+		}, keyHolder);
+
+		account.setId(keyHolder.getKey().intValue());
+
+		return account;
 	}
 
 	@Override
@@ -42,7 +66,21 @@ public class AccountDaoImpl implements IAccountDao {
 	public void update(Account account) {
 		final String UPDATE_SQL = "update account set account_name=?, summ=?,debtor_id=?  where id=?";
 
-		jdbcTemplate.update(psc);
+		jdbcTemplate.update(new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL,
+						new String[] { "action_name", "summ", "debtor_id" });
+
+				ps.setString(1, account.getAccountName());
+				ps.setBigDecimal(2, account.getMoney());
+				ps.setInt(3, account.getDebtorId());
+				ps.setInt(4, account.getId());
+
+				return ps;
+			}
+		});
 	}
 
 	@Override
