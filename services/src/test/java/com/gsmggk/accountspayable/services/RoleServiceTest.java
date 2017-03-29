@@ -40,7 +40,7 @@ public class RoleServiceTest extends AbstractTest {
 		roleService.save(role);
 		Integer savedRoleId = role.getId();
 		Role roleFromDb = roleService.get(savedRoleId);
-		roleFromDb.setRoleName(null);
+		
 		Assert.notNull(roleFromDb, "roleService.save test- must by not null after save");
 		
 		//System.out.println(roleFromDb.toString());
