@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Role;
+
 @Transactional
 public class RoleServiceTest extends AbstractTest {
 	@Inject

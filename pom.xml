@@ -25,6 +25,7 @@
 		<!--module>dao-impl-xml</module -->
 		<module>services</module>
 		<module>webapp</module>
+		<module>javafx</module>
 	</modules>
 
 	<dependencyManagement>
@@ -64,7 +65,11 @@
 				<version>${common.project.version}</version>
 			</dependency>
 
-
+			<dependency>
+				<groupId>com.gsmggk.accountspayable</groupId>
+				<artifactId>javafx</artifactId>
+				<version>${common.project.version}</version>
+			</dependency>
 			<!-- Other libraries -->
 
 			<!--For @Inject -->
@@ -142,6 +147,7 @@
 				<version>${spring.version}</version>
 				<scope>test</scope>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
@@ -270,6 +276,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<groupId>com.zenjava</groupId>
+					<artifactId>javafx-maven-plugin</artifactId>
+					<version>8.8.3</version>
+					<configuration>
+						<mainClass>com.gsmggk.accountspayable.javafx.Main</mainClass>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -13,7 +13,9 @@
 	    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
 	    http://www.springframework.org/schema/task
 	    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
 	<import resource="classpath:services-context.xml" />
+
 	<bean id="dataSource"
 		class="com.gsmggk.accountspayable.dao.impl.db.util.SchemaNameAwareBasicDataSource"
 		destroy-method="close">
