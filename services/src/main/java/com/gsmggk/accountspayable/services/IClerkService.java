@@ -18,5 +18,13 @@ public interface IClerkService {
 	@Transactional
 	void delete(Clerk clerk);
 	
+	/**
+	 * Try Log in to Application 
+	 * @param login -Login name
+	 * @param password -password
+	 * @return return true is success or generate exceptions
+	 */
 	Boolean loginClerk(String login,String password);
+	
+
 }

@@ -47,8 +47,10 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public Boolean loginClerk(String login, String password) {
-		if (login.isEmpty()){};
-		if (password.isEmpty()){};
+		if (login.isEmpty() || password.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+       clerkDao.loginClerk(login,password);
 		return null;
 	}
 }

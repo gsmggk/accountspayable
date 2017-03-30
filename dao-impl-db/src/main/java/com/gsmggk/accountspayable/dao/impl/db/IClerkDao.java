@@ -14,4 +14,6 @@ public interface IClerkDao {
 	void delete(Clerk clerk);
 
 	List<Clerk> getAll();
+
+	Boolean loginClerk(String login, String password);
 }

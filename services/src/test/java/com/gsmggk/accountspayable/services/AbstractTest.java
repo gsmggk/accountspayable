@@ -20,7 +20,7 @@ public class AbstractTest {
 	 * No runnable method 
 	 */
 	@Test
-	public void nullTest() {
+	public void unUsedTest() {
 	}
 
 }
