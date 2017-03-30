@@ -1,6 +1,9 @@
-package com.gsmggk.accountspayable.javafx;
+package com.gsmggk.accountspayable.javafx.control;
 
 
+
+import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.services.IClerkService;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class MainController {
+	private IClerkService clerkService;
 	@FXML
 	private TextField loginField;
 	@FXML
@@ -36,6 +40,8 @@ public class MainController {
 		if (passwordField.getText().isEmpty()) {
 			passwordField.setStyle(styleRed);
 		}
-
+		/*tryLogin(username,paswword)
+		Clerk clerk=new Clerk();
+		clerk=clerkService.get(0);*/
 	}
 }

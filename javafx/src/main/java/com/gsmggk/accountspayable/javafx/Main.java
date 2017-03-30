@@ -15,8 +15,7 @@ public class Main extends Application {
 		try {
 			
 			String fxmlFile = "LoginView.fxml";
-			FXMLLoader loader = new FXMLLoader();
-			Parent root = (Parent) loader.load(getClass().getResource(fxmlFile));
+			Parent root = (Parent) FXMLLoader.load(getClass().getResource(fxmlFile));
 			// BorderPane root = new BorderPane();
 			Scene scene = new Scene(root, 350, 120);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

@@ -21,6 +21,7 @@ public class AbstractTest {
 	 */
 	@Test
 	public void nullTest() {
+		
 	}
 
 }
