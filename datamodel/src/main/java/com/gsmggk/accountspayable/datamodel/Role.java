@@ -14,7 +14,7 @@ public class Role extends AbstractTable {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", roleName=" + roleName + "]";
+		return "Role [id=" + id + ", roleName=" + roleName + "]";
 
 	}
 }

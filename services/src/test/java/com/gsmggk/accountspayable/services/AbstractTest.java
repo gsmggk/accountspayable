@@ -20,8 +20,12 @@ public class AbstractTest {
 	 * No runnable method 
 	 */
 	@Test
+<<<<<<< HEAD
 	public void nullTest() {
 		
+=======
+	public void unUsedTest() {
+>>>>>>> Update-maven
 	}
 
 }

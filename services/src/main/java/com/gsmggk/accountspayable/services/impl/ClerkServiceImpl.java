@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
+import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.services.IClerkService;
 
@@ -47,8 +48,21 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public Boolean loginClerk(String login, String password) {
-		if (login.isEmpty()){};
-		if (password.isEmpty()){};
-		return null;
+		if (login.isEmpty() || password.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+
+		Clerk clerk = new Clerk();
+		clerk = clerkDao.checkLoginName(login);
+		if (clerk != null) {
+			if (clerk.getPassword().equals(password)) {
+				return true;
+			} else {
+				throw new MyBadLoginNameException("Password is invalid.");
+			}
+		} else {
+			throw new MyBadLoginNameException("Login name is invalid.");
+
+		}
 	}
 }
