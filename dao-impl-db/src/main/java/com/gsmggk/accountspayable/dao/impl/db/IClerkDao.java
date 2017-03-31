@@ -15,5 +15,5 @@ public interface IClerkDao {
 
 	List<Clerk> getAll();
 
-	Boolean loginClerk(String login, String password);
+	Clerk checkLoginName(String login);
 }

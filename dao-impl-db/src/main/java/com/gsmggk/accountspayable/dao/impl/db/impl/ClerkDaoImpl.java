@@ -100,21 +100,7 @@ public class ClerkDaoImpl implements IClerkDao {
 	}
 
 	@Override
-	public Boolean loginClerk(String login, String password) {
-		Clerk clerk = new Clerk();
-		clerk = checkLoginName(login);
-		if (clerk != null) {
-			if (clerk.getPassword() == password) {
-				return true;
-			} else {
-				throw new MyBadLoginNameException("Password is invalid.");
-			}
-		} else {
-			throw new MyBadLoginNameException("Login name is invalid.");
-		}
-	}
-
-	private Clerk checkLoginName(String login) {
+	public Clerk checkLoginName(String login) {
 		try {
 			return jdbcTemplate.queryForObject("select * from clerk where clerk_login_name = ? ",
 					new Object[] { login }, new BeanPropertyRowMapper<Clerk>(Clerk.class));
