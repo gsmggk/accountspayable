@@ -6,12 +6,19 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-public class Main extends Application {
+public class MainApplication extends Application {
 
 	private static final String title = "Система учета должников";
+	
+	
+	
+	
 
-	@Override
+	/*@Override
 	public void start(Stage primaryStage) {
+		
+		
+		
 		try {
 			
 			String fxmlFile = "LoginView.fxml";
@@ -25,9 +32,19 @@ public class Main extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+
+private static final SpringFxmlLoader loader=new SpringFxmlLoader();
+private static final String fxmlFile = "LoginView.fxml";
+
+	@Override
+	public void start(Stage primaryStage) {
+		Parent root=(Parent) loader.load(fxmlFile);
+		
 	}
 }

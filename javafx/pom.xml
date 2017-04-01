@@ -11,9 +11,7 @@
  
  
   <artifactId>javafx</artifactId>
-  <version>1.0.0</version>
-
-<dependencies>
+  <dependencies>
 		<dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
 			<artifactId>services</artifactId>

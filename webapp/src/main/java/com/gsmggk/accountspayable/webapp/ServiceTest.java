@@ -47,10 +47,13 @@ public class ServiceTest {
 		 * System.out.println(iActionService.getAll());
 		 */
 
-		@SuppressWarnings("unchecked")
+	
 		// IAbstractService<Clerk> iClerkService = (IAbstractService<Clerk>)
 		// context.getBean(IAbstractService.class);
 		Clerk clerk = new Clerk();
+		if (iClerkService.loginClerk("boss", "111111")){
+			System.out.println("LOGIN OK");
+		}
 	//	iClerkService.delete(clerk);
 
 		context.close();

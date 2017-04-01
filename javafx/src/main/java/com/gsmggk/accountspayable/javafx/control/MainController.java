@@ -1,9 +1,14 @@
 package com.gsmggk.accountspayable.javafx.control;
 
+import javax.inject.Inject;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
 
 import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.services.IActionService;
 import com.gsmggk.accountspayable.services.IClerkService;
+import com.gsmggk.accountspayable.services.IRoleService;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -12,7 +17,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class MainController {
-	private IClerkService clerkService;
+	
 	@FXML
 	private TextField loginField;
 	@FXML
@@ -21,8 +26,6 @@ public class MainController {
 	private Button loginButton;
 	@FXML
 	private Button cancelButton;
-
-	
 
 	@FXML
 	private void cancelButtonAction() {
@@ -33,15 +36,29 @@ public class MainController {
 
 	@FXML
 	private void loginButtonAction() {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("javafx-context.xml");
+
+		IRoleService iRoleService = context.getBean(IRoleService.class);
+		IActionService iActionService = context.getBean(IActionService.class);
+		IClerkService iClerkService = context.getBean(IClerkService.class);
+
+		
+		
 		String styleRed = "-fx-background-color:red;";
-		if (loginField.getText().isEmpty()) {
+		String login=loginField.getText();
+		String password=passwordField.getText();
+		if (login.isEmpty()) {
 			loginField.setStyle(styleRed);
 		}
-		if (passwordField.getText().isEmpty()) {
+		if (password.isEmpty()) {
 			passwordField.setStyle(styleRed);
 		}
-		/*tryLogin(username,paswword)
-		Clerk clerk=new Clerk();
-		clerk=clerkService.get(0);*/
+		
+
+		if (iClerkService.loginClerk(login, password)) {
+			System.out.println("LOGIN OK");
+		}
+		;
+
 	}
 }
