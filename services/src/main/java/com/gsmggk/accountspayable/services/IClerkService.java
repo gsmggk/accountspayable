@@ -22,9 +22,9 @@ public interface IClerkService {
 	 * Try Log in to Application 
 	 * @param login -Login name
 	 * @param password -password
-	 * @return return true is success or generate exceptions
+	 * @return return <b>Clerk</b> is success or generate exceptions
 	 */
-	Boolean loginClerk(String login,String password);
+	Clerk loginCheck(String login,String password);
 	
 
 }

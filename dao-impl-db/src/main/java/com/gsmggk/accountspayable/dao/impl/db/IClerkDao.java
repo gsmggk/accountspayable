@@ -15,5 +15,12 @@ public interface IClerkDao {
 
 	List<Clerk> getAll();
 
-	Clerk checkLoginName(String login);
+	/**
+	 * query for Clerk with same login name as <b>login</b>
+	 * 
+	 * @param login
+	 *            - login name String
+	 * @return Clerk
+	 */
+	Clerk loginCheck(String login);
 }

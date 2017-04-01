@@ -32,11 +32,7 @@ public class AccountServiceTest extends AbstractTest {
 		// account.setDebtorId(1);
 	}
 
-	@Before
-	public void runBeforeInsertTest() {
-
-	}
-
+	
 	@Test
 	@Rollback(true)
 	public void InsertTest() {

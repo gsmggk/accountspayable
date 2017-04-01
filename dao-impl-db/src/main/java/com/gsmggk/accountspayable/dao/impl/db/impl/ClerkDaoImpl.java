@@ -99,8 +99,10 @@ public class ClerkDaoImpl implements IClerkDao {
 		}
 	}
 
+	
+	
 	@Override
-	public Clerk checkLoginName(String login) {
+	public Clerk loginCheck(String login) {
 		try {
 			return jdbcTemplate.queryForObject("select * from clerk where clerk_login_name = ? ",
 					new Object[] { login }, new BeanPropertyRowMapper<Clerk>(Clerk.class));
