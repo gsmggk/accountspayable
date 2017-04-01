@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IDebtorDao;
-import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 
 @Repository

@@ -11,17 +11,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IAccountDao;
 import com.gsmggk.accountspayable.datamodel.Account;
-import com.gsmggk.accountspayable.datamodel.Action;
-import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class AccountDaoImpl implements IAccountDao {
