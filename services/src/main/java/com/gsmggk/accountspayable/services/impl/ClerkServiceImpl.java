@@ -47,6 +47,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public void delete(Clerk clerk) {
+		LOGGER.debug("delete clerk");
 		clerkDao.delete(clerk);
 
 	}
@@ -54,7 +55,7 @@ public class ClerkServiceImpl implements IClerkService {
 	@Override
 	public Clerk loginCheck(String login, String password) {
 		if (login == null) {
-			LOGGER.error("login is null");
+			LOGGER.warn("login is null");
 			throw new IllegalArgumentException();
 		}
 
@@ -66,11 +67,11 @@ public class ClerkServiceImpl implements IClerkService {
 				LOGGER.debug("login is ok");
 				return clerk;
 			} else {
-				LOGGER.error("passwor is wrong");
+				LOGGER.warn("passwor is wrong");
 				throw new MyBadPasswordException("Password is invalid.");
 			}
 		} else {
-			LOGGER.error("loginname is wrong");
+			LOGGER.warn("loginname is wrong");
 			throw new MyBadLoginNameException("Login name is invalid.");
 
 		}

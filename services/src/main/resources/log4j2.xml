@@ -3,36 +3,44 @@
 
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="MY %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 
 		<RollingFile name="RollingFile" fileName="logs/accontspayable.log"
 			filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-			<PatternLayout pattern="MY %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 				<SizeBasedTriggeringPolicy size="250 MB" />
 			</Policies>
 		</RollingFile>
+		
+		<Console name="Console1" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="MY %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
 	</Appenders>
 
 	<Loggers>
-		<Root level="debug">
+		<Root level="debug" >
 			<AppenderRef ref="Console" />
 		</Root>
 		<!-- свойство name значит полное имя начинается с name -->
 		<Logger level="warning" name="com.gsmggk.accountspayable"
 			additivity="false">
-				<AppenderRef ref="RollingFile" />
+			<AppenderRef ref="RollingFile" />
 		</Logger>
-
+		<Logger level="debug" name="com.gsmggk.accountspayable"
+			additivity="false">
+			<AppenderRef ref="Console1" />
+		</Logger>
 		<Logger level="error" name="com.gsmggk.accountspayable"
 			additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
 
-	</Loggers>	
+	</Loggers>
 
 
 </Configuration>
