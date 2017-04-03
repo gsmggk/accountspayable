@@ -16,9 +16,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
-import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class ClerkDaoImpl implements IClerkDao {

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;

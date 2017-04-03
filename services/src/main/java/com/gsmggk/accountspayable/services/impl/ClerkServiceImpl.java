@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
@@ -14,16 +16,18 @@ import com.gsmggk.accountspayable.services.IClerkService;
 
 @Service
 public class ClerkServiceImpl implements IClerkService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClerkServiceImpl.class);
+
 	@Inject
 	private IClerkDao clerkDao;
 
 	@Override
 	public void save(Clerk clerk) {
 		if (clerk.getId() == null) {
-
+			LOGGER.debug("insert clerk");
 			clerkDao.insert(clerk);
 		} else {
-
+			LOGGER.debug("update clerk");
 			clerkDao.update(clerk);
 		}
 
@@ -43,13 +47,15 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public void delete(Clerk clerk) {
+		LOGGER.debug("delete clerk");
 		clerkDao.delete(clerk);
 
 	}
 
 	@Override
 	public Clerk loginCheck(String login, String password) {
-		if (login==null) {
+		if (login == null) {
+			LOGGER.warn("login is null");
 			throw new IllegalArgumentException();
 		}
 
@@ -58,11 +64,14 @@ public class ClerkServiceImpl implements IClerkService {
 		if (clerk != null) {
 			// Check password
 			if (clerk.getPassword().equals(password)) {
+				LOGGER.debug("login is ok");
 				return clerk;
 			} else {
+				LOGGER.warn("passwor is wrong");
 				throw new MyBadPasswordException("Password is invalid.");
 			}
 		} else {
+			LOGGER.warn("loginname is wrong");
 			throw new MyBadLoginNameException("Login name is invalid.");
 
 		}

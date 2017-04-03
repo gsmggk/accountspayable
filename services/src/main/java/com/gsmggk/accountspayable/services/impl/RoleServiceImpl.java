@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao.impl.db.IRoleDao;
@@ -12,6 +14,8 @@ import com.gsmggk.accountspayable.services.IRoleService;
 
 @Service
 public class RoleServiceImpl implements IRoleService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoleServiceImpl.class);
+
 	/*
 	 * @Value("${key1}") private String key1;
 	 * 
@@ -24,10 +28,10 @@ public class RoleServiceImpl implements IRoleService {
 	@Override
 	public void save(Role role) {
 		if (role.getId() == null) {
-
+			LOGGER.debug("add Role");
 			roleDao.insert(role);
 		} else {
-
+			LOGGER.debug("update Role");
 			roleDao.update(role);
 		}
 
@@ -46,6 +50,7 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public void delete(Role role) {
+		LOGGER.debug("delete Role");
 		roleDao.delete(role);
 	}
 
