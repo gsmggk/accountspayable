@@ -4,35 +4,44 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Account;
 
+@Transactional
 public class AccountServiceTest extends AbstractTest {
 
 	@Inject
 	private IAccountService accountService;
+	
 	private static Account account;
 
 	@BeforeClass
-	public static void runBeforeTests(){
-		 account=new Account();
+	public static void runBeforeTests() {
+		account = new Account();
 		account.setAccountName("Test account");
-		
+
 		BigDecimal money = new BigDecimal("3000.25");
-		
+
 		account.setMoney(money);
-		account.setDebtorId(1);
+		// account.setDebtorId(1);
 	}
+
 	
-	@Before
-	public void runBeforeInsertTest(){
-		accountService.save(account);
-	}
 	@Test
+	@Rollback(true)
 	public void InsertTest() {
-		
+		// FIXIT Дделать форин кей  
+	//	accountService.save(account);
+		Integer savedAccountId = account.getId();
+		Account accountFromDb = new Account();
+		accountFromDb = accountService.get(savedAccountId);
+
+		Assert.isNull(accountFromDb, "must be not null after save");
+
 	}
 }

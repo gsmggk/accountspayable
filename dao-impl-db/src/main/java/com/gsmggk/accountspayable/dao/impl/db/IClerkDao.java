@@ -14,4 +14,13 @@ public interface IClerkDao {
 	void delete(Clerk clerk);
 
 	List<Clerk> getAll();
+
+	/**
+	 * query for Clerk with same login name as <b>login</b>
+	 * 
+	 * @param login
+	 *            - login name String
+	 * @return Clerk
+	 */
+	Clerk loginCheck(String login);
 }

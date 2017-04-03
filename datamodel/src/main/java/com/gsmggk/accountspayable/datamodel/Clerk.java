@@ -2,23 +2,35 @@ package com.gsmggk.accountspayable.datamodel;
 
 public class Clerk extends AbstractTable {
 
-	private String clerkName;
+	private String clerkLoginName;
 	private String password;
 	private Integer roleId;
+	private String clerkFullName;
+
+	public String getClerkLoginName() {
+		return clerkLoginName;
+	}
+
+	public void setClerkLoginName(String clerkLoginName) {
+		this.clerkLoginName = clerkLoginName;
+	}
+
+	public String getClerkFullName() {
+		return clerkFullName;
+	}
+
+	public void setClerkFullName(String clerkFullName) {
+		this.clerkFullName = clerkFullName;
+	}
+
+	
+	
+
 
 	@Override
 	public String toString() {
-		String result = null;
-		result = "Clerk [id=" + id + ", clerkName=" + clerkName + ", password=" + password + ", roleId=" + roleId + "]";
-		return result;
-	}
-
-	public String getClerkName() {
-		return clerkName;
-	}
-
-	public void setClerkName(String clerkName) {
-		this.clerkName = clerkName;
+		return "Clerk [clerkLoginName=" + clerkLoginName + ", password=" + password + ", roleId=" + roleId
+				+ ", clerkFullName=" + clerkFullName + ", id=" + id + "]";
 	}
 
 	public String getPassword() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="{    } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+
+		<Console name="ConsoleMy" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="{My_L} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+		<RollingFile name="RollingFile" fileName="logs/accontspayable.log"
+			filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="250 MB" />
+			</Policies>
+		</RollingFile>
+
+
+	</Appenders>
+
+	<Loggers>
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+		
+		<Logger level="debug" name="com.gsmggk.accountspayable"
+			additivity="false">
+			<AppenderRef ref="ConsoleMy" />
+		</Logger>
+
+		<Logger level="warning" name="com.gsmggk.accountspayable"
+			additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+		<Logger level="error" name="com.gsmggk.accountspayable"
+			additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+	</Loggers>
+
+
+</Configuration>
