@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +18,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IRoleDao;
+import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class RoleDaoImpl implements IRoleDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoleDaoImpl.class);
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
@@ -75,6 +79,7 @@ public class RoleDaoImpl implements IRoleDao {
 			return jdbcTemplate.queryForObject("select * from role where id = ? ", new Object[] { id },
 					new BeanPropertyRowMapper<Role>(Role.class));
 		} catch (EmptyResultDataAccessException e) {
+			//LOGGER.debug("read role.id={} get empty result", id, e);
 			return null;
 		}
 
@@ -86,8 +91,54 @@ public class RoleDaoImpl implements IRoleDao {
 			List<Role> rs = jdbcTemplate.query("select * from role ", new BeanPropertyRowMapper<Role>(Role.class));
 			return rs;
 		} catch (EmptyResultDataAccessException e) {
+		//	LOGGER.debug("Table role empty result", e);
 			return null;
 		}
+
+	}
+
+	@Override
+	public List<Action> getActions4Role(Integer roleId) {
+		final String SELECT_SQL = "select a.id,a.action_name " + "from role2action as ra "
+				+ "JOIN action as a ON (ra.action_id=a.id)" + "where ra.role_id=?";
+		try {
+
+			List<Action> rs = jdbcTemplate.query(SELECT_SQL, 
+					new Object[] {roleId},
+					new BeanPropertyRowMapper<Action>(Action.class));
+			return rs;
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.debug("getActions4Role .id={} empty result", roleId, e);
+
+			return null;
+		}
+	}
+
+	@Override
+	public Boolean chekAction2role(Integer actionId, Integer roleId) {
+		final String SELECT_SQL = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
+		Integer rs = jdbcTemplate.queryForObject(SELECT_SQL, Integer.class, new Object[] { actionId, roleId });
+		LOGGER.debug("find {} link, role.id={} action.id={}", rs, roleId, actionId);
+		if (rs == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public void addAction2Role(Integer actionId, Integer roleId) {
+		final String INSERT_SQL = "insert INTO role2action VALUES(?,?)";
+
+		jdbcTemplate.update(INSERT_SQL, new Object[] { roleId,actionId  });
+
+	}
+
+	@Override
+	public void deleteAction2Role(Integer actionId, Integer roleId) {
+		final String DELETE_SQL = "delete from role2action as ra where ra.action_id=? and ra.role_id=?";
+
+		jdbcTemplate.update(DELETE_SQL, new Object[] { actionId, roleId });
 
 	}
 

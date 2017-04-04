@@ -6,7 +6,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * For import annotation to child 
+ * For import annotation to child
+ * 
  * @author Gena
  *
  */
@@ -16,8 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AbstractTest {
 
 	/**
-	 * Need for prevent maven test error:
-	 * No runnable method 
+	 * 
+	 * Need for prevent maven test error: No runnable method
 	 */
 	@Test
 	public void unUsedTest() {

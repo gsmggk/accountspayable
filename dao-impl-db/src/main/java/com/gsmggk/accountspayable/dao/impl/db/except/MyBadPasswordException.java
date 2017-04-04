@@ -2,6 +2,11 @@ package com.gsmggk.accountspayable.dao.impl.db.except;
 
 public class MyBadPasswordException extends IllegalArgumentException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public MyBadPasswordException() {
 		
 	}

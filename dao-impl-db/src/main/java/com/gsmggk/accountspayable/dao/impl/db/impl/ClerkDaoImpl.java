@@ -16,9 +16,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
-import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class ClerkDaoImpl implements IClerkDao {
@@ -38,7 +36,8 @@ public class ClerkDaoImpl implements IClerkDao {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
 				ps.setString(1, clerk.getClerkLoginName());
 				ps.setString(2, clerk.getPassword());
-				ps.setInt(3, clerk.getRoleId());
+				ps.setNull(3, java.sql.Types.INTEGER);
+			//	ps.setInt(3, clerk.getRoleId());
 				ps.setString(4, clerk.getClerkFullName());
 				return ps;
 			}
@@ -100,7 +99,7 @@ public class ClerkDaoImpl implements IClerkDao {
 	}
 
 	@Override
-	public Clerk checkLoginName(String login) {
+	public Clerk loginCheck(String login) {
 		try {
 			return jdbcTemplate.queryForObject("select * from clerk where clerk_login_name = ? ",
 					new Object[] { login }, new BeanPropertyRowMapper<Clerk>(Clerk.class));

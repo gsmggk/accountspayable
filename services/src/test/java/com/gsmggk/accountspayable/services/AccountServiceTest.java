@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
@@ -32,11 +31,7 @@ public class AccountServiceTest extends AbstractTest {
 		// account.setDebtorId(1);
 	}
 
-	@Before
-	public void runBeforeInsertTest() {
-
-	}
-
+	
 	@Test
 	@Rollback(true)
 	public void InsertTest() {
