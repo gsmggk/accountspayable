@@ -36,7 +36,8 @@ public class ClerkDaoImpl implements IClerkDao {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
 				ps.setString(1, clerk.getClerkLoginName());
 				ps.setString(2, clerk.getPassword());
-				ps.setInt(3, clerk.getRoleId());
+				ps.setNull(3, java.sql.Types.INTEGER);
+			//	ps.setInt(3, clerk.getRoleId());
 				ps.setString(4, clerk.getClerkFullName());
 				return ps;
 			}
@@ -97,8 +98,6 @@ public class ClerkDaoImpl implements IClerkDao {
 		}
 	}
 
-	
-	
 	@Override
 	public Clerk loginCheck(String login) {
 		try {
