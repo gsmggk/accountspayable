@@ -5,16 +5,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 
 public class MainApplication extends Application {
 
 	private static final String title = "Система учета должников";
 	
 	
-	
+	public static void main(String[] args) {
+		launch(args);
+	}
 	
 
-	/*@Override
+	@Override
 	public void start(Stage primaryStage) {
 		
 		
@@ -32,19 +35,21 @@ public class MainApplication extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+	
+/*
 
-
-private static final SpringFxmlLoader loader=new SpringFxmlLoader();
+private static final SpringFXMLLoader loader=new SpringFXMLLoader();
 private static final String fxmlFile = "LoginView.fxml";
 
 	@Override
 	public void start(Stage primaryStage) {
-		Parent root=(Parent) loader.load(fxmlFile);
-		
+	//	Parent root=(Parent) loader.load(fxmlFile);
+		 MainController controller = (MainController) SpringFXMLLoader.load(fxmlFile);
+	        Scene scene = new Scene((Parent) controller.getView(), 300, 275);
+	        primaryStage.setTitle("Todolist");
+	        primaryStage.setScene(scene);
+	        primaryStage.show();
 	}
-}
+}*/

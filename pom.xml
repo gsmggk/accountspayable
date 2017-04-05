@@ -145,9 +145,9 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
-				
+
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
@@ -237,6 +237,11 @@
 				<version>2.5</version>
 			</dependency>
 
+			<dependency>
+			<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+	<version>1.5.2.RELEASE</version>
+			</dependency>
 
 
 		</dependencies>

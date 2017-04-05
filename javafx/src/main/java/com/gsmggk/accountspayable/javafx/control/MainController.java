@@ -1,15 +1,9 @@
 package com.gsmggk.accountspayable.javafx.control;
 
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
-
-import com.gsmggk.accountspayable.datamodel.Clerk;
-import com.gsmggk.accountspayable.services.IActionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.gsmggk.accountspayable.services.IClerkService;
-import com.gsmggk.accountspayable.services.IRoleService;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,7 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class MainController {
-	
+	 @Autowired
+	 private IClerkService service;
 	@FXML
 	private TextField loginField;
 	@FXML
@@ -36,12 +31,7 @@ public class MainController {
 
 	@FXML
 	private void loginButtonAction() {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("javafx-context.xml");
-
-		IRoleService iRoleService = context.getBean(IRoleService.class);
-		IActionService iActionService = context.getBean(IActionService.class);
-		IClerkService iClerkService = context.getBean(IClerkService.class);
-
+		
 		
 		
 		String styleRed = "-fx-background-color:red;";
@@ -54,11 +44,18 @@ public class MainController {
 			passwordField.setStyle(styleRed);
 		}
 		
-
-		if (iClerkService.loginClerk(login, password)) {
-			System.out.println("LOGIN OK");
-		}
-		;
+service.loginCheck(login, password);
 
 	}
+	 @FXML
+	    public void initialize() {
+	    }
+
+	    /**
+	     * На этом этапе уже произведены все возможные инъекции.
+	     */
+	    @PostConstruct
+	    public void init() {
+	    	service.getAll();
+	    }
 }
