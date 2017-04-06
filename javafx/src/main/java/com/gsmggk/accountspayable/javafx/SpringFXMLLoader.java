@@ -5,8 +5,11 @@ import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.gsmggk.accountspayable.javafx.control.ConfigurationControllers;
 import com.gsmggk.accountspayable.javafx.control.Controller;
 
 import javafx.fxml.FXMLLoader;
@@ -15,10 +18,10 @@ import javafx.util.Callback;
 
 
 public class SpringFXMLLoader  {
-/*private static final ApplicationContext appContext=
-new AnnotationConfigApplicationContext(JdbcTemplate.class);*/
+private static final ApplicationContext context=
+new AnnotationConfigApplicationContext(ConfigurationControllers.class);
 private static final Logger LOGGER = LoggerFactory.getLogger(SpringFXMLLoader.class);
-static ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("javafx-context.xml");
+//static ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("javafx-context.xml");
 public static Controller load(String url) {
     InputStream fxmlStream = null;
     try {

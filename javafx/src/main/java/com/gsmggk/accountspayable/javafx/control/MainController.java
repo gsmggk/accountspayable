@@ -11,8 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class MainController {
-	 @Autowired
-	 private IClerkService service;
+	@Autowired
+	private IClerkService service;
 	@FXML
 	private TextField loginField;
 	@FXML
@@ -31,31 +31,30 @@ public class MainController {
 
 	@FXML
 	private void loginButtonAction() {
-		
-		
-		
+
 		String styleRed = "-fx-background-color:red;";
-		String login=loginField.getText();
-		String password=passwordField.getText();
+		String login = loginField.getText();
+		String password = passwordField.getText();
 		if (login.isEmpty()) {
 			loginField.setStyle(styleRed);
 		}
 		if (password.isEmpty()) {
 			passwordField.setStyle(styleRed);
 		}
-		
-service.loginCheck(login, password);
+
+		service.loginCheck(login, password);
 
 	}
-	 @FXML
-	    public void initialize() {
-	    }
 
-	    /**
-	     * На этом этапе уже произведены все возможные инъекции.
-	     */
-	    @PostConstruct
-	    public void init() {
-	    	service.getAll();
-	    }
+	@FXML
+	public void initialize() {
+	}
+
+	/**
+	 * На этом этапе уже произведены все возможные инъекции.
+	 */
+	@PostConstruct
+	public void init() {
+		// service.getAll();
+	}
 }

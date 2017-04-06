@@ -10,7 +10,8 @@ import javafx.scene.layout.BorderPane;
 public class MainApplication extends Application {
 
 	private static final String title = "Система учета должников";
-	
+	 private static final MySpringFxmlLoader loader = new MySpringFxmlLoader();
+
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -25,7 +26,7 @@ public class MainApplication extends Application {
 		try {
 			
 			String fxmlFile = "LoginView.fxml";
-			Parent root = (Parent) FXMLLoader.load(getClass().getResource(fxmlFile));
+			Parent root = (Parent) loader.load("LoginView.fxml");
 			// BorderPane root = new BorderPane();
 			Scene scene = new Scene(root, 350, 120);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

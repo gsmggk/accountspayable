@@ -287,7 +287,7 @@
 					<artifactId>javafx-maven-plugin</artifactId>
 					<version>8.8.3</version>
 					<configuration>
-						<mainClass>com.gsmggk.accountspayable.javafx.Main</mainClass>
+						<mainClass>com.gsmggk.accountspayable.javafx.NewMainApplication</mainClass>
 					</configuration>
 				</plugin>
 			</plugins>

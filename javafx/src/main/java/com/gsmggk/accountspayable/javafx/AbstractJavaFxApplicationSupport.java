@@ -1,9 +1,9 @@
 package com.gsmggk.accountspayable.javafx;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.application.Application;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public abstract class AbstractJavaFxApplicationSupport extends Application{
 	  private static String[] savedArgs;
