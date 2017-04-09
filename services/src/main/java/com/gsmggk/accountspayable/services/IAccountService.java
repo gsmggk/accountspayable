@@ -17,4 +17,17 @@ public interface IAccountService {
 
 	@Transactional
 	void delete(Account account);
+	
+	//FIXME remove after test
+	Account getR(Integer id);
+	
+	@Transactional
+	void deleteR(Account account);
+	
+	List<Account> getAllR();
+	
+	@Transactional
+	void saveR(Account account);
+
+	
 }
