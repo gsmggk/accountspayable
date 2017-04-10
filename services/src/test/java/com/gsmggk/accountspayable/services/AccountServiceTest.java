@@ -35,7 +35,7 @@ public class AccountServiceTest extends AbstractTest {
 	@Test
 	@Rollback(true)
 	public void InsertTest() {
-		// FIXIT Дделать форин кей  
+		// FIXME Дделать форин кей  
 	//	accountService.save(account);
 		Integer savedAccountId = account.getId();
 		Account accountFromDb = new Account();
