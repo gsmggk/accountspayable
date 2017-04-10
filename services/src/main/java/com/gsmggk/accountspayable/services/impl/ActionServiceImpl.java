@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao.impl.db.IActionDao;
+import com.gsmggk.accountspayable.dao4db.IActionDao;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.services.IActionService;
 

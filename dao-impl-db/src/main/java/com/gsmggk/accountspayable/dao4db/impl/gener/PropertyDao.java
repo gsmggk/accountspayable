@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db.impl.gener;
+package com.gsmggk.accountspayable.dao4db.impl.gener;
 
 import org.springframework.jdbc.core.RowMapper;
 

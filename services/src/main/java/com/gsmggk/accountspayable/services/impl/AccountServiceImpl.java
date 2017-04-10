@@ -6,8 +6,8 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao.impl.db.IAccountDao;
-import com.gsmggk.accountspayable.dao.impl.db.IrAccountDao;
+import com.gsmggk.accountspayable.dao4db.IAccountDao;
+import com.gsmggk.accountspayable.dao4db.IrAccountDao;
 import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.services.IAccountService;
 

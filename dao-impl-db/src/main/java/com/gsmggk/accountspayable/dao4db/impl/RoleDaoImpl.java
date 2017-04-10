@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db.impl;
+package com.gsmggk.accountspayable.dao4db.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.gsmggk.accountspayable.dao.impl.db.IRoleDao;
+import com.gsmggk.accountspayable.dao4db.IRoleDao;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 

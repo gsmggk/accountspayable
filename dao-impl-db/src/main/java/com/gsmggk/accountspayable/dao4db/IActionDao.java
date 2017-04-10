@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db;
+package com.gsmggk.accountspayable.dao4db;
 
 import java.util.List;
 

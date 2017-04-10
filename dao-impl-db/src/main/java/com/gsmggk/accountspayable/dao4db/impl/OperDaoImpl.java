@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db.impl;
+package com.gsmggk.accountspayable.dao4db.impl;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.gsmggk.accountspayable.dao.impl.db.IOperDao;
+import com.gsmggk.accountspayable.dao4db.IOperDao;
 import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository

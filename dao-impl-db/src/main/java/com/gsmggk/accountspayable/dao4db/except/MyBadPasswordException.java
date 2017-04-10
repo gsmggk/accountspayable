@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db.except;
+package com.gsmggk.accountspayable.dao4db.except;
 
 public class MyBadPasswordException extends IllegalArgumentException {
 

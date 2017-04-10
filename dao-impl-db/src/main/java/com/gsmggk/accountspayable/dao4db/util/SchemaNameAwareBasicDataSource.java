@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao.impl.db.util;
+package com.gsmggk.accountspayable.dao4db.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
