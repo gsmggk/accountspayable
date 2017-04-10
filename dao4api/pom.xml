@@ -10,7 +10,7 @@
 	</parent>
 
 
-	<artifactId>dao-api</artifactId>
+	<artifactId>dao4api</artifactId>
 	
 	<packaging>jar</packaging>
 

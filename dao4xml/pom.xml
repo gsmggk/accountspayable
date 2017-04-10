@@ -7,12 +7,12 @@
 		<artifactId>parent-project</artifactId>
 		<version>1.0.1</version>
 	</parent>
-	<artifactId>dao-impl-xml</artifactId>
+	<artifactId>dao4xml</artifactId>
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
-			<artifactId>dao-api</artifactId>
+			<artifactId>dao4api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
