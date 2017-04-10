@@ -10,10 +10,8 @@ import java.util.List;
  *
  * @param <T>
  *            - datamodel name
- * @param <PK>
- *            - primary key f. e. <code>id</code>
  */
-public interface IGenericDao<T, PK extends Serializable> {
+public interface IGenericDao<T> {
 
 	T readR(Integer id);
 

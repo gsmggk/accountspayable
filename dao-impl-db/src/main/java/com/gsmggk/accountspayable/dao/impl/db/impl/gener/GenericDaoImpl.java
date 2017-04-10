@@ -22,29 +22,23 @@ import com.gsmggk.accountspayable.datamodel.AbstractTable;
 import com.gsmggk.accountspayable.datamodel.Account;
 
 @Repository
-public abstract class GenericDaoImpl<T extends AbstractTable, PK extends Serializable> implements IGenericDao<T, PK> {
+public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
+	
 
-	public abstract String getReadSql();
-
-	public abstract String getDeleteSql();
-
-	public abstract String getSelectAllSql();
-
-	public abstract String getInsertSql();
-
-	public abstract String getUpdateSql();
+	
 
 	public abstract BeanPropertyRowMapper<T> getRowMapper();
 
 	public abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
 
-	public abstract String[] getUpdateFields();
-
+	public abstract PropertyDao getPropertyDao();
+	
 	@Override
 	public T readR(Integer id) {
-		final String READ_SQL = getReadSql();
+		PropertyDao prDao=getPropertyDao();
+		final String READ_SQL =prDao.getReadSql();
 		try {
 			return jdbcTemplate.queryForObject(READ_SQL, new Object[] { id }, getRowMapper());
 		} catch (EmptyResultDataAccessException e) {
@@ -54,13 +48,13 @@ public abstract class GenericDaoImpl<T extends AbstractTable, PK extends Seriali
 
 	@Override
 	public void deleteR(T object) {
-		final String DELETE_SQL = getDeleteSql();
+		final String DELETE_SQL = getPropertyDao().getDeleteSql();
 		jdbcTemplate.update(DELETE_SQL + object.getId());
 	}
 
 	@Override
 	public List<T> getAllR() {
-		final String SELECT_ALL_SQL = getSelectAllSql();
+		final String SELECT_ALL_SQL = getPropertyDao().getSelectSql();
 		try {
 			List<T> rs = jdbcTemplate.query(SELECT_ALL_SQL, getRowMapper());
 			return rs;
@@ -71,7 +65,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable, PK extends Seriali
 
 	@Override
 	public T insertR(T object) {
-		final String INSERT_SQL = getInsertSql();
+		final String INSERT_SQL =getPropertyDao().getInsertSql();
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -98,13 +92,14 @@ public abstract class GenericDaoImpl<T extends AbstractTable, PK extends Seriali
 
 	@Override
 	public void updateR(T object) {
-		final String UPDATE_SQL = getUpdateSql();
+		PropertyDao prDao=getPropertyDao();
+		final String UPDATE_SQL =prDao.getUpdateSql();
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, getUpdateFields());
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, prDao.getFieldsList());
 				getInsertPrepareStatement(ps, object);
 			
 				return ps;
