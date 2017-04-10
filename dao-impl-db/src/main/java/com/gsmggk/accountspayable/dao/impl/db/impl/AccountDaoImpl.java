@@ -88,7 +88,7 @@ public class AccountDaoImpl implements IAccountDao {
 	@Override
 	public List<Account> getAll() {
 		try {
-			List<Account> rs = jdbcTemplate.query("select * from action ", rowMapper);
+			List<Account> rs = jdbcTemplate.query("select * from account ", rowMapper);
 			return rs;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

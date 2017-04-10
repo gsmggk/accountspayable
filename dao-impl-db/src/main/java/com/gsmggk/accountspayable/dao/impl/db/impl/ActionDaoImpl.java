@@ -25,7 +25,7 @@ public class ActionDaoImpl implements IActionDao {
 
 	@Override
 	public Action insert(Action action) {
-		final String INSERT_SQL = "insert into action (action_name) values(?)";
+		final String INSERT_SQL = "insert into action (action_name,duration) values(?,?)";
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -34,6 +34,11 @@ public class ActionDaoImpl implements IActionDao {
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
 				ps.setString(1, action.getActionName());
+				if (action.getDuration() == null) {
+					ps.setNull(2, java.sql.Types.INTEGER);
+				} else {
+					ps.setInt(2, action.getDuration());
+				}
 				return ps;
 			}
 		}, keyHolder);
@@ -55,7 +60,7 @@ public class ActionDaoImpl implements IActionDao {
 
 	@Override
 	public void update(Action action) {
-		final String UPDATE_SQL = "update action set action_name=? where id=?";
+		final String UPDATE_SQL = "update action set action_name=?,duration=? where id=?";
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
@@ -63,7 +68,12 @@ public class ActionDaoImpl implements IActionDao {
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "action_name", "id" });
 				ps.setString(1, action.getActionName());
-				ps.setInt(2, action.getId());
+				if (action.getDuration() == null) {
+					ps.setNull(2, java.sql.Types.INTEGER);
+				} else {
+					ps.setInt(2, action.getDuration());
+				}
+				ps.setInt(3, action.getId());
 				return ps;
 			}
 		});

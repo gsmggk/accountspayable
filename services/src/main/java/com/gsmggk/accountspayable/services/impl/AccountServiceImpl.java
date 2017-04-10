@@ -7,12 +7,16 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao.impl.db.IAccountDao;
+import com.gsmggk.accountspayable.dao.impl.db.IrAccountDao;
 import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.services.IAccountService;
 
 @Service
 public class AccountServiceImpl implements IAccountService {
-
+	// FIXME remove after test
+	@Inject
+	private IrAccountDao accountDaoR;
+	
 	@Inject
 	private IAccountDao accountDao;
 
@@ -46,5 +50,37 @@ public class AccountServiceImpl implements IAccountService {
 		accountDao.delete(account);
 
 	}
+
+	
+	// FIXME remove after test
+	@Override
+	public Account getR(Integer id) {
+		return accountDaoR.readR(id);
+	}
+
+	@Override
+	public void deleteR(Account account) {
+		 accountDaoR.deleteR(account);
+	}
+
+	@Override
+	public List<Account> getAllR() {
+		
+		return accountDaoR.getAllR();
+	}
+
+	@Override
+	public void saveR(Account account) {
+		if (account.getId() == null) {
+
+			accountDaoR.insertR(account);
+		} else {
+
+			accountDaoR.updateR(account);
+		}
+
+		
+	}
+	
 
 }

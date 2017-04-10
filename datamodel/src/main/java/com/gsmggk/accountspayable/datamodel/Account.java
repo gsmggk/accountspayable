@@ -37,4 +37,33 @@ public class Account extends AbstractTable {
 		this.debtorId = debtorId;
 	}
 
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (accountName == null) {
+			if (other.accountName != null)
+				return false;
+		} else if (!accountName.equals(other.accountName))
+			return false;
+		if (debtorId == null) {
+			if (other.debtorId != null)
+				return false;
+		} else if (!debtorId.equals(other.debtorId))
+			return false;
+		if (money == null) {
+			if (other.money != null)
+				return false;
+		} else if (!money.equals(other.money))
+			return false;
+		return true;
+	}
+
 }

@@ -12,6 +12,7 @@ import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
 import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
 import com.gsmggk.accountspayable.dao.impl.db.except.MyBadPasswordException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 
 @Service
@@ -47,8 +48,8 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public void delete(Clerk clerk) {
-		LOGGER.debug("delete clerk");
-		clerkDao.delete(clerk);
+		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}",clerk.getId().toString(),clerk.getClerkLoginName());
+			clerkDao.delete(clerk);
 
 	}
 
@@ -75,5 +76,11 @@ public class ClerkServiceImpl implements IClerkService {
 			throw new MyBadLoginNameException("Login name is invalid.");
 
 		}
+	}
+
+	@Override
+	public void addRole2Clerk(Clerk clerk, Role role) {
+		clerk.setRoleId(role.getId());
+		clerkDao.update(clerk);
 	}
 }
