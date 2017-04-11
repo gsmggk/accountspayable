@@ -9,8 +9,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadPasswordException;
+import com.gsmggk.accountspayable.dao4db.except.MyBadLoginNameException;
+import com.gsmggk.accountspayable.dao4db.except.MyBadPasswordException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 

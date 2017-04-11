@@ -13,15 +13,12 @@
 	    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
 	    http://www.springframework.org/schema/task
 	    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-	<import resource="classpath:services-context.xml" />
-	<bean id="dataSource"
-		class="com.gsmggk.accountspayable.dao.impl.db.util.SchemaNameAwareBasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="schema" value="${test.schema}" />
-	</bean>
+
+
+
+	<import resource="classpath:dao-context.xml" />
+	<context:component-scan base-package="com.gsmggk.accountspayable.services.impl" />
+
+	
 
 </beans>

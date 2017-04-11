@@ -20,9 +20,9 @@
 
 	<modules>
 		<module>datamodel</module>
-		<module>dao-api</module>
-		<module>dao-impl-db</module>
-		<!--module>dao-impl-xml</module -->
+		<module>dao4api</module>
+		<module>dao4db</module>
+		<module>dao4xml</module>
 		<module>services</module>
 		<module>webapp</module>
 	</modules>
@@ -38,18 +38,21 @@
 
 			<dependency>
 				<groupId>com.gsmggk.accountspayable</groupId>
-				<artifactId>dao-api</artifactId>
+				<artifactId>dao4api</artifactId>
 				<version>${common.project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.gsmggk.accountspayable</groupId>
-				<artifactId>dao-impl-db</artifactId>
+				<artifactId>dao4db</artifactId>
 				<version>${common.project.version}</version>
 			</dependency>
 
-			<!--dependency> <groupId>com.gsmggk.accountspayable</groupId> <artifactId>dao-impl-xml</artifactId> 
-				<version>1.0.0</version> </dependency -->
+			<dependency>
+				<groupId>com.gsmggk.accountspayable</groupId>
+				<artifactId>dao4xml</artifactId>
+				<version>${common.project.version}</version>
+			</dependency>
 
 
 			<dependency>
@@ -212,7 +215,9 @@
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>1.9.13</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+			
+			<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream 
+			For deploy XML file-->
 			<dependency>
 				<groupId>com.thoughtworks.xstream</groupId>
 				<artifactId>xstream</artifactId>

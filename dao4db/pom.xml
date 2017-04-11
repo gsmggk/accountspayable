@@ -6,24 +6,34 @@
 		<artifactId>parent-project</artifactId>
 		<version>1.0.1</version>
 	</parent>
-
-	<artifactId>services</artifactId>
+	<artifactId>dao4db</artifactId>
 	<packaging>jar</packaging>
+
 
 	<dependencies>
 		<dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
-			<artifactId>dao4db</artifactId>
+			<artifactId>dao4api</artifactId>
 		</dependency>
+		
+		
+		
+
+		<!-- Add external dependency for db connect -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
 		</dependency>
 
-	</dependencies>
 
+
+	</dependencies>
 </project>

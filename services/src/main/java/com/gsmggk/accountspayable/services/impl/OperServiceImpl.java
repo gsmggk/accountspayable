@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao.impl.db.IOperDao;
+import com.gsmggk.accountspayable.dao4db.IOperDao;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.services.IOperService;
 
