@@ -8,12 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao4db.IClerkDao;
-import com.gsmggk.accountspayable.dao4db.except.MyBadLoginNameException;
-import com.gsmggk.accountspayable.dao4db.except.MyBadPasswordException;
+import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 
 @Service
 public class ClerkServiceImpl implements IClerkService {

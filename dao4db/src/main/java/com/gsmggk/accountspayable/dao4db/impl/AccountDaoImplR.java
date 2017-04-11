@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.gsmggk.accountspayable.dao4db.IrAccountDao;
+import com.gsmggk.accountspayable.dao4api.IrAccountDao;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Account;

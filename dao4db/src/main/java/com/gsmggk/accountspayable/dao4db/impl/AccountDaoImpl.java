@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.gsmggk.accountspayable.dao4db.IAccountDao;
+import com.gsmggk.accountspayable.dao4api.IAccountDao;
 import com.gsmggk.accountspayable.datamodel.Account;
 
 @Repository

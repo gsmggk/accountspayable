@@ -10,12 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Account;
 
-@Transactional
+
 public class AccountParaTest extends AbstractTest {
 
 	@Inject

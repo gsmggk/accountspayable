@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db;
+package com.gsmggk.accountspayable.dao4api;
 
 import java.io.Serializable;
 import java.util.List;

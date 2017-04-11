@@ -13,7 +13,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
+		
+			<!-- Switch dao  -->
+			<!--  
 			<artifactId>dao4db</artifactId>
+			-->
+			
+			<artifactId>dao4xml</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
