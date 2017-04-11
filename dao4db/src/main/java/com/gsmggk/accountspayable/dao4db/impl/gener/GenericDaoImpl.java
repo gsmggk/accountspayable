@@ -1,6 +1,5 @@
 package com.gsmggk.accountspayable.dao4db.impl.gener;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,14 +11,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4db.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
-import com.gsmggk.accountspayable.datamodel.Account;
 
 @Repository
 public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {

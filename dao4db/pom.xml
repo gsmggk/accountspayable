@@ -15,21 +15,9 @@
 			<groupId>com.gsmggk.accountspayable</groupId>
 			<artifactId>dao4api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.gsmggk.accountspayable</groupId>
-			<artifactId>datamodel</artifactId>
-		</dependency>
-
-		<!-- Add external dependency for spring -->
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-		</dependency>
+		
+		
+		
 
 		<!-- Add external dependency for db connect -->
 		<dependency>
