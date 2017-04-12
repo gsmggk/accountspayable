@@ -20,4 +20,10 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 		return "oper.xml";
 	}
 
+	@Override
+	public void insertDetal(Oper oper) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -24,11 +24,11 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
-	public abstract BeanPropertyRowMapper<T> getRowMapper();
+	protected abstract BeanPropertyRowMapper<T> getRowMapper();
 
-	public abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
+	protected abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
 
-	public abstract PropertyDao getPropertyDao();
+	protected abstract PropertyDao getPropertyDao();
 
 	@Override
 	public T read(Integer id) {

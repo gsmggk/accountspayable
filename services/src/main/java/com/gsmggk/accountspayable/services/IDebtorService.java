@@ -12,7 +12,7 @@ public interface IDebtorService {
 	List<Debtor> getAll();
 
 	Debtor get(Integer id);
-
 	
 	void delete(Debtor debtor);
+	
 }
