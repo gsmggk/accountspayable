@@ -1,19 +1,10 @@
-package com.gsmggk.accountspayable.dao4db;
+package com.gsmggk.accountspayable.dao4api;
 
-import java.util.List;
-
+import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
-public interface IClerkDao {
-	Clerk insert(Clerk clerk);
-
-	Clerk read(Integer id);
-
-	void update(Clerk clerk);
-
-	void delete(Clerk clerk);
-
-	List<Clerk> getAll();
+public interface IClerkDao  extends IGenericDao<Clerk>{
+	
 
 	/**
 	 * query for Clerk with same login name as <b>login</b>

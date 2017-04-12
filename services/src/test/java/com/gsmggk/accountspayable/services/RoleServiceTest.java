@@ -5,12 +5,11 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Role;
 
-@Transactional
+//@Transactional
 public class RoleServiceTest extends AbstractTest {
 	@Inject
 	private IRoleService roleService;

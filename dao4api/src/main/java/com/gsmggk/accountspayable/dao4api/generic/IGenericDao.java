@@ -1,6 +1,5 @@
-package com.gsmggk.accountspayable.dao4db;
+package com.gsmggk.accountspayable.dao4api.generic;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,14 +12,14 @@ import java.util.List;
  */
 public interface IGenericDao<T> {
 
-	T readR(Integer id);
+	T read(Integer id);
 
-	void deleteR(T object);
+	void delete(T object);
 
-	List<T> getAllR();
+	List<T> getAll();
 
-	T insertR(T object);
+	T insert(T object);
 
-	void updateR(T object);
+	void update(T object);
 
 }

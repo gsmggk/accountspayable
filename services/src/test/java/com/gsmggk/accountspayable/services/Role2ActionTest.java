@@ -7,12 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 
-@Transactional
+
 public class Role2ActionTest extends AbstractTest {
 	@Inject
 	private IRoleService roleService;

@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db.except;
+package com.gsmggk.accountspayable.services.impl.exceptions;
 
 public class MyBadLoginNameException extends IllegalArgumentException{
 
