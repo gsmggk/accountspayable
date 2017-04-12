@@ -16,16 +16,7 @@ public interface IAccountService {
 	
 	void delete(Account account);
 	
-	//FIXME remove after test
-	Account getR(Integer id);
-	
-	
-	void deleteR(Account account);
-	
-	List<Account> getAllR();
-	
-	
-	void saveR(Account account);
+
 
 	
 }

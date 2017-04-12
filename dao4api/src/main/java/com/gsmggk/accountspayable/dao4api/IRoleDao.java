@@ -2,20 +2,14 @@ package com.gsmggk.accountspayable.dao4api;
 
 import java.util.List;
 
+import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 
-public interface IRoleDao {
 
-	Role insert(Role role);
+public interface IRoleDao extends IGenericDao<Role>{
 
-	Role read(Integer id);
 
-	void update(Role role);
-
-	void delete(Role role);
-
-	List<Role> getAll();
 
 	List<Action> getActions4Role(Integer roleId);
 

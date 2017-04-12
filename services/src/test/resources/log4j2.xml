@@ -15,7 +15,7 @@
 	</Appenders>
 
 	<Loggers>
-		<Root level="error" >
+		<Root level="debug" >
 			<AppenderRef ref="Console" />
 		</Root>
 	<!-- свойство name значит полное имя начинается с name -->

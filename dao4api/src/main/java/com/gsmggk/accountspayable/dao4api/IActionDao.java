@@ -1,18 +1,9 @@
 package com.gsmggk.accountspayable.dao4api;
 
-import java.util.List;
-
+import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.Action;
 
-public interface IActionDao {
+public interface IActionDao extends IGenericDao<Action> {
 
-	Action insert(Action action);
-
-	Action read(Integer id);
-
-	void update(Action action);
-
-	void delete(Action action);
-
-	List<Action> getAll();
+	
 }

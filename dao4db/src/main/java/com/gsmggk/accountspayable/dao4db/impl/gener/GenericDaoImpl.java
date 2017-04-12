@@ -14,28 +14,26 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.gsmggk.accountspayable.dao4api.IGenericDao;
+import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
-@Repository
+
 public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
-	
-
-	
 
 	public abstract BeanPropertyRowMapper<T> getRowMapper();
 
 	public abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
 
 	public abstract PropertyDao getPropertyDao();
-	
+
 	@Override
-	public T readR(Integer id) {
-		PropertyDao prDao=getPropertyDao();
-		final String READ_SQL =prDao.getReadSql();
+	public T read(Integer id) {
+		PropertyDao prDao = getPropertyDao();
+		final String READ_SQL = prDao.getReadSql();
 		try {
 			return jdbcTemplate.queryForObject(READ_SQL, new Object[] { id }, getRowMapper());
 		} catch (EmptyResultDataAccessException e) {
@@ -43,14 +41,15 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		}
 	}
 
+	@Transactional
 	@Override
-	public void deleteR(T object) {
+	public void delete(T object) {
 		final String DELETE_SQL = getPropertyDao().getDeleteSql();
 		jdbcTemplate.update(DELETE_SQL + object.getId());
 	}
 
 	@Override
-	public List<T> getAllR() {
+	public List<T> getAll() {
 		final String SELECT_ALL_SQL = getPropertyDao().getSelectSql();
 		try {
 			List<T> rs = jdbcTemplate.query(SELECT_ALL_SQL, getRowMapper());
@@ -60,9 +59,10 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		}
 	}
 
+	@Transactional
 	@Override
-	public T insertR(T object) {
-		final String INSERT_SQL =getPropertyDao().getInsertSql();
+	public T insert(T object) {
+		final String INSERT_SQL = getPropertyDao().getInsertSql();
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -72,7 +72,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
 				getInsertPrepareStatement(ps, object);
-		
+
 				return ps;
 
 			}
@@ -87,10 +87,11 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 	}
 
+	@Transactional
 	@Override
-	public void updateR(T object) {
-		PropertyDao prDao=getPropertyDao();
-		final String UPDATE_SQL =prDao.getUpdateSql();
+	public void update(T object) {
+		PropertyDao prDao = getPropertyDao();
+		final String UPDATE_SQL = prDao.getUpdateSql();
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
@@ -98,7 +99,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, prDao.getFieldsList());
 				getInsertPrepareStatement(ps, object);
-			
+
 				return ps;
 			}
 		});
