@@ -2,10 +2,7 @@ package com.gsmggk.accountspayable.services.impl.exceptions;
 
 public class MyBadLoginNameException extends IllegalArgumentException{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	
 
 	public MyBadLoginNameException() {
 		super();

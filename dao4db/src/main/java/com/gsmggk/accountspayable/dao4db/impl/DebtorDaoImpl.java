@@ -17,6 +17,13 @@ import com.gsmggk.accountspayable.datamodel.Debtor;
 
 @Repository
 public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao {
+	private String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
+			"other" };
+	private String readSql = "select * from debtor where id = ? ";
+	private String deleteSql = "delete from debtor where id=";
+	private String selectSql = "select * from debtor";
+	private String insertSql = "insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)";
+	private String updateSql = "update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Debtor> getRowMapper() {
@@ -37,36 +44,49 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 				ps.setString(i++, debtor.getJobe());
 				ps.setString(i++, debtor.getFamily());
 				ps.setString(i++, debtor.getOther());
-				
-				
+
 				ps.setInt(i++, debtor.getId());
-				
+
 			}
 
 		}
 
 		catch (Exception e) {
 			// FIXME это не тот уровень исключения хотя и работает
-	//		e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 	}
-	
+
 	@Override
 	public PropertyDao getPropertyDao() {
 		PropertyDao prDao = new PropertyDao();
-		String[] fieldsList = new String[] { "short_name", "full_name", "address","phones","jobe","family","other" };
 		prDao.setFieldsList(fieldsList);
-		prDao.setReadSql("select * from debtor where id = ? ");
-		prDao.setDeleteSql("delete from debtor where id=");
-		prDao.setSelectSql("select * from debtor");
-		String insertSql = String.format("insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)", (Object[]) fieldsList);
+		prDao.setReadSql(readSql);
+		prDao.setDeleteSql(deleteSql);
+		prDao.setSelectSql(selectSql);
+		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format("update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?", (Object[]) fieldsList);
+		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 
 	}
-	
+
+	@Override
+	public List<Debtor> getAllocatedDebtor(Boolean allocated)
+
+	{
+		selectSql = "select "
+				+ "d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o "
+				+ "join debtor as d on(o.debtor_id=d.id) " + "WHERE o.action_id=9 and %s EXISTS"
+				+ "(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)";
+		String prefix = "";
+		if (!allocated) {
+			prefix = "NOT";
+		}
+		selectSql = String.format(selectSql, prefix);
+		return super.getAll();
+	}
 
 }

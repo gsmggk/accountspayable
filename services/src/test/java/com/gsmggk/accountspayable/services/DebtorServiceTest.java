@@ -1,8 +1,11 @@
 package com.gsmggk.accountspayable.services;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +28,12 @@ public class DebtorServiceTest extends AbstractTest {
 		model = new Debtor();
 		model.setShortName("Тестовый №15");
 		model.setFullName("Петрученко Игнат Варфоломеевич");
-      CurrentLayer.setClerkId(15);
-      
+		CurrentLayer.setClerkId(15);
+
 	}
 
 	@Test
-	// @Ingore
+	 @Ignore
 	@Rollback(true)
 	public void insertDebtorTest() {
 		Assert.isNull(model.getId(), "insertDebtorTest- debtor.id before test is not null");
@@ -38,6 +41,11 @@ public class DebtorServiceTest extends AbstractTest {
 		LOGGER.debug("insert debtor: {}", model.getId());
 		Assert.isTrue(model.getId() != null, "insertDebtorTest- debtor.id after test is  null");
 	}
-	
-	
+
+	@Test
+	public void getNotDistributeDebtorsTest() {
+		List<Debtor> debtors = service.getAllocatedDebtor(false);
+		System.out.println(debtors);
+	}
+
 }

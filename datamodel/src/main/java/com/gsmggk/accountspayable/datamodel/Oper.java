@@ -1,12 +1,13 @@
 package com.gsmggk.accountspayable.datamodel;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Oper extends AbstractTable {
 	private Integer debtorId;
 	private Integer clerkId;
 	private Integer actionId;
-	private Date actionDate;
+	private Timestamp actionDate;
 	private Date controlDate;
 	private String operDesc;
 
@@ -40,11 +41,11 @@ public class Oper extends AbstractTable {
 		this.actionId = actionId;
 	}
 
-	public Date getActionDate() {
+	public Timestamp getActionDate() {
 		return actionDate;
 	}
 
-	public void setActionDate(Date actionDate) {
+	public void setActionDate(Timestamp actionDate) {
 		this.actionDate = actionDate;
 	}
 

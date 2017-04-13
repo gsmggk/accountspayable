@@ -5,6 +5,8 @@ import com.gsmggk.accountspayable.datamodel.Oper;
 
 public interface IOperDao extends IGenericDao<Oper> {
 
-	void insertDetal(Oper oper);
+	
+
+	
 	
 }

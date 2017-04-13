@@ -1,5 +1,6 @@
 package com.gsmggk.accountspayable.services.impl;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
-import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.SystemValue;
 import com.gsmggk.accountspayable.services.IDebtorService;
+import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
@@ -25,12 +26,13 @@ public class DebtorServiceImpl implements IDebtorService {
 	@Inject
 	private IDebtorDao debtorDao;
 	@Inject
-	private IOperDao operDao;
+	private IOperService operService;
 
 	@Transactional
 	@Override
 	public void save(Debtor debtor) {
 		Oper oper = new Oper();
+		Integer clerkId = CurrentLayer.getClerkId();
 		if (debtor.getId() == null) {
 			LOGGER.debug("insert Debtor: " + debtor);
 			debtorDao.insert(debtor);
@@ -38,13 +40,15 @@ public class DebtorServiceImpl implements IDebtorService {
 			oper.setDebtorId(debtor.getId());
 			oper.setActionId(SystemValue.ADD_ACTION.getCode());
 
-			oper.setClerkId(CurrentLayer.getClerkId());
-			operDao.insert(oper);
-			oper.setActionDate(new Date());
-			// Тут впору сделать добавление деталей операции
-			operDao.insertDetal(oper);
-
-			LOGGER.debug("insert Debtor: insert Oper(add debtor) : " + oper);
+			oper.setClerkId(clerkId);
+			oper.setActionDate(new Timestamp(new Date().getTime()));
+			String desc = String.format("Clerk %s do oretation %s for debtor %s", clerkId,
+					SystemValue.ADD_ACTION.toString(), debtor.getShortName());
+			oper.setOperDesc(desc);
+			
+			operService.save(oper);
+		
+		
 
 		} else {
 			LOGGER.debug("update Debtor: " + debtor);
@@ -54,8 +58,7 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public List<Debtor> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+				return debtorDao.getAll();
 	}
 
 	@Override
@@ -70,4 +73,17 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	}
 
+	@Override
+	public List<Debtor> getAllocatedDebtor(Boolean allocated) {
+		
+		return debtorDao.getAllocatedDebtor(allocated);
+	}
+
+	@Override
+	public void allocateDebtor2Clerk(Integer debtorID, Integer clerkId) {
+		// TODO checkAllocated(Integer debtorID, Integer clerkId);
+			// TODO allocate(Integer debtorID, Integer clerkId);
+	}
+
+	
 }

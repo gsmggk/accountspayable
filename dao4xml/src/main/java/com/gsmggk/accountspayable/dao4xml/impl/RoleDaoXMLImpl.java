@@ -22,31 +22,29 @@ public class RoleDaoXMLImpl extends GenericDaoXMLImpl<Role> implements IRoleDao 
 
 	@Override
 	public List<Action> getActions4Role(Integer roleId) {
-		// TODO Auto-generated method stub
-		return null;
+		 throw new NotSupportedMethodException();
 	}
 
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
-		// TODO Auto-generated method stub
-		return null;
+		 throw new NotSupportedMethodException();
 	}
 
 	@Override
 	public void addAction2Role(Integer actionId, Integer roleId) {
-		// TODO Auto-generated method stub
+		 throw new NotSupportedMethodException();
 		
 	}
 
 	@Override
 	public void deleteAction2Role(Integer actionId, Integer roleId) {
-		// TODO Auto-generated method stub
+		 throw new NotSupportedMethodException();
 		
 	}
 
 	@Override
 	public void getPropert4Update(Role modelItem, Role object) {
-		// TODO Auto-generated method stub
+		 throw new NotSupportedMethodException();
 		
 	}
 
