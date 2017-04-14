@@ -22,14 +22,13 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
-	private  String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
-	private  String readSql="select * from oper where id = ? ";
-	private  String deleteSql="delete from oper where id=";
-	private  String selectSql="select * from oper";
-	private  String insertSql="insert into oper (%s,%s,%s) values(?,?,?)";
-	private  String updateSql="update oper set %s=?, %s=?, %s=? where id=?";
-	
-	
+	private String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
+	private String readSql = "select * from oper where id = ? ";
+	private String deleteSql = "delete from oper where id=";
+	private String selectSql = "select * from oper";
+	private String insertSql = "insert into oper (%s,%s,%s) values(?,?,?)";
+	private String updateSql = "update oper set %s=?, %s=?, %s=? where id=?";
+
 	@Override
 	public BeanPropertyRowMapper<Oper> getRowMapper() {
 		// FIXME Тут не все в порядке может быть
@@ -39,8 +38,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 
 	@Override
 	public void getInsertPrepareStatement(PreparedStatement ps, Oper object) {
-		
-		
+
 		try {
 			{
 				int i = 1;
@@ -71,23 +69,40 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		return prDao;
 	}
 
-
 	@Transactional
 	@Override
 	public Oper insert(Oper object) {
-		
+
 		super.insert(object);
-		
+
 		insertDetale(object);
-		
-		
+
 		return object;
 	}
 
 	private void insertDetale(Oper newOper) {
-     String sql=String.format("insert into oper_detail (%s,%s,%s,%s) values(?,?,?,?)",(Object[])new String[] {"oper_id","action_date","control_date","oper_desc"});
-	jdbcTemplate.update(sql, newOper.getId(),newOper.getActionDate(),newOper.getControlDate(),newOper.getOperDesc());
-		
+		String sql = String.format("insert into oper_detail (%s,%s,%s,%s) values(?,?,?,?)",
+				(Object[]) new String[] { "oper_id", "action_date", "control_date", "oper_desc" });
+		jdbcTemplate.update(sql, newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),
+				newOper.getOperDesc());
+
+	}
+
+	@Override
+	public Boolean checkAllocated(Integer debtorID, Integer clerkId) {
+		readSql = "select count(*) from oper as o where o.action_id=11 and o.debtor_id=? and o.clerk_id=? ";
+		Integer res = super.read(new Object[] { debtorID, clerkId }, Integer.class);
+		if (res == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void allocate(Integer debtorID, Integer clerkId) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

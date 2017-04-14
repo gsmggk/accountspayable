@@ -26,7 +26,7 @@ public interface IDebtorService {
 	List<Debtor> getAllocatedDebtor(Boolean allocated);
 	
 	
+	List<Debtor> getDebtor4Clerk(Integer clerkId);
 	
-	void allocateDebtor2Clerk(Integer debtorID,Integer clerkId);
 
 }

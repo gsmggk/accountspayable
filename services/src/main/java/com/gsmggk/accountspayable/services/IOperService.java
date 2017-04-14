@@ -17,4 +17,14 @@ public interface IOperService {
 
 	
 	void delete(Oper oper);
+	
+	
+	
+	/**
+	 * Check debtor allocated to clerk.
+	 *Allocate if not.
+	 * @param debtorID debtor id
+	 * @param clerkId clerk id
+	 */
+	void allocateDebtor2Clerk(Integer debtorID,Integer clerkId);
 }

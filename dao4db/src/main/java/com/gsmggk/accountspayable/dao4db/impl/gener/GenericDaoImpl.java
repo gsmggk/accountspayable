@@ -40,7 +40,16 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			return null;
 		}
 	}
-
+	@Override
+	public <R> R read(Object[] objects,Class<R> clazzz) {
+		PropertyDao prDao = getPropertyDao();
+		final String READ_SQL = prDao.getReadSql();
+		try {
+			return jdbcTemplate.queryForObject(READ_SQL, objects,clazzz);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 	@Transactional
 	@Override
 	public void delete(T object) {

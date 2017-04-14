@@ -5,8 +5,21 @@ import com.gsmggk.accountspayable.datamodel.Oper;
 
 public interface IOperDao extends IGenericDao<Oper> {
 
-	
+	/**
+	 * Check debtor allocated to clerk.
+	 * Prevent double allocation link.
+	 * @param debtorID
+	 * @param clerkId
+	 * @return true - allocated <br>
+	 * false - not
+	 */
+	Boolean checkAllocated(Integer debtorID, Integer clerkId);
 
 	
-	
+	/**
+	 * Create operation <b>allocate</b> <code>debtor</code> to <code>clerk</code>
+	 * @param debtorID
+	 * @param clerkId
+	 */
+	void allocate( Integer debtorID, Integer clerkId);
 }

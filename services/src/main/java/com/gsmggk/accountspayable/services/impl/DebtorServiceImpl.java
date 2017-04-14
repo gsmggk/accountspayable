@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
-import com.gsmggk.accountspayable.datamodel.SystemValue;
+import com.gsmggk.accountspayable.datamodel.DefaultValue;
 import com.gsmggk.accountspayable.services.IDebtorService;
 import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
@@ -38,12 +38,12 @@ public class DebtorServiceImpl implements IDebtorService {
 			debtorDao.insert(debtor);
 
 			oper.setDebtorId(debtor.getId());
-			oper.setActionId(SystemValue.ADD_ACTION.getCode());
+			oper.setActionId(DefaultValue.ADD_ACTION.getCode());
 
 			oper.setClerkId(clerkId);
 			oper.setActionDate(new Timestamp(new Date().getTime()));
 			String desc = String.format("Clerk %s do oretation %s for debtor %s", clerkId,
-					SystemValue.ADD_ACTION.toString(), debtor.getShortName());
+					DefaultValue.ADD_ACTION.toString(), debtor.getShortName());
 			oper.setOperDesc(desc);
 			
 			operService.save(oper);
@@ -80,10 +80,12 @@ public class DebtorServiceImpl implements IDebtorService {
 	}
 
 	@Override
-	public void allocateDebtor2Clerk(Integer debtorID, Integer clerkId) {
-		// TODO checkAllocated(Integer debtorID, Integer clerkId);
-			// TODO allocate(Integer debtorID, Integer clerkId);
+	public List<Debtor> getDebtor4Clerk(Integer clerkId) {
+		//debtorDao.read(objects, clazzz)
+		return null;
 	}
+
+	
 
 	
 }
