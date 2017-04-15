@@ -54,7 +54,7 @@ public class ClerkServiceImpl implements IClerkService {
 	}
 
 	@Override
-	public Clerk loginCheck(String login, String password) {
+	public Clerk loginCheck(String login, String password) throws IllegalArgumentException {
 		if (login == null) {
 			LOGGER.warn("login is null");
 			throw new IllegalArgumentException();

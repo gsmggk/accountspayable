@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 
 public interface IClerkService {
 
@@ -13,7 +14,6 @@ public interface IClerkService {
 
 	Clerk get(Integer id);
 
-	
 	void delete(Clerk clerk);
 
 	/**
@@ -24,10 +24,10 @@ public interface IClerkService {
 	 * @param password
 	 *            -password
 	 * @return return <b>Clerk</b> if success or generate exceptions
+	 * 
 	 */
-	Clerk loginCheck(String login, String password);
+	Clerk loginCheck(String login, String password) throws IllegalArgumentException;
 
-	
 	void addRole2Clerk(Clerk clerk, Role role);
 
 }

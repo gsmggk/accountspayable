@@ -10,9 +10,11 @@ import java.util.List;
  * @param <T>
  *            - datamodel name
  */
-public interface IGenericDao<T> {
+public interface  IGenericDao<T> {
 
 	T read(Integer id);
+	
+	<R> R read(Object[] objects,Class<R> clazzz);
 
 	void delete(T object);
 

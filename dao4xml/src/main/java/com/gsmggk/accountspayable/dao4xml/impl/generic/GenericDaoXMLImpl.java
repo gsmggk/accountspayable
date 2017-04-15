@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
+import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.wrapper.XmlModelWrapper;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 import com.thoughtworks.xstream.XStream;
@@ -110,6 +111,11 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 
 		writeNewData(file, wrapper);
 
+	}
+
+	@Override
+	public <R> R read(Object[] objects, Class<R> clazzz) {
+		throw new NotSupportedMethodException();
 	}
 
 }

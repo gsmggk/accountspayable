@@ -24,11 +24,11 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
-	public abstract BeanPropertyRowMapper<T> getRowMapper();
+	protected abstract BeanPropertyRowMapper<T> getRowMapper();
 
-	public abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
+	protected abstract void getInsertPrepareStatement(PreparedStatement ps, T object);
 
-	public abstract PropertyDao getPropertyDao();
+	protected abstract PropertyDao getPropertyDao();
 
 	@Override
 	public T read(Integer id) {
@@ -40,7 +40,16 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			return null;
 		}
 	}
-
+	@Override
+	public <R> R read(Object[] objects,Class<R> clazzz) {
+		PropertyDao prDao = getPropertyDao();
+		final String READ_SQL = prDao.getReadSql();
+		try {
+			return jdbcTemplate.queryForObject(READ_SQL, objects,clazzz);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 	@Transactional
 	@Override
 	public void delete(T object) {

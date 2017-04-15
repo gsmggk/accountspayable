@@ -95,4 +95,11 @@ public class AccountDaoImpl implements IAccountDao {
 		}
 	}
 
+	@Override
+	public <R> R read(Object[] objects, Class<R> clazzz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }
