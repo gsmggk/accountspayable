@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
+import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
-import com.gsmggk.accountspayable.datamodel.DefaultValue;
+import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
+import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.IDebtorService;
 import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
@@ -26,66 +28,64 @@ public class DebtorServiceImpl implements IDebtorService {
 	@Inject
 	private IDebtorDao debtorDao;
 	@Inject
-	private IOperService operService;
+	private IClerkService clerkService;
 
-	@Transactional
 	@Override
 	public void save(Debtor debtor) {
-		Oper oper = new Oper();
+
 		Integer clerkId = CurrentLayer.getClerkId();
+		Clerk clerk = new Clerk();
+		clerk = clerkService.get(clerkId);
+		Oper oper = new Oper();
+		oper.setActionDate(new Timestamp(new Date().getTime()));
+
+		oper.setClerkId(clerkId);
+
 		if (debtor.getId() == null) {
-			LOGGER.debug("insert Debtor: " + debtor);
-			debtorDao.insert(debtor);
-
-			oper.setDebtorId(debtor.getId());
+			LOGGER.info("Create Debtor: " + debtor);
 			oper.setActionId(DefaultValue.ADD_ACTION.getCode());
-
-			oper.setClerkId(clerkId);
-			oper.setActionDate(new Timestamp(new Date().getTime()));
-			String desc = String.format("Clerk %s do oretation %s for debtor %s", clerkId,
-					DefaultValue.ADD_ACTION.toString(), debtor.getShortName());
+			String desc = String.format("Клерк %s ДОБАВИЛ должника %s", clerk.getClerkFullName(),
+					debtor.getShortName());
 			oper.setOperDesc(desc);
-			
-			operService.save(oper);
-		
-		
+
+			debtorDao.creareDebtor(debtor, oper);
 
 		} else {
 			LOGGER.debug("update Debtor: " + debtor);
+
 			debtorDao.update(debtor);
 		}
 	}
 
 	@Override
 	public List<Debtor> getAll() {
-				return debtorDao.getAll();
+		return debtorDao.getAll();
 	}
 
 	@Override
 	public Debtor get(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return debtorDao.read(id);
 	}
 
 	@Override
 	public void delete(Debtor debtor) {
-		// TODO Auto-generated method stub
+		debtorDao.update(debtor);
 
 	}
 
 	@Override
 	public List<Debtor> getAllocatedDebtor(Boolean allocated) {
-		
+
 		return debtorDao.getAllocatedDebtor(allocated);
 	}
 
 	@Override
-	public List<Debtor> getDebtor4Clerk(Integer clerkId) {
-		//debtorDao.read(objects, clazzz)
+	public List<Debtor> getDebtors4Clerk(Integer clerkId) {
+
+		// debtorDao.search(bookFilter)
+		
 		return null;
 	}
 
-	
-
-	
 }

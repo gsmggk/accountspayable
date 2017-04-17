@@ -5,18 +5,27 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
+import com.gsmggk.accountspayable.dao4api.IOperDao;
+import com.gsmggk.accountspayable.dao4api.filter.DebtorFilter;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Debtor;
+import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository
 public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DebtorDaoImpl.class);
+	@Inject
+	private IOperDao operDao;
+	
 	private String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
 			"other" };
 	private String readSql = "select * from debtor where id = ? ";
@@ -87,6 +96,29 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		}
 		selectSql = String.format(selectSql, prefix);
 		return super.getAll();
+	}
+
+	@Override
+	public List<Debtor> search(DebtorFilter debtorFilter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	@Override
+	public Debtor creareDebtor(Debtor debtor, Oper oper) {
+		try {
+			super.insert(debtor);
+		} catch (DuplicateKeyException e) {
+			LOGGER.error("Create Debtor error:",e);
+			throw e;
+		}
+		
+		oper.setDebtorId(debtor.getId());
+		
+		operDao.insert(oper);	
+		
+		return debtor;
 	}
 
 }

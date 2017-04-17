@@ -1,17 +1,99 @@
 package com.gsmggk.accountspayable.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
-public class OperServiceTest extends AbstractTest {
-	
+import com.gsmggk.accountspayable.datamodel.Action;
+import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Debtor;
+import com.gsmggk.accountspayable.datamodel.Oper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath:services-context.xml")
+public class OperServiceTest {
+
 	@Inject
 	private IOperService operService;
-	
+	@Inject
+	private IClerkService clerkService;
+	@Inject
+	private IDebtorService debtorService;
+	@Inject
+	private IActionService actionService;
+	@Inject
+	private IRoleService roleService;
+
 	@Test
-	public void allocateDebtor2ClerkTest(){
+	//@Ignore
+	public void allocateDebtor2ClerkTest() {
+
+		String login = "Boss";
+		String password = "111111";
+		clerkService.loginCheck(login, password);
+		// TODO test it
+		operService.getAll();
 		operService.allocateDebtor2Clerk(4, 91);
+		operService.getAll();
+	}
+
+	@Test
+	// @Ignore
+	public void addOperTest() {
+		// log in
+		String login = "user1";
+		String password = "111111";
+		Clerk clerk = new Clerk();
+		clerk = clerkService.loginCheck(login, password);
+		Assert.notNull(clerk, "clerk -after login not null");
+		Assert.isTrue(clerk.getClerkLoginName().equals(login),"login name is same");
+
+		// give debtor
+		Integer debtorId = 5;
+		Debtor debtor = new Debtor();
+		debtor = debtorService.get(debtorId);
+		Assert.notNull(debtor, "debtor -must be not null");
+		Assert.isTrue(debtor.getId() == debtorId, "Debtor id must be 14");
+
+		// give action
+		Integer actionId = 18;
+		Action action = new Action();
+		List<Action> actions = roleService.getActions4Role(clerk.getRoleId());
+		action = actionService.get(actionId);
+		Integer duration = action.getDuration();
+
+		// define oper
+		//
+		Oper oper = new Oper();
+		String descr = "Сказал что будет брать кредит для рефинансирования";
+		oper.setDebtorId(debtor.getId());
+		oper.setActionId(action.getId());
+		oper.setOperDesc(descr);
+
+		// add control date
+		Date dt = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(dt);
+		c.add(Calendar.DATE, duration);
+		dt = c.getTime();
+
+		oper.setControlDate(dt);
+
+		operService.addOper(oper);
+
 	}
 
 }

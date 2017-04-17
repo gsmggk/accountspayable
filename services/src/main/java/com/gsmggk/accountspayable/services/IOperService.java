@@ -26,5 +26,12 @@ public interface IOperService {
 	 * @param debtorID debtor id
 	 * @param clerkId clerk id
 	 */
-	void allocateDebtor2Clerk(Integer debtorID,Integer clerkId);
+	void allocateDebtor2Clerk(Integer debtorId,Integer clerkId);
+	
+
+	/**
+	 * Add oper
+	 * @param oper -oper detail
+	 */
+	void addOper(Oper oper);
 }

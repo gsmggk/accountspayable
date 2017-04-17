@@ -1,101 +1,82 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
+import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
 @Repository
-public class ClerkDaoImpl implements IClerkDao {
+public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClerkDaoImpl.class);
+
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
+	private String[] fieldsList = new String[] { "clerk_login_name", "password", "role_id", "clerk_full_name" };
+	private String readSql = "select * from clerk where id = ? ";
+	private String deleteSql = "delete from clerk where id=";
+	private String selectSql = "select * from clerk";
+	private String insertSql = "insert into clerk (%s,%s,%s,%s) values(?,?,?,?)";
+	private String updateSql = "update clerk set %s=?, %s=?, %s=?, %s=?  where id=?";
+
 	@Override
-	public Clerk insert(Clerk clerk) {
-
-		final String INSERT_SQL = "insert into clerk (clerk_login_name,password,role_id,clerk_full_name) values(?,?,?,?)";
-
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, clerk.getClerkLoginName());
-				ps.setString(2, clerk.getPassword());
-		// FIXME roleId can be not null
-				ps.setNull(3, java.sql.Types.INTEGER);
-				ps.setString(4, clerk.getClerkFullName());
-				return ps;
-			}
-		}, keyHolder);
-
-		clerk.setId(keyHolder.getKey().intValue());
-
-		return clerk;
+	public BeanPropertyRowMapper<Clerk> getRowMapper() {
+		BeanPropertyRowMapper<Clerk> rowMapper = new BeanPropertyRowMapper<Clerk>(Clerk.class);
+		return rowMapper;
 	}
 
 	@Override
-	public Clerk read(Integer id) {
+	public void getInsertPrepareStatement(PreparedStatement ps, Clerk clerk) {
 		try {
-			return jdbcTemplate.queryForObject("select * from clerk where id = ? ", new Object[] { id },
-					new BeanPropertyRowMapper<Clerk>(Clerk.class));
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
+			{
+				int i = 1;
+				ps.setString(i++, clerk.getClerkLoginName());
+				ps.setString(i++, clerk.getPassword());
+				if (clerk.getRoleId() == null) {
+					ps.setNull(i++, java.sql.Types.INTEGER);
+				} else {
+					ps.setInt(i++, clerk.getRoleId());
+				}
+				;
 
-	@Override
-	public void update(Clerk clerk) {
+				ps.setString(i++, clerk.getClerkFullName());
 
-		final String UPDATE_SQL = "update clerk set" + " clerk_login_name=?," + "password=?," + "role_id=?,"
-				+ "clerk_full_name=?" + " where id=?";
+				ps.setInt(i++, clerk.getId());
 
-		jdbcTemplate.update(new PreparedStatementCreator() {
-
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL,
-						new String[] { "clerk_login_name", "password", "role_id", "clerk_full_name", "id" });
-				ps.setString(1, clerk.getClerkLoginName());
-				ps.setString(2, clerk.getPassword());
-				ps.setInt(3, clerk.getRoleId());
-				ps.setString(4, clerk.getClerkFullName());
-				ps.setInt(5, clerk.getId());
-				return ps;
 			}
-		});
 
-	}
-
-	@Override
-	public void delete(Clerk clerk) {
-		final String DELETE_SQL = "delete from clerk where id=";
-		jdbcTemplate.update(DELETE_SQL + clerk.getId());
-
-	}
-
-	@Override
-	public List<Clerk> getAll() {
-		try {
-			List<Clerk> rs = jdbcTemplate.query("select * from clerk ", new BeanPropertyRowMapper<Clerk>(Clerk.class));
-			return rs;
-		} catch (EmptyResultDataAccessException e) {
-			return null;
 		}
+
+		catch (Exception e) {
+			// FIXME это не тот уровень исключения хотя и работает
+			// e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public PropertyDao getPropertyDao() {
+		PropertyDao prDao = new PropertyDao();
+		prDao.setFieldsList(fieldsList);
+		prDao.setReadSql(readSql);
+		prDao.setDeleteSql(deleteSql);
+		prDao.setSelectSql(selectSql);
+		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		prDao.setInsertSql(insertSql);
+		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		prDao.setUpdateSql(updateSql);
+		return prDao;
+
 	}
 
 	@Override
@@ -106,6 +87,7 @@ public class ClerkDaoImpl implements IClerkDao {
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
+
 	}
 
 	@Override

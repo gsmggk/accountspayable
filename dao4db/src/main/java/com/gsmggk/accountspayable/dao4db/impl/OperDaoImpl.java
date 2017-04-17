@@ -1,14 +1,12 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,7 @@ import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository
 public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperDaoImpl.class);
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 	private String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
@@ -72,12 +70,23 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	@Transactional
 	@Override
 	public Oper insert(Oper object) {
+		try {
+			super.insert(object);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("Add oper error:", e);
+			throw e;
+		}
+		try {
+			insertDetale(object);
+		} catch (Exception e) {
 
-		super.insert(object);
-
-		insertDetale(object);
-
+			e.printStackTrace();
+			LOGGER.error("Add oper detale error:", e);
+			throw e;
+		}
 		return object;
+
 	}
 
 	private void insertDetale(Oper newOper) {

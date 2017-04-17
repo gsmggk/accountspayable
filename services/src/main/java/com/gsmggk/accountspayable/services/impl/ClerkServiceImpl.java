@@ -14,6 +14,7 @@ import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
+import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
 public class ClerkServiceImpl implements IClerkService {
@@ -48,8 +49,8 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public void delete(Clerk clerk) {
-		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}",clerk.getId().toString(),clerk.getClerkLoginName());
-			clerkDao.delete(clerk);
+		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}", clerk.getId().toString(), clerk.getClerkLoginName());
+		clerkDao.delete(clerk);
 
 	}
 
@@ -66,6 +67,9 @@ public class ClerkServiceImpl implements IClerkService {
 			// Check password
 			if (clerk.getPassword().equals(password)) {
 				LOGGER.debug("login is ok");
+				// Write CurrentLayer properties
+				CurrentLayer.setClerkId(clerk.getId());
+				CurrentLayer.setClerkFullName(clerk.getClerkFullName());
 				return clerk;
 			} else {
 				LOGGER.warn("passwor is wrong");

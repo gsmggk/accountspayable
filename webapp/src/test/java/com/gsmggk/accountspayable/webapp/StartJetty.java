@@ -10,6 +10,10 @@ import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use
@@ -17,13 +21,15 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * with jconsole).
  */
 public class StartJetty {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(StartJetty.class);
     /**
      * Main function, starts the jetty server.
      *
      * @param args
      */
     public static void main(String[] args) {
-
+    
         startInstance(8081);
        //  startInstance(8082);
         // startInstance(8083);
@@ -55,9 +61,11 @@ public class StartJetty {
         server.addBean(mBeanContainer);
 
         try {
+        	LOGGER.info("Jetty server start");
             server.start();
             // server.join();
         } catch (Exception e) {
+        	LOGGER.error("Jetty server error:", e.getMessage());
             e.printStackTrace();
             System.exit(100);
         }

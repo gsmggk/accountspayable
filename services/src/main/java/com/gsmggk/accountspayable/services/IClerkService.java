@@ -17,8 +17,8 @@ public interface IClerkService {
 	void delete(Clerk clerk);
 
 	/**
-	 * Try Login to Application
-	 * 
+	 * Try Login to Application.
+	 * And save clerk id, full name into CurrentLayer property.
 	 * @param login
 	 *            -Login name
 	 * @param password

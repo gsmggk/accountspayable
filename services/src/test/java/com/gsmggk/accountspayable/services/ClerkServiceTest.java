@@ -40,7 +40,7 @@ public class ClerkServiceTest extends AbstractTest {
 
 		clerk.setClerkFullName(clerkFullName);
 		clerk.setClerkLoginName(clerkLoginName);
-		// clerk.setPassword();
+		 clerk.setPassword(password);
 
 		clerkFromDb = new Clerk();
 	}
@@ -71,7 +71,7 @@ public class ClerkServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+	//@Ignore
 	@Rollback(true)
 	public void updateTest() {
 		clerkService.save(clerk);
@@ -93,7 +93,7 @@ public class ClerkServiceTest extends AbstractTest {
 
 	@Test
 	@Rollback(true)
-	@Ignore
+//	@Ignore
 	public void deleteTest() {
 		clerkService.save(clerk);
 		Integer savedClerkId = clerk.getId();
