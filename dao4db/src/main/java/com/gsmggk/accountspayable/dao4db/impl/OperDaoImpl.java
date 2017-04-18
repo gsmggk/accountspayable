@@ -18,8 +18,10 @@ import com.gsmggk.accountspayable.datamodel.Oper;
 @Repository
 public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperDaoImpl.class);
+	
 	@Inject
 	private JdbcTemplate jdbcTemplate;
+	
 	private String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
 	private String readSql = "select * from oper where id = ? ";
 	private String deleteSql = "delete from oper where id=";

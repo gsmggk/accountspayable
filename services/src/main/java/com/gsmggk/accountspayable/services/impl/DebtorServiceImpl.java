@@ -83,9 +83,9 @@ public class DebtorServiceImpl implements IDebtorService {
 	@Override
 	public List<Debtor> getDebtors4Clerk(Integer clerkId) {
 
-		// debtorDao.search(bookFilter)
+		Criteria ctireria=new Criteria();
 		
-		return null;
+		return  debtorDao.searchDebtors( ctireria);
 	}
 
 }

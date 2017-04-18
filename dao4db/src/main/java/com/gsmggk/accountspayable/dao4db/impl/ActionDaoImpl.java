@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,88 +18,62 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
+import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
+import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Action;
+import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository
-public class ActionDaoImpl implements IActionDao {
-	@Inject
-	private JdbcTemplate jdbcTemplate;
+public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ActionDaoImpl.class);	
+	
+	private String[] fieldsList = new String[] { "action_name", "duration" };
+	private String readSql = "select * from action where id = ? ";
+	private String deleteSql = "delete from action where id=";
+	private String selectSql = "select * from action";
+	private String insertSql = "insert into action (%s,%s) values(?,?)";
+	private String updateSql = "update action set %s=?, %s=? where id=?";
 
 	@Override
-	public Action insert(Action action) {
-		final String INSERT_SQL = "insert into action (action_name,duration) values(?,?)";
-
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, action.getActionName());
-				if (action.getDuration() == null) {
-					ps.setNull(2, java.sql.Types.INTEGER);
-				} else {
-					ps.setInt(2, action.getDuration());
-				}
-				return ps;
-			}
-		}, keyHolder);
-
-		action.setId(keyHolder.getKey().intValue());
-
-		return action;
+	public BeanPropertyRowMapper<Action> getRowMapper() {
+		// FIXME Тут не все в порядке может быть
+		BeanPropertyRowMapper<Action> rowMapper = new BeanPropertyRowMapper<Action>(Action.class);
+		return rowMapper;
 	}
 
 	@Override
-	public Action read(Integer id) {
+	public void getInsertPrepareStatement(PreparedStatement ps, Action object) {
+
 		try {
-			return jdbcTemplate.queryForObject("select * from action where id = ? ", new Object[] { id },
-					new BeanPropertyRowMapper<Action>(Action.class));
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public void update(Action action) {
-		final String UPDATE_SQL = "update action set action_name=?,duration=? where id=?";
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "action_name", "id" });
-				ps.setString(1, action.getActionName());
-				if (action.getDuration() == null) {
-					ps.setNull(2, java.sql.Types.INTEGER);
-				} else {
-					ps.setInt(2, action.getDuration());
-				}
-				ps.setInt(3, action.getId());
-				return ps;
+			{
+				int i = 1;
+				ps.setString(i++, object.getActionName());
+				ps.setInt(i++, object.getDuration());
+				
+				ps.setInt(i++, object.getId());
 			}
-		});
-
-	}
-
-	@Override
-	public void delete(Action action) {
-		final String DELETE_SQL = "delete from action where id=";
-		jdbcTemplate.update(DELETE_SQL + action.getId());
-
-	}
-
-	@Override
-	public List<Action> getAll() {
-		try {
-			List<Action> rs = jdbcTemplate.query("select * from action ",
-					new BeanPropertyRowMapper<Action>(Action.class));
-			return rs;
-		} catch (EmptyResultDataAccessException e) {
-			return null;
+		} catch (Exception e) {
+			// FIXME это не тот уровень исключения хотя и работает
+			// e.printStackTrace();
 		}
 
 	}
+
+	@Override
+	public PropertyDao getPropertyDao() {
+		PropertyDao prDao = new PropertyDao();
+		prDao.setFieldsList(fieldsList);
+		prDao.setReadSql(readSql);
+		prDao.setDeleteSql(deleteSql);
+		prDao.setSelectSql(selectSql);
+		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		prDao.setInsertSql(insertSql);
+		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		prDao.setUpdateSql(updateSql);
+		return prDao;
+	}
+	
+
 
 	@Override
 	public <R> R read(Object[] objects, Class<R> clazzz) {
