@@ -18,13 +18,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 
 @Repository
 public class RoleDaoImpl implements IRoleDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleDaoImpl.class);
-
+//TODO refactor to generik
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
@@ -68,9 +69,9 @@ public class RoleDaoImpl implements IRoleDao {
 	}
 
 	@Override
-	public void delete(Role role) {
+	public void delete(Integer id) {
 		final String DELETE_SQL = "delete from role where id=";
-		jdbcTemplate.update(DELETE_SQL + role.getId());
+		jdbcTemplate.update(DELETE_SQL + id);
 	}
 
 	@Override
@@ -147,6 +148,9 @@ public class RoleDaoImpl implements IRoleDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
+	
 
 	
 }

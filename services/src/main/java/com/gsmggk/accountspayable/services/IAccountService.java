@@ -17,6 +17,12 @@ public interface IAccountService {
 	void delete(Account account);
 	
 
+	 /**
+	  * Get accounts for debtor with id
+	 * @param  id -  debtor id 
+	 * @return List<Account>
+	 */
+	List<Account> getAccounts4Debtor(Integer debtorId);
 
 	
 }

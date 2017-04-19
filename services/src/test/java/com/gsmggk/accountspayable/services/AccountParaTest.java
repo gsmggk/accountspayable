@@ -19,53 +19,51 @@ public class AccountParaTest extends AbstractTest {
 	@Inject
 	private IAccountService accountService;
 
-	private static Account account;
+	private  Account account;
 	private Account accountAfter;
 
-	@BeforeClass
-	public static void runBeforeTests() {
-		account = new Account();
-		account.setAccountName("Test account para");
-		BigDecimal money = new BigDecimal("1300.25");
-		account.setMoney(money);
-		account.setDebtorId(1);
-
-	}
+	
 
 	@Before
 	public void runBefore() {
+		account = new Account();
+		account.setAccountName("Test account para");
+		BigDecimal money = new BigDecimal("1300.25");
+		account.setSumm(money);
+		account.setDebtorId(1);
 		accountAfter = new Account();
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void readTest() {
 
-		account = accountService.get(3);
+		account = accountService.get(1);
 		Assert.notNull(account, "account after read must be not null");
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@Rollback(true)
 	public void deleteTest() {
-		account = accountService.get(3);
+		account = accountService.get(1);
 
 		accountService.delete(account);
-		account = accountService.get(3);
+		accountAfter = accountService.get(1);
 		System.out.println(account);
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void getAllTest() {
 		List<Account> accounts = accountService.getAll();
 		// TODO доделать тест
 		System.out.println(accounts);
+		Assert.notEmpty(accounts, "List accounts not null");
 
 	}
 
-	// @Ignore
+//	 @Ignore
 	@Test
 	@Rollback(true)
 	public void insertTest() {
@@ -84,20 +82,19 @@ public class AccountParaTest extends AbstractTest {
 	// @Ignore
 	@Rollback(true)
 	public void updateTest() {
+		
+
+		account = accountService.get(1);
+	      
+		account.setSumm(new BigDecimal("1313.11"));
 		accountService.save(account);
-
-		accountAfter = accountService.get(account.getId());
-		System.out.println("u" + accountAfter);
-
-		accountAfter.setMoney(new BigDecimal("1313.11"));
-		accountService.save(accountAfter);
 		accountAfter = accountService.get(account.getId());
 		System.out.println("u" + accountAfter);
 		Assert.notNull(account, "updateTest accont after update must be not null");
 		Assert.notNull(accountAfter, "updateTest accont readed after save update be not null");
-		Assert.isTrue(!accountAfter.equals(account), "updateTest account readed after save must be NOT equal accont");
+		Assert.isTrue(accountAfter.equals(account), "updateTest account readed after save must be NOT equal accont");
 
-		Assert.isTrue(accountAfter.getMoney().equals(new BigDecimal("1313.11")),
+		Assert.isTrue(accountAfter.getSumm().equals(new BigDecimal("1313.11")),
 				"updateTest account readed after save must be  equal accont after correct");
 
 	}

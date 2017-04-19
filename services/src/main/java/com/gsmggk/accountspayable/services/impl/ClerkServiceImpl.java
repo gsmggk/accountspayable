@@ -50,7 +50,7 @@ public class ClerkServiceImpl implements IClerkService {
 	@Override
 	public void delete(Clerk clerk) {
 		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}", clerk.getId().toString(), clerk.getClerkLoginName());
-		clerkDao.delete(clerk);
+		clerkDao.delete(clerk.getId());
 
 	}
 

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4api.filter.Filter;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
@@ -82,10 +84,17 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public List<Debtor> getDebtors4Clerk(Integer clerkId) {
-
-		Criteria ctireria=new Criteria();
+     Criteria criteria=new Criteria();
+     Filter filter=new Filter();
+     filter.setField("clerk_id");
+     filter.setOperator("=");
+     filter.setValue(clerkId.toString());
+	 List<Filter> filters = null;
+	 filters.add(filter);
+	 criteria.setFilters(filters);
 		
-		return  debtorDao.searchDebtors( ctireria);
+	return  debtorDao.search(criteria );
+		
 	}
 
 }

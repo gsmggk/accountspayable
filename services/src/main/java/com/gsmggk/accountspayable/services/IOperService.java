@@ -30,8 +30,8 @@ public interface IOperService {
 	
 
 	/**
-	 * Add oper
-	 * @param oper -oper detail
+	 * Add operation
+	 * @param oper -operation detail
 	 */
 	void addOper(Oper oper);
 }

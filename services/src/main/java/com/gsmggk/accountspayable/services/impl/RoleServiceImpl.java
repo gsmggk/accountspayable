@@ -52,7 +52,7 @@ public class RoleServiceImpl implements IRoleService {
 	@Override
 	public void delete(Role role) {
 		LOGGER.warn("Delete Role: .id={} .roleName={}",role.getId().toString(),role.getRoleName());
-		roleDao.delete(role);
+		roleDao.delete(role.getId());
 	}
 
 	@Override

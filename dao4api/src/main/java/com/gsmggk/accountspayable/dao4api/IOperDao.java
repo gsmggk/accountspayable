@@ -16,10 +16,5 @@ public interface IOperDao extends IGenericDao<Oper> {
 	Boolean checkAllocated(Integer debtorID, Integer clerkId);
 
 	
-	/**
-	 * Create operation <b>allocate</b> <code>debtor</code> to <code>clerk</code>
-	 * @param debtorID
-	 * @param clerkId
-	 */
-	void allocate( Integer debtorID, Integer clerkId);
+	
 }

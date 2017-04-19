@@ -1,105 +1,109 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
+import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Account;
 
 @Repository
-public class AccountDaoImpl implements IAccountDao {
+public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountDao {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountDaoImpl.class);	
+
+	private String[] fieldsList = new String[] { "account_name", "summ", "debtor_id" };
+	private String readSql = "select * from account where id = ? ";
+	private String deleteSql = "delete from account where id=";
+	private String selectSql = "select * from account";
+	private String insertSql = "insert into account (%s,%s,%s) values(?,?,?)";
+	private String updateSql = "update account set %s=?, %s=?,%s=? where id=?";
+	
+	private ColumnMapRowMapper rowMapper;
+	
+	@Override
+	public BeanPropertyRowMapper<Account> getRowMapper() {
+		// FIXME Тут не все в порядке может быть
+		BeanPropertyRowMapper<Account> rowMapper = new BeanPropertyRowMapper<Account>(Account.class);
+		return rowMapper;
+	}
+	
+	@Override
+	public PropertyDao getPropertyDao() {
+		PropertyDao prDao = new PropertyDao();
+		prDao.setFieldsList(fieldsList);
+		prDao.setReadSql(readSql);
+		prDao.setDeleteSql(deleteSql);
+		prDao.setSelectSql(selectSql);
+		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		prDao.setInsertSql(insertSql);
+		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		prDao.setUpdateSql(updateSql);
+		return prDao;
+	}
+	
+	
+	@Override
+	public void getInsertPrepareStatement(PreparedStatement ps, Account object) {
+
+		try {
+			{
+				int i = 1;
+				ps.setString(i++, object.getAccountName());
+				ps.setBigDecimal(i++, object.getSumm());
+				
+				ps.setInt(i++, object.getDebtorId());
+				
+				ps.setInt(i++, object.getId());
+			}
+		} catch (Exception e) {
+			// FIXME это не тот уровень исключения хотя и работает
+			// e.printStackTrace();
+		}
+
+	}
+
+	
+
+	
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
-	private BeanPropertyRowMapper<Account> rowMapper = new BeanPropertyRowMapper<Account>(Account.class);
 
 	@Override
-	public Account insert(Account account) {
-		final String INSERT_SQL = "insert into account (" + "account_name," + "summ," + "debtor_id" + ") values(?,?,?)";
-
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-
-				ps.setString(1, account.getAccountName());
-				ps.setBigDecimal(2, account.getMoney());
-				ps.setInt(3, account.getDebtorId());
-				return ps;
-			}
-		}, keyHolder);
-
-		account.setId(keyHolder.getKey().intValue());
-
-		return account;
-	}
-
-	@Override
-	public Account read(Integer id) {
-		try {
-			return jdbcTemplate.queryForObject("select * from account where id = ? ", new Object[] { id }, rowMapper);
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public void update(Account account) {
-		final String UPDATE_SQL = "update account set account_name=?, summ=?,debtor_id=?  where id=?";
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL,
-						new String[] { "action_name", "summ", "debtor_id" });
-
-				ps.setString(1, account.getAccountName());
-				ps.setBigDecimal(2, account.getMoney());
-				ps.setInt(3, account.getDebtorId());
-				ps.setInt(4, account.getId());
-
-				return ps;
-			}
-		});
-	}
-
-	@Override
-	public void delete(Account account) {
-		final String DELETE_SQL = "delete from account where id=";
-		jdbcTemplate.update(DELETE_SQL + account.getId());
-
-	}
-
-	@Override
-	public List<Account> getAll() {
-		try {
-			List<Account> rs = jdbcTemplate.query("select * from account ", rowMapper);
+	public List<Map<String, Object>> search(Integer id) {
+		
+		final String SELECT_ALL_SQL = "select * from account as a where a.debtor_id=?";
+		ColumnMapRowMapper rowMap=new ColumnMapRowMapper();
+	//	rowMap.mapRow(rs, rowNum)
+		
+		try {			
+			List<Map<String,Object>> rs = jdbcTemplate.query(SELECT_ALL_SQL,new Object[]{ id},rowMap);
+			
 			return rs;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
+		
+		
 	}
 
-	@Override
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
+	
 	
 }

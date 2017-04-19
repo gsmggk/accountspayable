@@ -51,14 +51,14 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 	}
 
 	@Override
-	public void delete(T object) {
+	public void delete(Integer id) {
 		File file = getFile();
 
 		XmlModelWrapper<T> wrapper = (XmlModelWrapper<T>) xstream.fromXML(file);
 		List<T> models = wrapper.getRows();
 		T found = null;
 		for (T model : models) {
-			if (model.getId().equals(object.getId())) {
+			if (model.getId().equals(id)) {
 				found = model;
 				break;
 			}

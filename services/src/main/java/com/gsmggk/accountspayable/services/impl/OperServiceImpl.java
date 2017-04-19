@@ -59,7 +59,7 @@ public class OperServiceImpl implements IOperService {
 
 	@Override
 	public void delete(Oper oper) {
-		operDao.delete(oper);
+		operDao.delete(oper.getId());
 
 	}
 

@@ -110,10 +110,6 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		}
 	}
 
-	@Override
-	public void allocate(Integer debtorID, Integer clerkId) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

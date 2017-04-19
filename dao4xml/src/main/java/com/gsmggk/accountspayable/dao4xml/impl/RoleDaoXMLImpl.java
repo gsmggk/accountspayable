@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.dao4xml.impl.wrapper.XmlModelWrapper;
@@ -52,5 +53,7 @@ public class RoleDaoXMLImpl extends GenericDaoXMLImpl<Role> implements IRoleDao 
 	protected String getXMLFileName() {
 				return "role.xml";
 	}
+
+	
 	
 }

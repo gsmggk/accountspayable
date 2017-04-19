@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 
 public class Account extends AbstractTable {
 	private String accountName;
-	private BigDecimal money;
+	private BigDecimal summ;
 	private Integer debtorId;
 
 	@Override
 	public String toString() {
-		return "Account [accountName=" + accountName + ", money=" + money + ", debtorId=" + debtorId + ", id=" + id
+		return "Account [accountName=" + accountName + ", summ=" + summ + ", debtorId=" + debtorId + ", id=" + id
 				+ "]";
 	}
 
@@ -21,12 +21,12 @@ public class Account extends AbstractTable {
 		this.accountName = accountName;
 	}
 
-	public BigDecimal getMoney() {
-		return money;
+	public BigDecimal getSumm() {
+		return summ;
 	}
 
-	public void setMoney(BigDecimal money) {
-		this.money = money;
+	public void setSumm(BigDecimal summ) {
+		this.summ = summ;
 	}
 
 	public Integer getDebtorId() {
@@ -58,10 +58,10 @@ public class Account extends AbstractTable {
 				return false;
 		} else if (!debtorId.equals(other.debtorId))
 			return false;
-		if (money == null) {
-			if (other.money != null)
+		if (summ == null) {
+			if (other.summ != null)
 				return false;
-		} else if (!money.equals(other.money))
+		} else if (!summ.equals(other.summ))
 			return false;
 		return true;
 	}

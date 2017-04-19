@@ -41,5 +41,8 @@ public interface IDebtorService {
 	 * @return List<Debtor>
 	 */
 	List<Debtor> getDebtors4Clerk(Integer clerkId);
+	
+	
+	
 
 }

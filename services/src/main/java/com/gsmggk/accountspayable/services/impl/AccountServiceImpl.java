@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4api.filter.Filter;
 import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.services.IAccountService;
 
@@ -44,8 +46,16 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public void delete(Account account) {
-		accountDao.delete(account);
+		accountDao.delete(account.getId());
 
+	}
+
+	@Override
+	public List<Account> getAccounts4Debtor(Integer id) {
+		
+	   
+		
+		return accountDao.search(id);
 	}
 
 

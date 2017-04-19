@@ -46,7 +46,7 @@ public class ActionServiceImpl implements IActionService {
 	public void delete(Action action) {
 		LOGGER.warn("Delete Action: .id={} .actionName={}",action.getId().toString(),action.getActionName());
 
-		actionDao.delete(action);
+		actionDao.delete(action.getId());
 
 	}
 

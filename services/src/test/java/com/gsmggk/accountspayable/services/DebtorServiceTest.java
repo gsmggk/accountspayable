@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,20 +30,15 @@ public class DebtorServiceTest extends AbstractTest {
 	public IDebtorService service;
 	@Inject
 	public  IClerkService clerkService;
-	private static Debtor model;
+	private  Debtor model;
 
-	@BeforeClass
-	public static void runBeforeClass() {
-		
-		
-		
-		
-		
-
+	@Before 
+	public  void runBefore() {
+       
 	}
 
 	@Test
-	// @Ignore
+	 @Ignore
 	@Rollback(true)
 	public void insertDebtorTest() {
 		Clerk clerk = new Clerk();
@@ -62,10 +58,12 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
+	@Ignore
 	public void getNotDistributeDebtorsTest() {
 		List<Debtor> debtors = service.getAllocatedDebtor(false);
 		System.out.println(debtors);
-		
+		Assert.notEmpty(debtors,"debtors - must containt data");
 	}
 
+	
 }

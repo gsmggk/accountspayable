@@ -1,16 +1,20 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
 import java.sql.PreparedStatement;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
@@ -87,13 +91,16 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
-
+		/*
+		readSql="select * from clerk where clerk_login_name = ? ";
+		
+       Clerk clerk=new Clerk();
+       clerk=super.read(new Object[] { login },Clerk.class);
+       return clerk;*/
 	}
 
-	@Override
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+
+	
 
 }
