@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
-import com.gsmggk.accountspayable.dao4api.filter.Criteria;
-import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Account;
 
@@ -25,9 +23,18 @@ public class AccountDaoXMLImpl extends GenericDaoXMLImpl<Account> implements IAc
 			return "account.xml";
 	}
 
+	
+
 	@Override
-	public List<Account> search(Integer id) {
-		throw new NotSupportedMethodException();
+	public <R> R read(Object[] objects, Class<R> clazzz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Account> getAccounts(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

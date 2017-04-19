@@ -1,7 +1,9 @@
 package com.gsmggk.accountspayable.services;
 
+import java.util.Date;
 import java.util.List;
 
+import com.gsmggk.accountspayable.dao4api.maps.DebtorControl;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 
 public interface IDebtorService {
@@ -40,9 +42,32 @@ public interface IDebtorService {
 	 * @param clerkId
 	 * @return List<Debtor>
 	 */
-	List<Debtor> getDebtors4Clerk(Integer clerkId);
+	List<DebtorControl> getDebtors4Clerk(Integer clerkId);
 	
-	
+	/**
+	 * Generate List debtors with control date for clerk.
+	 * Futures search by short debtor name, full debtor name.
+	 * Query for single control date.
+	 * Sort by control date ,debtor full name and sort name
+	 * 
+	 * @param clerkId Integer - clerk id
+	 * @param serchShotName String - part of short name for search 
+	 * @param searchFullName String - part of full name for search
+	 * @param equal2Date - Date single date sort
+	 * @param sortControl 
+	 * @param sortShornName
+	 * @param sortFullName
+	 * @return List<DebtorControl>
+	 */
+	List<DebtorControl> getDebtors4Clerk(
+			Integer clerkId
+			,String searchShotName
+			,String searchFullName
+			,Date equal2Date
+			,Boolean sortControl
+			,Boolean sortShortName
+			,Boolean sortFullName
+			);
 	
 
 }

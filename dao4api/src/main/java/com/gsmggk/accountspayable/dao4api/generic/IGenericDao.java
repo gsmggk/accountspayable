@@ -37,8 +37,5 @@ public interface  IGenericDao<T> {
 
 	void update(T object);
 	
-	/*List<T> search(Criteria criteria);
-
-	<R> R search1(Criteria criteria);*/
-
+	
 }

@@ -3,6 +3,9 @@ package com.gsmggk.accountspayable.dao4db.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4api.maps.DebtorControl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
+import com.gsmggk.accountspayable.dao4db.mapper.DebtorControlRowMapper;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 
@@ -28,7 +33,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DebtorDaoImpl.class);
 	@Inject
 	private IOperDao operDao;
-	
+
 	private String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
 			"other" };
 	private String readSql = "select * from debtor where id = ? ";
@@ -89,8 +94,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	public List<Debtor> getAllocatedDebtor(Boolean allocated)
 
 	{
-		
-		
+
 		selectSql = "select "
 				+ "d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o "
 				+ "join debtor as d on(o.debtor_id=d.id) " + "WHERE o.action_id=9 and %s EXISTS"
@@ -103,64 +107,79 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		return super.getAll();
 	}
 
-	
-
 	@Transactional
 	@Override
 	public Debtor creareDebtor(Debtor debtor, Oper oper) {
 		try {
 			super.insert(debtor);
 		} catch (DuplicateKeyException e) {
-			LOGGER.error("Create Debtor error:",e);
+			LOGGER.error("Create Debtor error:", e);
 			throw e;
 		}
-		
+
 		oper.setDebtorId(debtor.getId());
-		
-		operDao.insert(oper);	
-		
+
+		operDao.insert(oper);
+
 		return debtor;
 	}
 
 	@Override
-	protected RowMapper<Debtor> getSearchRowMapper() {
-		RowMapper<Debtor> mapRow=new RowMapper<Debtor>() {
+	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
+			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName) {
 
-			@Override
-			public Debtor mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Debtor debtor = new Debtor();
-				debtor.setAddress(rs.);
-				return null;
-			}
-		};
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("select ");
+		sqlBuilder.append("debtor_id,short_name,full_name,max(control_date) as control  ");
+		sqlBuilder.append("from oper as o ");
+		sqlBuilder.append("join debtor as d on (o.debtor_id=d.id) ");
+		sqlBuilder.append("join oper_detail as od on (od.oper_id=o.id)");
+		sqlBuilder.append("where ");
+		sqlBuilder.append("EXISTS(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)");
+		sqlBuilder.append("and ");
+		sqlBuilder.append("not EXISTS(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=1)");
+
+		Criteria criteria = new Criteria();
+		criteria.setSql(sqlBuilder.toString());
+
+		criteria.addFilter("o.clerk_id=?", "AND", null);
+		Object[] newObj = new Object[] { clerkId };
 		
-		return null;
+		if (searchShotName != null && !searchShotName.isEmpty()) {
+			criteria.addFilter("d.short_name LIKE '%?%'", "AND", null);
+		      newObj = appendValue(newObj,searchShotName );
+		}
+		if (searchFullName != null && !searchFullName.isEmpty()) {
+			criteria.addFilter("d.full_name LIKE '%?%'", "AND", null);
+			 newObj = appendValue(newObj,searchFullName );
+		}
+		if (equal2Date != null) {
+			criteria.addFilter("od.control_date = ?", "AND", null);
+			 newObj = appendValue(newObj,equal2Date );
+		}
+		criteria.addFilter("debtor_id,short_name,full_name", "group by", null);
+
+		switch (sortControl.toString()) {
+		case "true":
+			criteria.addSort("control", "asc");
+			break;
+		case "false":
+			criteria.addSort("control", "asc");
+			break;
+		default:
+			break;
+		}
+		String sql = criteria.getCriteriaSql();
+		System.out.println(sql);
+
+		DebtorControlRowMapper rm = new DebtorControlRowMapper();
+		return getCriteriaRowMapper(criteria, newObj, rm);
 	}
 
-	
-	
-	
-	
-@Override
-	public List<Debtor> search(Criteria criteria) {
-		
-		String searchSelectSql="select" +
-" debtor_id,short_name,full_name,max(control_date) as control "+
-"from oper as o join debtor as d on (o.debtor_id=d.id) join oper_detail as od on (od.oper_id=o.id)"
-+ "where  "
-+ " EXISTS(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)"
-+ " and "
-+ " not EXISTS(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=1)"
-+ " AND"
-+ "o.clerk_id=91"
-+ "and "
-+ "d.full_name like '%ров%'"
-+ "group by debtor_id,short_name,full_name"
-+ "order by control";
-		
-		
-		
-		return null;
+	private Object[] appendValue(Object[] obj, Object newObj) {
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+		temp.add(newObj);
+		return temp.toArray();
 	}
 
 }

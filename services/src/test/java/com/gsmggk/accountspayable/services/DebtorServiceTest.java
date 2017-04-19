@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import com.gsmggk.accountspayable.dao4api.maps.DebtorControl;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
@@ -65,5 +66,11 @@ public class DebtorServiceTest extends AbstractTest {
 		Assert.notEmpty(debtors,"debtors - must containt data");
 	}
 
-	
+	@Test
+	//@Ignore
+	public void getDebtor4ClerkTest(){
+	Integer clerkId=91;
+	List<DebtorControl> dc=service.getDebtors4Clerk(clerkId);
+	System.out.println(dc);
+	}
 }

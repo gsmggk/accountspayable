@@ -9,20 +9,14 @@ import javax.inject.Inject;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
-import com.gsmggk.accountspayable.dao4api.filter.Criteria.Field;
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
@@ -122,42 +116,19 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		});
 
 	}
-
-	/*@Override
-	public <R> R search1(Criteria criteria) {
-		PropertyDao prDao = getPropertyDao();
-		final String SELECT_SEARCH_SQL = prDao.getSelectSql();
-		
-	List<Field> fields=	criteria.getFields();
-		
-	ColumnMapRowMapper rowMap=new ColumnMapRowMapper();
-	rowMap=getColumnMapRowMapper();
-	 Object rs = jdbcTemplate.query(SELECT_SEARCH_SQL,rowMap);
-		//TODO make this
-		String SELECT_SQL = parseSql(criteria.getSql());
-		 * 
-		try {
-			List<T> rs = jdbcTemplate.query(SELECT_SQL, getSearchRowMapper());
-			return rs;
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-		
-		NamedParameterJdbcTemplate npjdbc=new NamedParameterJdbcTemplate(jdbcTemplate);
-		
-		String sql;
-		ColumnMapRowMapper cmrm=new ColumnMapRowMapper();
 	
-		npjdbc.query(sql, cmrm);
 	
-		return (R) rs;
-		
-	}*/
+	/**
+	 * Select table with: order, limit, offset criteria 
+	 * @param criteria
+	 * @return List
+	 */
+	public <R> List<R> getCriteriaRowMapper(Criteria criteria,Object[] objects,RowMapper<R> rm){
+			String sql=criteria.getCriteriaSql();
+		return jdbcTemplate.query(sql, objects, rm);
+	}
 
-//	protected abstract ColumnMapRowMapper getColumnMapRowMapper();
-
-//	protected abstract RowMapper<T> getSearchRowMapper();
- 
+	
 	
 	
 

@@ -2,6 +2,7 @@ package com.gsmggk.accountspayable.services;
 
 import java.util.List;
 
+import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.datamodel.Account;
 
 public interface IAccountService {
@@ -23,6 +24,8 @@ public interface IAccountService {
 	 * @return List<Account>
 	 */
 	List<Account> getAccounts4Debtor(Integer debtorId);
+	
+	
 
 	
 }

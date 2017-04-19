@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.filter.Filter;
+import com.gsmggk.accountspayable.dao4api.maps.DebtorControl;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
@@ -83,18 +84,16 @@ public class DebtorServiceImpl implements IDebtorService {
 	}
 
 	@Override
-	public List<Debtor> getDebtors4Clerk(Integer clerkId) {
-     Criteria criteria=new Criteria();
-     Filter filter=new Filter();
-     filter.setField("clerk_id");
-     filter.setOperator("=");
-     filter.setValue(clerkId.toString());
-	 List<Filter> filters = null;
-	 filters.add(filter);
-	 criteria.setFilters(filters);
+	public List<DebtorControl> getDebtors4Clerk(Integer clerkId) {
+     	return  debtorDao.getDebtors4Clerk(clerkId, null, null, null, true, null, null);
 		
-	return  debtorDao.search(criteria );
+	}
+
+	@Override
+	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
+			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName) {
 		
+ 	return  debtorDao.getDebtors4Clerk(clerkId, searchShotName, searchFullName, equal2Date, sortControl, sortShortName, sortFullName);
 	}
 
 }

@@ -113,9 +113,5 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 
 	}
 
-	@Override
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		throw new NotSupportedMethodException();
-	}
-
+	
 }

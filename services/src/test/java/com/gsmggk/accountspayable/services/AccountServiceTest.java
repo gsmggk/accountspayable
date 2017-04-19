@@ -1,6 +1,7 @@
 package com.gsmggk.accountspayable.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -12,12 +13,11 @@ import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Account;
 
-
 public class AccountServiceTest extends AbstractTest {
 
 	@Inject
 	private IAccountService accountService;
-	
+
 	private static Account account;
 
 	@BeforeClass
@@ -35,8 +35,8 @@ public class AccountServiceTest extends AbstractTest {
 	@Test
 	@Rollback(true)
 	public void InsertTest() {
-		// FIXME Дделать форин кей  
-	//	accountService.save(account);
+		// FIXME Дделать форин кей
+		// accountService.save(account);
 		Integer savedAccountId = account.getId();
 		Account accountFromDb = new Account();
 		accountFromDb = accountService.get(savedAccountId);
@@ -44,13 +44,13 @@ public class AccountServiceTest extends AbstractTest {
 		Assert.isNull(accountFromDb, "must be not null after save");
 
 	}
-	
+
 	@Test
 	public void getAccounts4DebtorTest(){
 		Integer debtorId=1;
-		accountService.getAccounts4Debtor(debtorId);
-		
+	  List<Account> accounts=accountService.getAccounts4Debtor(debtorId);
+	 Assert.notEmpty(accounts,"list must be not empty"); 
+		System.out.println(accounts);
 	}
-	
-	
+
 }
