@@ -85,15 +85,16 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId) {
-     	return  debtorDao.getDebtors4Clerk(clerkId, null, null, null, true, null, null);
+     	return  debtorDao.getDebtors4Clerk(clerkId, null, null, null, true, null, null,null,null);
 		
 	}
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
-			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName) {
+			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName,Integer limit
+			,Integer offset) {
 		
- 	return  debtorDao.getDebtors4Clerk(clerkId, searchShotName, searchFullName, equal2Date, sortControl, sortShortName, sortFullName);
+ 	return  debtorDao.getDebtors4Clerk(clerkId, searchShotName, searchFullName, equal2Date, sortControl, sortShortName, sortFullName,limit,offset);
 	}
 
 }

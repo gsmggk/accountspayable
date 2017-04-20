@@ -1,27 +1,15 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Action;
-import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository
 public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao {
@@ -48,7 +36,12 @@ public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao 
 			{
 				int i = 1;
 				ps.setString(i++, object.getActionName());
-				ps.setInt(i++, object.getDuration());
+				if (object.getDuration() == null) {
+					ps.setNull(i++, java.sql.Types.INTEGER);
+				} else {
+					ps.setInt(i++, object.getDuration());
+				};
+			
 				
 				ps.setInt(i++, object.getId());
 			}
@@ -75,11 +68,7 @@ public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao 
 	
 
 
-	@Override
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 
 

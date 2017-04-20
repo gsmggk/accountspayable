@@ -29,6 +29,11 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 		throw new NotSupportedMethodException();
 	}
 
+	@Override
+	public Oper getOper(Integer operId) {
+		throw new NotSupportedMethodException();
+	}
+
 	
 
 	

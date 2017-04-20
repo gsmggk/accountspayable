@@ -31,8 +31,10 @@ public interface IDebtorDao extends IGenericDao<Debtor> {
 	 * @param sortControl
 	 * @param sortShornName
 	 * @param sortFullName
+	 * @param offset 
+	 * @param limit 
 	 * @return List<DebtorControl>
 	 */
 	List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName, Date equal2Date,
-			Boolean sortControl, Boolean sortShortName, Boolean sortFullName);
+			Boolean sortControl, Boolean sortShortName, Boolean sortFullName, Integer limit, Integer offset);
 }

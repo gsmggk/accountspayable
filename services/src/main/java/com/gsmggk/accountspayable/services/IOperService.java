@@ -34,4 +34,20 @@ public interface IOperService {
 	 * @param oper -operation detail
 	 */
 	void addOper(Oper oper);
+	
+	/**
+	 * Get full oper with detail
+	 * @param operId
+	 * @return oper
+	 */
+	Oper getOper(Integer operId);
+
+	
+	/**
+	 *   Check clerk access for operation action.
+	 * If access exist modify operation 
+	 * @param conductClerkId - clerk id who conduct update
+	 * @param oper operation
+	 */
+	void updateOper(Integer conductClerkId,Oper oper);
 }

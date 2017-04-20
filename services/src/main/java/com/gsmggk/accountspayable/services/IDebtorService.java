@@ -67,6 +67,8 @@ public interface IDebtorService {
 			,Boolean sortControl
 			,Boolean sortShortName
 			,Boolean sortFullName
+			,Integer limit
+			,Integer offset
 			);
 	
 

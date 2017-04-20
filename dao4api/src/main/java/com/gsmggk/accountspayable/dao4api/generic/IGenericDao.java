@@ -21,13 +21,7 @@ public interface  IGenericDao<T> {
 	 */
 	T read(Integer id);
 	
-	/**
-	 * Read one property of model  
-	 * @param objects - field array
-	 * @param clazzz - f.e. <i>Integer.Class</i>
-	 * @return property value
-	 */
-	<R> R read(Object[] objects,Class<R> clazzz);
+	
 
 	void delete(Integer id);
 

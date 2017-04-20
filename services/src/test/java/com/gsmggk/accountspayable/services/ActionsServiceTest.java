@@ -1,5 +1,7 @@
 package com.gsmggk.accountspayable.services;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Before;
@@ -102,6 +104,11 @@ public class ActionsServiceTest extends AbstractTest {
 		modelService.delete(model);
 		Action modelFromDb = modelService.get(savedModelId);
 		Assert.isNull(modelFromDb, "Model " + model.getClass().getSimpleName() + " must be null after delete");
+	}
+	@Test
+	public void getAllTest(){
+		List<Action> actions=modelService.getAll();
+		Assert.notEmpty(actions,"List of actions must be not empty");
 	}
 
 }

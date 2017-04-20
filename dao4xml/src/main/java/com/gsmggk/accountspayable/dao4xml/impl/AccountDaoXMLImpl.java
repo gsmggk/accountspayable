@@ -25,11 +25,7 @@ public class AccountDaoXMLImpl extends GenericDaoXMLImpl<Account> implements IAc
 
 	
 
-	@Override
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public List<Account> getAccounts(Integer id) {

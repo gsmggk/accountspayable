@@ -1,30 +1,24 @@
 package com.gsmggk.accountspayable.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:services-context.xml")
-public class OperServiceTest {
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = "classpath:services-context.xml")
+public class OperServiceTest 
+extends AbstractTest
+{
 
 	@Inject
 	private IOperService operService;
@@ -38,20 +32,20 @@ public class OperServiceTest {
 	private IRoleService roleService;
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void allocateDebtor2ClerkTest() {
 
 		String login = "Boss";
 		String password = "111111";
 		clerkService.loginCheck(login, password);
 		// TODO test it
-		operService.getAll();
-		operService.allocateDebtor2Clerk(4, 91);
-		operService.getAll();
+		
+		operService.allocateDebtor2Clerk(46, 90);
+		
 	}
 
 	@Test
-	// @Ignore
+	 @Ignore
 	public void addOperTest() {
 		// log in
 		String login = "user1";
@@ -95,5 +89,15 @@ public class OperServiceTest {
 		operService.addOper(oper);
 
 	}
-
+	
+	@Test
+	@Ignore
+	public void updateOper(){
+	Integer clerkId=15;
+	Integer operId=46;
+	Oper oldOper=operService.getOper(operId);
+	oldOper.setControlDate(new Date(new Date().getTime()));
+	operService.updateOper(clerkId,oldOper);
+	System.out.println(oldOper);
+}
 }

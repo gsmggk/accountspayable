@@ -20,9 +20,8 @@ import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
-
 public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {
-	
+
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
@@ -42,16 +41,26 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			return null;
 		}
 	}
-	@Override
-	public <R> R read(Object[] objects,Class<R> clazzz) {
+
+	/**
+	 * Read one property of model
+	 * 
+	 * @param objects
+	 *            - field array
+	 * @param clazzz
+	 *            - f.e. <i>Integer.Class</i>
+	 * @return property value
+	 */
+	public <R> R read(Object[] objects, Class<R> clazzz) {
 		PropertyDao prDao = getPropertyDao();
 		final String READ_SQL = prDao.getReadSql();
 		try {
-			return jdbcTemplate.queryForObject(READ_SQL, objects,clazzz);
+			return jdbcTemplate.queryForObject(READ_SQL, objects, clazzz);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
+
 	@Transactional
 	@Override
 	public void delete(Integer id) {
@@ -116,20 +125,21 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		});
 
 	}
-	
-	
+
 	/**
-	 * Select table with: order, limit, offset criteria 
+	 * Select table with: order, limit, offset criteria
+	 * 
 	 * @param criteria
 	 * @return List
 	 */
-	public <R> List<R> getCriteriaRowMapper(Criteria criteria,Object[] objects,RowMapper<R> rm){
-			String sql=criteria.getCriteriaSql();
-		return jdbcTemplate.query(sql, objects, rm);
-	}
+	public <R> List<R> getCriteriaRowMapper(Criteria criteria, Object[] objects, RowMapper<R> rm) {
+		String sql = criteria.getCriteriaSql();
+		try {
+			return jdbcTemplate.query(sql, objects, rm);
 
-	
-	
-	
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 
 }

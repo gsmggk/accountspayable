@@ -55,7 +55,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 			{
 				int i = 1;
 				ps.setString(i++, debtor.getShortName());
-				ps.setString(i++, debtor.getShortName());
+				ps.setString(i++, debtor.getFullName());
 				ps.setString(i++, debtor.getAddress());
 				ps.setString(i++, debtor.getPhones());
 				ps.setString(i++, debtor.getJobe());
@@ -126,11 +126,12 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
-			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName) {
+			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName,Integer limit
+			,Integer offset) {
 
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select ");
-		sqlBuilder.append("debtor_id,short_name,full_name,max(control_date) as control  ");
+		sqlBuilder.append("o.debtor_id,d.short_name,d.full_name,max(control_date) as control ");
 		sqlBuilder.append("from oper as o ");
 		sqlBuilder.append("join debtor as d on (o.debtor_id=d.id) ");
 		sqlBuilder.append("join oper_detail as od on (od.oper_id=o.id)");
@@ -146,29 +147,58 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		Object[] newObj = new Object[] { clerkId };
 		
 		if (searchShotName != null && !searchShotName.isEmpty()) {
-			criteria.addFilter("d.short_name LIKE '%?%'", "AND", null);
+			criteria.addFilter("d.short_name LIKE ?", "AND", null);
 		      newObj = appendValue(newObj,searchShotName );
 		}
 		if (searchFullName != null && !searchFullName.isEmpty()) {
-			criteria.addFilter("d.full_name LIKE '%?%'", "AND", null);
+			criteria.addFilter("d.full_name LIKE ?", "AND", null);
 			 newObj = appendValue(newObj,searchFullName );
 		}
 		if (equal2Date != null) {
 			criteria.addFilter("od.control_date = ?", "AND", null);
 			 newObj = appendValue(newObj,equal2Date );
 		}
-		criteria.addFilter("debtor_id,short_name,full_name", "group by", null);
+		criteria.addFilter("debtor_id, short_name, full_name", "group by", null);
 
+		if (sortControl!=null){
 		switch (sortControl.toString()) {
 		case "true":
 			criteria.addSort("control", "asc");
 			break;
 		case "false":
-			criteria.addSort("control", "asc");
+			criteria.addSort("control", "desc");
 			break;
 		default:
 			break;
-		}
+		}}
+		if (sortShortName!=null){
+			switch (sortShortName.toString()) {
+			case "true":
+				criteria.addSort("short_name", "asc");
+				break;
+			case "false":
+				criteria.addSort("short_name", "desc");
+				break;
+			default:
+				break;
+			}}
+		if (sortFullName!=null){
+			switch (sortFullName.toString()) {
+			case "true":
+				criteria.addSort("full_name", "asc");
+				break;
+			case "false":
+				criteria.addSort("full_name", "desc");
+				break;
+			default:
+				break;
+			}}
+		if(limit!=null&&limit>0){
+			criteria.setLimit(limit);
+			}
+		if (offset!=null&&offset>0){
+			criteria.setOffset(offset);
+			}
 		String sql = criteria.getCriteriaSql();
 		System.out.println(sql);
 

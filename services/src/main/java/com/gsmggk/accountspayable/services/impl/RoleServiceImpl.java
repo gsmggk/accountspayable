@@ -74,4 +74,10 @@ public class RoleServiceImpl implements IRoleService {
 		
 	}
 
+	@Override
+	public Boolean chekAction2Role(Integer actionId, Integer roleId) {
+		
+		return roleDao.chekAction2role(actionId, roleId);
+	}
+
 }

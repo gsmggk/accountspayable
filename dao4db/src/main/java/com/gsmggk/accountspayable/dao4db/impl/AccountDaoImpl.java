@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
@@ -25,8 +24,6 @@ public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountD
 	private String selectSql = "select * from account";
 	private String insertSql = "insert into account (%s,%s,%s) values(?,?,?)";
 	private String updateSql = "update account set %s=?, %s=?,%s=? where id=?";
-
-	private ColumnMapRowMapper rowMapper;
 
 	@Override
 	public BeanPropertyRowMapper<Account> getRowMapper() {

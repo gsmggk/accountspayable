@@ -1,5 +1,7 @@
 package com.gsmggk.accountspayable.services;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Before;
@@ -14,7 +16,9 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 public class ClerkServiceTest extends AbstractTest {
 	@Inject
 	private IClerkService clerkService;
-
+	@Inject
+	private IRoleService roleService;
+	
 	private Clerk clerk;
 	private Clerk clerkFromDb;
 
@@ -102,4 +106,19 @@ public class ClerkServiceTest extends AbstractTest {
 		Assert.isNull(clerkFromDb, "Clerk must be null after delete");
 	}
 
+	@Test
+	//@Ignore
+	public void checkAction4ClerkTest(){
+		Integer clerkId=15;
+		Integer actionId=11;
+		
+		Clerk clerk=clerkService.get(clerkId);
+		
+	Assert.isTrue(roleService.chekAction2Role(actionId, clerk.getRoleId()), "Link must exist");	
+	}
+	@Test
+	public void getAllTest(){
+		List<Clerk> clerks=clerkService.getAll();
+		Assert.notEmpty(clerks,"List of clerks must be not empty");
+	}
 }
