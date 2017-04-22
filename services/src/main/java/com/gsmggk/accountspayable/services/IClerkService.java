@@ -29,5 +29,12 @@ public interface IClerkService {
 	Clerk loginCheck(String login, String password) throws IllegalArgumentException;
 
 	void addRole2Clerk(Clerk clerk, Role role);
-
+	 /**
+	 * Check access clerk to action.
+	 * @param clerkId
+	 * @param actionId
+	 * @return true - if approved <br>
+	 * false - if denied 
+	 */
+	Boolean checkAction4Clerk(Integer clerkId, Integer actionId);
 }

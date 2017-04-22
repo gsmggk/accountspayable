@@ -5,17 +5,17 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 
-public class DebtorControlRowMapper implements RowMapper<DebtorControl> {
+public class DebtorStateRowMapper implements RowMapper<DebtorState> {
 
 	@Override
-	public DebtorControl mapRow(ResultSet rs, int rowNum) throws SQLException {
-		DebtorControl model = new DebtorControl();
+	public DebtorState mapRow(ResultSet rs, int rowNum) throws SQLException {
+		DebtorState model = new DebtorState();
 		model.setDebtorId(rs.getInt(1));
 		model.setShortName(rs.getString(2));
 		model.setFullName(rs.getString(3));
-		model.setControl(rs.getDate(4));
+		model.setActive(rs.getBoolean(4));
 		
 		return model;
 	}

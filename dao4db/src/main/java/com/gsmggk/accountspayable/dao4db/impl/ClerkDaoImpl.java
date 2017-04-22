@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
@@ -23,6 +24,9 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClerkDaoImpl.class);
 
+	
+	@Inject
+	private IRoleDao roleDao;
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
@@ -97,6 +101,13 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
        Clerk clerk=new Clerk();
        clerk=super.read(new Object[] { login },Clerk.class);
        return clerk;*/
+	}
+
+	@Override
+	public Boolean checkAction4Clerk(Integer clerkId, Integer actionId) {
+		Clerk clerk=read(clerkId);
+		
+		return roleDao.chekAction2role(actionId, clerk.getRoleId());
 	}
 
 	

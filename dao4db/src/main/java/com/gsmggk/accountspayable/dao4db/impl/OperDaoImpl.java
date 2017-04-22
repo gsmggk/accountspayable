@@ -78,23 +78,23 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 
 	@Transactional
 	@Override
-	public Oper insert(Oper object) {
+	public Oper insert(Oper oper) {
 		try {
-			super.insert(object);
+			super.insert(oper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Add oper error:", e);
 			throw e;
 		}
 		try {
-			insertDetale(object);
+			insertDetale(oper);
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			LOGGER.error("Add oper detale error:", e);
 			throw e;
 		}
-		return object;
+		return oper;
 
 	}
 
@@ -132,6 +132,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		opers = getCriteriaRowMapper(cr, objects, rm);
 
 		if (opers.size() > 1) {
+			//TODO change exception type
 			throw new RuntimeException("Can't have more then one row in answer");
 		}
 
@@ -156,7 +157,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 			throw e;
 		}
 		try {
-			insertDetale(object);
+			updateDetale(object);
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -165,6 +166,68 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		}
 		
 	}
-	
 
+	private void updateDetale(Oper newOper) {
+		String sql = String.format("update oper_detail set %s=? , %s=? , %s=? where oper_id=?",
+				(Object[]) new String[] {  "action_date", "control_date", "oper_desc","oper_id" });
+		jdbcTemplate.update(sql,  newOper.getActionDate(), newOper.getControlDate(),
+				newOper.getOperDesc(),newOper.getId());
+	}
+
+	@Override
+	@Transactional
+	public void delete(Integer operId) {
+		try {
+			deleteDetale(operId);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			LOGGER.error("Delete oper detale error:", e);
+			throw e;
+		}
+		
+		
+		try {
+			super.delete(operId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("Delete oper error:", e);
+			throw e;
+		}
+		
+		
+	}
+
+	private void deleteDetale(Integer operId) {
+		String sql = String.format("delete from oper_detail where oper_id=?");
+		jdbcTemplate.update(sql, operId);
+	}
+	
+	
+	@Override
+	public List<Oper> getOpers4Debtor(Integer debtorId) {
+		String sql = "select "
+				+ "o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc "
+				+ "from oper as o "
+				+ "join oper_detail as od ON(od.oper_id=o.id) "
+				+ "join debtor as d on (d.id=o.debtor_id) ";
+
+		Object[] objects = new Object[] { debtorId };
+
+		Criteria cr = new Criteria();
+		cr.setSql(sql);
+        cr.addFilter(" o.debtor_id=?", "where", null);
+		OperRowMapper rm = new OperRowMapper();
+		List<Oper> opers = getCriteriaRowMapper(cr, objects, rm);
+
+
+		return opers;}
+	
+	@Override
+	public Oper getDebtorStateOper(Integer debtorId) {
+		
+		readSql="select id,debtor_id,clerk_id,action_id,action_date,control_date,oper_desc from oper o join oper_detail op on (o.id=op.oper_id) where (o.action_id=9 or o.action_id=1) and o.debtor_id =?";
+		
+		return  read(debtorId);
+	}
 }

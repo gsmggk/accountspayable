@@ -9,7 +9,7 @@ import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.filter.Filter;
 import com.gsmggk.accountspayable.dao4api.filter.SortData;
-import com.gsmggk.accountspayable.dao4api.maps.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Debtor;

@@ -109,12 +109,15 @@ public class ClerkServiceTest extends AbstractTest {
 	@Test
 	//@Ignore
 	public void checkAction4ClerkTest(){
-		Integer clerkId=15;
-		Integer actionId=11;
+		Integer clerkId=91;
+		Integer actionId=19;
 		
 		Clerk clerk=clerkService.get(clerkId);
 		
-	Assert.isTrue(roleService.chekAction2Role(actionId, clerk.getRoleId()), "Link must exist");	
+	Integer roleId = clerk.getRoleId();
+
+	Boolean chekAction2Role = roleService.chekAction2Role(actionId, roleId);
+	Assert.isTrue(chekAction2Role, "Link must exist");	
 	}
 	@Test
 	public void getAllTest(){

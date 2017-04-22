@@ -87,4 +87,10 @@ public class ClerkServiceImpl implements IClerkService {
 		clerk.setRoleId(role.getId());
 		clerkDao.update(clerk);
 	}
+
+	@Override
+	public Boolean checkAction4Clerk(Integer clerkId, Integer actionId) {
+		
+		return clerkDao.checkAction4Clerk(clerkId, actionId);
+	}
 }

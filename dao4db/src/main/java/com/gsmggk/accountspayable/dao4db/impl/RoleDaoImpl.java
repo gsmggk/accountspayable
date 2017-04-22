@@ -91,6 +91,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
+		
 		readSql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
 		Integer rs = super.read(objects, Integer.class);

@@ -1,24 +1,49 @@
 package com.gsmggk.accountspayable.dao4api.filter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Criteria {
+	private List<Filter> filters;
+	private List<SortData> sorts;
+	private String sql;
+	private Integer limit;
+	private Integer offset;
+	private Object[] objects;
 
 	public Criteria() {
 		super();
-		
+
 		this.filters = new ArrayList<Filter>();
 
 		this.sorts = new ArrayList<SortData>();
+		this.objects = new Object[] {};
 	}
 
-	public void addFilter(String column, String operator, String value) {
+	/*public void addFilter(String column, String operator, String value) {
 		Filter f = new Filter();
 		f.setField(column);
 		f.setOperator(operator);
 		f.setValue(value);
 		this.filters.add(f);
+	}*/
+
+	public void addFilter(String column, String operator, Object newObj) {
+		Filter f = new Filter();
+		f.setField(column);
+		f.setOperator(operator);
+
+		if (newObj != null) {
+			this.objects = appendValue(this.objects, newObj);
+		}
+		this.filters.add(f);
+	}
+
+	private Object[] appendValue(Object[] obj, Object newObj) {
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+		temp.add(newObj);
+		return temp.toArray();
 	}
 
 	public void addSort(String column, String order) {
@@ -30,7 +55,7 @@ public class Criteria {
 	}
 
 	public String getCriteriaSql() {
-		if (sql==null||sql.isEmpty()) {
+		if (sql == null || sql.isEmpty()) {
 			throw new IllegalArgumentException("Criteria sql string must containd entrys");
 		}
 		StringBuilder sBuilder = new StringBuilder();
@@ -42,11 +67,11 @@ public class Criteria {
 		if (!sorts.isEmpty()) {
 			setSorts(sBuilder);
 		}
-		
-		if(limit!=null&&limit>0){
+
+		if (limit != null && limit > 0) {
 			sBuilder.append(String.format(" limit %s", limit));
 		}
-		if(offset!=null){
+		if (offset != null) {
 			sBuilder.append(String.format(" offset %s", offset));
 		}
 		return sBuilder.toString();
@@ -70,12 +95,6 @@ public class Criteria {
 
 		}
 	}
-
-	private List<Filter> filters;
-	private List<SortData> sorts;
-	private String sql;
-	private Integer limit;
-	private Integer offset;
 
 	public List<Filter> getFilters() {
 		return filters;
@@ -115,6 +134,10 @@ public class Criteria {
 
 	public void setOffset(Integer offset) {
 		this.offset = offset;
+	}
+
+	public Object[] getObjects() {
+		return objects;
 	}
 
 }

@@ -14,4 +14,13 @@ public interface IClerkDao  extends IGenericDao<Clerk>{
 	 * @return Clerk
 	 */
 	Clerk loginCheck(String login);
+
+	/**
+	 * Check access clerk to action.
+	 * @param clerkId
+	 * @param actionId
+	 * @return true - if approved <br>
+	 * false - if denied 
+	 */
+	Boolean checkAction4Clerk(Integer clerkId, Integer actionId);
 }

@@ -50,4 +50,19 @@ public interface IOperService {
 	 * @param oper operation
 	 */
 	void updateOper(Integer conductClerkId,Oper oper);
+
+	/**
+	 * Get operations for  debtor
+	 * @param debtorId
+	 * @return List oper
+	 */
+	List<Oper> getOpers4Debtor(Integer debtorId);
+
+	/**
+	 * Check clerk access to operation action.
+	 * If allowed delete operation. 
+	 * @param conductClerkId - clerk id who conduct update
+	 * @param oper operation
+	 */
+	void deleteOper(Integer conductClerkId, Oper oper);
 }

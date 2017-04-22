@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4api.maps;
+package com.gsmggk.accountspayable.dao4api.modelmap;
 
 import java.util.Date;
 

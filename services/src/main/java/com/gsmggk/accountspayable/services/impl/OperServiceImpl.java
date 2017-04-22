@@ -92,8 +92,13 @@ public class OperServiceImpl implements IOperService {
 	@Override
 	public void addOper(Oper oper) {
 		oper.setActionDate(new Timestamp(new Date().getTime()));
-		oper.setClerkId(CurrentLayer.getClerkId());
-
+	    	
+		Integer clerkId=oper.getClerkId();
+		Integer actionId=oper.getActionId();
+		if(!clerkDao.checkAction4Clerk(clerkId,actionId)){
+			LOGGER.error("Clerk id:{} have access denide to Add operation with action id:{}",clerkId,actionId);
+			throw new MyAccessDeniedException("Access clerk to operation denieded");
+		};	
 		operDao.insert(oper);
       LOGGER.info("Operatin id:{} inserted- debtor id:{} action id:{} clerk id:{}",oper.getId(),oper.getDebtorId(),oper.getActionId(),oper.getClerkId());
 	}
@@ -106,15 +111,30 @@ public class OperServiceImpl implements IOperService {
 
 	@Override
 	public void updateOper(Integer conductClerkId, Oper oper) {
-		Clerk conductClerk = clerkDao.read(conductClerkId);
-		Integer conductRoleId = conductClerk.getRoleId();
-
-		if (!roleDao.chekAction2role(oper.getActionId(), conductRoleId)) {
-			LOGGER.error("Clerk id:{} name:{} try change operation id:{} desc:{}",conductClerkId,conductClerk.getClerkFullName(),oper.getId(),oper.getOperDesc());
-			throw new MyAccessDeniedException("Access clerk to operation denieded");
+		
+		if (!clerkDao.checkAction4Clerk(conductClerkId,oper.getActionId())) {
+			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}",conductClerkId,oper.getActionId());
+			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
 		}
 		
 		operDao.update(oper);
 	     LOGGER.info("Operatin id:{} updated- debtor id:{} action id:{} conduct clerk id:{}",oper.getId(),oper.getDebtorId(),oper.getActionId(),conductClerkId);
+	}
+
+	@Override
+	public List<Oper> getOpers4Debtor(Integer debtorId) {
+		
+		return operDao.getOpers4Debtor( debtorId) ;
+	}
+
+	@Override
+	public void deleteOper(Integer conductClerkId, Oper oper) {
+		if (!clerkDao.checkAction4Clerk(conductClerkId,oper.getActionId())) {
+			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}",conductClerkId,oper.getActionId());
+			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+		}
+		operDao.delete(oper.getId());
+	     LOGGER.warn("Operatin id:{} delete- debtor id:{} action id:{} conduct clerk id:{}",oper.getId(),oper.getDebtorId(),oper.getActionId(),conductClerkId);
+
 	}
 }
