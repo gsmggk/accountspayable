@@ -95,12 +95,12 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 	}
 
+	
 	@Override
-	public List<Debtor> getAllocatedDebtor(Boolean allocated)
-
+	public List<Debtor> getAllocatedDebtors(Boolean allocated,ParamsDebtor params)
 	{
 
-		selectSql = "select "
+		 String sql="select "
 				+ "d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o "
 				+ "join debtor as d on(o.debtor_id=d.id) " + "WHERE o.action_id=9 and %s EXISTS"
 				+ "(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)";
@@ -108,10 +108,20 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		if (!allocated) {
 			prefix = "NOT";
 		}
-		selectSql = String.format(selectSql, prefix);
-		return super.getAll();
-	}
+		sql = String.format(sql, prefix);
+		
+		Criteria criteria = new Criteria();
+		criteria.setSql(sql);
+		setCriteria4Debtor(params, criteria);
 
+		LOGGER.debug("getAllocatedDebtor sql:{}", criteria.getCriteriaSql());
+
+		
+		Object[] newObj = criteria.getObjects();
+		return getCriteriaRowMapper(criteria, newObj, getRowMapper());
+		
+		
+	}
 	@Transactional
 	@Override
 	public Debtor creareDebtor(Debtor debtor, Oper oper) {

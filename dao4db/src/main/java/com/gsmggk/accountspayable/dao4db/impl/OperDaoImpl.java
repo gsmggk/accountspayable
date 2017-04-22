@@ -107,15 +107,14 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	}
 
 	@Override
-	public Boolean checkAllocated(Integer debtorID, Integer clerkId) {
-		readSql = "select count(*) from oper as o where o.action_id=11 and o.debtor_id=? and o.clerk_id=? ";
-		Integer res = super.read(new Object[] { debtorID, clerkId }, Integer.class);
-		if (res == 1) {
-			return true;
-		} else {
-			return false;
+	public Oper checkAllocated(Integer debtorID, Integer clerkId) {
+		readSql = "select o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc from oper as o join oper_detail as od ON(od.oper_id=o.id)where (o.action_id=11 or o.action_id=2) and o.debtor_id=? and o.clerk_id=? ";
+				Object[] objects = new Object[] { debtorID, clerkId };
+		Oper oper = super.read(objects);
+		
+			return oper;
 		}
-	}
+	
 
 	@Override
 	public Oper getOper(Integer operId) {

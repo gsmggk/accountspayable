@@ -15,6 +15,7 @@ import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Clerk;
@@ -71,10 +72,17 @@ public class DebtorServiceImpl implements IDebtorService {
 	}
 
 	@Override
-	public List<Debtor> getAllocatedDebtor(Boolean allocated) {
-
-		return debtorDao.getAllocatedDebtor(allocated);
+	public List<Debtor> getAllocatedDebtors(Boolean allocated) {
+		ParamsDebtor params=new ParamsDebtor();
+		params.setSortShortName(true);
+		return debtorDao.getAllocatedDebtors(allocated,params);
 	}
+	@Override
+	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
+		
+		return debtorDao.getAllocatedDebtors(allocated, params);
+	}
+
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId) {
@@ -153,7 +161,7 @@ public class DebtorServiceImpl implements IDebtorService {
 			LOGGER.debug("Debtor id:{} not found");
 			throw new MyNotFoundException("Debtor not found");
 		}
-		Integer isDebtorOpen = operInit.getId();
+		Integer isDebtorOpen = operInit.getActionId();
 
 		if (isDebtorOpen.equals(DefaultValue.CLOSE_ACTION.getCode())) {
 			LOGGER.debug("Debtor id:{} allready closed");
@@ -188,6 +196,41 @@ public class DebtorServiceImpl implements IDebtorService {
 		return debtorDao.getDebtors4Boss(params);
 	}
 
+	@Override
+	public void reopenDedtor(Integer clerkId, Integer debtorId) {
+		if (!clerkDao.checkAction4Clerk(clerkId, DefaultValue.ADD_ACTION.getCode())) {
+			LOGGER.warn("Clerk id:{} access denid to reopen debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Reopen debtor access denied");
+		}
+		Oper operInit = operDao.getDebtorStateOper(debtorId);
+		if (operInit.equals(null)) {
+			LOGGER.debug("Debtor id:{} not found");
+			throw new MyNotFoundException("Debtor not found");
+		}
+	
+		Integer isDebtorOpen = operInit.getActionId();
+
+		if (isDebtorOpen.equals(DefaultValue.ADD_ACTION.getCode())) {
+			LOGGER.debug("Debtor id:{} allready active");
+			throw new MyNotFoundException("Debtor allready active");
+		}
+		 operInit.setActionDate(new Timestamp(new Date().getTime()));
+		 operInit.setControlDate(new Date(new Date().getTime()));
+	      StringBuilder desc=new StringBuilder();
+	      desc.append(operInit.getOperDesc()+"\n");
+	      desc.append(operInit.getActionDate().toString()+"\n");
+	      desc.append(String.format("Клерк %s ОТКРЫЛ ПОВТОРНО должника %s \n", 
+	    		 clerkDao.read(clerkId).getClerkFullName(),
+				 debtorDao.read(debtorId).getShortName()));
+	      operInit.setOperDesc(desc.toString());
+	      operInit.setClerkId(clerkId);
+	      operInit.setActionId(DefaultValue.ADD_ACTION.getCode());
+	      operDao.update(operInit);
+	      LOGGER.warn("Clerk id:{} Close debtor id:{}",clerkId,debtorId);
+		
+	}
+
+	
 	
 
 }

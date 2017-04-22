@@ -21,13 +21,23 @@ public interface IOperService {
 	
 	
 	/**
-	 * Check debtor allocated to clerk.
-	 *Allocate if not.
+	 * Check access conduct clerk for allocate debtor to other clerk.
+	 * Check if debtor yet allocated to clerk.
+	 * Allocate if not.
+	 * @param conductClerkId Conduct clerk id
 	 * @param debtorID debtor id
 	 * @param clerkId clerk id
 	 */
-	void allocateDebtor2Clerk(Integer debtorId,Integer clerkId);
-	
+	void linkDebtor2Clerk(Integer conductClerkId,Integer debtorId,Integer clerkId);
+	/**
+	 * Check access conduct clerk for unlocked debtor to other clerk.
+	 * 
+	 * Unlocked if not.
+	 * @param conductClerkId Conduct clerk id
+	 * @param debtorID debtor id
+	 * @param clerkId clerk id
+	 */
+	void unlinkDebtor2Clerk(Integer conductClerkId, Integer debtorId, Integer clerkId);
 
 	/**
 	 * Add operation
@@ -65,4 +75,6 @@ public interface IOperService {
 	 * @param oper operation
 	 */
 	void deleteOper(Integer conductClerkId, Oper oper);
+
+	
 }

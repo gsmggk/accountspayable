@@ -12,10 +12,9 @@ public interface IOperDao extends IGenericDao<Oper> {
 	 * 
 	 * @param debtorID
 	 * @param clerkId
-	 * @return true - allocated <br>
-	 *         false - not
+	 * @return oper - return allocate operation
 	 */
-	Boolean checkAllocated(Integer debtorID, Integer clerkId);
+	Oper checkAllocated(Integer debtorID, Integer clerkId);
 
 	/**
 	 * Get full oper with detail

@@ -75,7 +75,7 @@ public class ClerkServiceTest extends AbstractTest {
 	}
 
 	@Test
-	//@Ignore
+	@Ignore
 	@Rollback(true)
 	public void updateTest() {
 		clerkService.save(clerk);
@@ -97,7 +97,7 @@ public class ClerkServiceTest extends AbstractTest {
 
 	@Test
 	@Rollback(true)
-//	@Ignore
+	@Ignore
 	public void deleteTest() {
 		clerkService.save(clerk);
 		Integer savedClerkId = clerk.getId();
@@ -107,7 +107,7 @@ public class ClerkServiceTest extends AbstractTest {
 	}
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void checkAction4ClerkTest(){
 		Integer clerkId=91;
 		Integer actionId=19;
@@ -123,5 +123,14 @@ public class ClerkServiceTest extends AbstractTest {
 	public void getAllTest(){
 		List<Clerk> clerks=clerkService.getAll();
 		Assert.notEmpty(clerks,"List of clerks must be not empty");
+	}
+
+
+	@Test
+	public void getClerks4DebtorTest(){
+		
+	Integer debtorId=44;
+	List<Clerk> clerks=	clerkService.getClerks4Debtor(debtorId);
+	Assert.notEmpty(clerks,"Clerk list must be not empty");
 	}
 }

@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Clerk;
@@ -26,10 +27,12 @@ import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = "classpath:services-context.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath:services-context.xml")
 
-public class DebtorServiceTest extends AbstractTest {
+public class DebtorServiceTest
+// extends AbstractTest
+{
 	private static final Logger LOGGER = LoggerFactory.getLogger(DebtorServiceTest.class);
 
 	@Inject
@@ -90,9 +93,15 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void getNotDistributeDebtorsTest() {
-		List<Debtor> debtors = service.getAllocatedDebtor(false);
+		
+		
+		
+		Boolean allcated=false;
+		ParamsDebtor params=new ParamsDebtor();
+		params.setSortShortName(true);
+		List<Debtor> debtors = service.getAllocatedDebtors(allcated,params);
 		int i = 0;
 		while (i < debtors.size()) {
 
@@ -104,14 +113,14 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void getDebtor4ClerkTest() {
 		Integer clerkId = 91;
 		Boolean sortControl = true;
-		ParamsDebtors4Clerk params=new ParamsDebtors4Clerk();
+		ParamsDebtors4Clerk params = new ParamsDebtors4Clerk();
 		params.setSortControl(sortControl);
 		params.setSortShortName(true);
-		List<DebtorControl> debtors = service.getDebtors4Clerk(clerkId,params );
+		List<DebtorControl> debtors = service.getDebtors4Clerk(clerkId, params);
 
 		int i = 0;
 		while (i < debtors.size()) {
@@ -140,20 +149,32 @@ public class DebtorServiceTest extends AbstractTest {
 
 	@Test
 	@Ignore
+	@Rollback(true)
+	public void reoperDebtorTest() {
+		Integer clerkId = 15;// boss
+		Integer debtorId = 5;
+		service.reopenDedtor(clerkId, debtorId);
+
+	}
+
+	@Test
+	@Ignore
 	public void getDebtors4Boss() {
-	ParamsDebtors4Boss params=new ParamsDebtors4Boss();
-	//params.setSearchShortName("%нуш%");
-	params.setSortActive(false);
-	params.setSortShortName(true);
-	//params.setLimit(5);
-    List<DebtorState> debtorStates=  service.getDebtors4Boss(params);
-    int i = 0;
-	while (i < debtorStates.size()) {
+		ParamsDebtors4Boss params = new ParamsDebtors4Boss();
+		// params.setSearchShortName("%нуш%");
+		params.setSortActive(false);
+		params.setSortShortName(true);
+		// params.setLimit(5);
+		List<DebtorState> debtorStates = service.getDebtors4Boss(params);
+		int i = 0;
+		while (i < debtorStates.size()) {
 
-		System.out.println(debtorStates.get(i));
-		i++;
-	}
-	Assert.notEmpty(debtorStates,"List DebtorState must be not empty");
+			System.out.println(debtorStates.get(i));
+			i++;
+		}
+		Assert.notEmpty(debtorStates, "List DebtorState must be not empty");
 	}
 
+	
+	
 }

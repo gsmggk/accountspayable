@@ -44,7 +44,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 	/**
 	 * Read one property of model
-	 * 
+	 *<b> DON'T USE WITH FOR DATA OBJECTS</b>
 	 * @param objects
 	 *            - field array
 	 * @param clazzz
@@ -57,10 +57,28 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		try {
 			return jdbcTemplate.queryForObject(READ_SQL, objects, clazzz);
 		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
-
+	/**
+	 * Read one row of model
+	 *
+	 * @param objects
+	 *            - field array
+	
+	 * @return model
+	 */
+	public T read(Object[] objects) {
+		PropertyDao prDao = getPropertyDao();
+		final String READ_SQL = prDao.getReadSql();
+		try {
+			return jdbcTemplate.queryForObject(READ_SQL, objects, getRowMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	@Transactional
 	@Override
 	public void delete(Integer id) {

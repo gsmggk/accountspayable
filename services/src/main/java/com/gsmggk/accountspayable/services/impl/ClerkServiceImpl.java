@@ -93,4 +93,10 @@ public class ClerkServiceImpl implements IClerkService {
 		
 		return clerkDao.checkAction4Clerk(clerkId, actionId);
 	}
+
+	@Override
+	public List<Clerk> getClerks4Debtor(Integer debtorId) {
+		
+		return clerkDao.getClerks4Debtor(debtorId);
+	}
 }

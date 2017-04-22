@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
@@ -39,8 +40,8 @@ public interface IDebtorService {
 	 * 
 	 * @return List <b>debtors</b>
 	 */
-	List<Debtor> getAllocatedDebtor(Boolean allocated);
-
+	List<Debtor> getAllocatedDebtors(Boolean allocated);
+	List<Debtor> getAllocatedDebtors(Boolean allocated,ParamsDebtor params);
 	/**
 	 * Get debtors for clerk with <b>clerkId</b>. List contains debtors with
 	 * open act (debtor have operation with action=9(<i>Open</i>) and havn't
@@ -98,5 +99,12 @@ public interface IDebtorService {
 	List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params);
 
 	List<DebtorState> getDebtors4Boss();
+
+	/**
+	 * Reopen close debtor. Update debtor operation with action 1 into action 9.
+	 * @param clerkId conduct operation clerk id
+	 * @param debtorId debtor id
+	 */
+	void reopenDedtor(Integer clerkId, Integer debtorId);
 
 }

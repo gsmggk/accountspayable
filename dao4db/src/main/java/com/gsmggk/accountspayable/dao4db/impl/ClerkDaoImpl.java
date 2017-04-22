@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
@@ -108,6 +109,15 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		Clerk clerk=read(clerkId);
 		
 		return roleDao.chekAction2role(actionId, clerk.getRoleId());
+	}
+
+	@Override
+	public List<Clerk> getClerks4Debtor(Integer debtorId) {
+		String sql="select c.id,c.clerk_login_name,c.password,c.role_id,c.clerk_full_name from oper o join clerk c on(o.clerk_id=c.id) where o.action_id=11";
+				Criteria criteria=new Criteria();
+	  criteria.setSql(sql);
+	  criteria.addFilter("o.debtor_id=?", "AND", debtorId);
+	  return super.getCriteriaRowMapper(criteria, criteria.getObjects(), getRowMapper());
 	}
 
 	

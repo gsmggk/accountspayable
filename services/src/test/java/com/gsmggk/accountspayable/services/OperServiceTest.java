@@ -36,15 +36,16 @@ public class OperServiceTest
 
 	@Test
 	@Ignore
-	public void allocateDebtor2ClerkTest() {
+	public void linkDebtor2ClerkTest() {
 
 		String login = "Boss";
 		String password = "111111";
-		clerkService.loginCheck(login, password);
-		// TODO test it
+		
 
-		operService.allocateDebtor2Clerk(46, 90);
-
+		Integer debtorId=5;
+		Integer clerkId=90;
+		operService.linkDebtor2Clerk(clerkService.loginCheck(login, password).getId(),debtorId, clerkId);
+		operService.unlinkDebtor2Clerk(clerkService.loginCheck(login, password).getId(),debtorId, clerkId);
 	}
 
 	@Test
@@ -110,10 +111,10 @@ public class OperServiceTest
 		System.out.println(oldOper);
 	}
 	@Test
-	 @Ignore
+	@Ignore
 	public void deleteOperTest() {
-		Integer clerkId = 91;
-		Integer operId = 72;
+		Integer clerkId = 15;
+		Integer operId = 76;
 		Oper oldOper = operService.getOper(operId);
 		
 		operService.deleteOper(clerkId, oldOper);
@@ -122,6 +123,7 @@ public class OperServiceTest
 	
 	
 	@Test
+	@Ignore
 	public void getOpers4DebtorTest() {
 		Integer debtorId = 5;
 		List<Oper> opers = operService.getOpers4Debtor(debtorId);
