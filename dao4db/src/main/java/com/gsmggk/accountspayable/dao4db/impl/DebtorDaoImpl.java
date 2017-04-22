@@ -23,6 +23,7 @@ import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
@@ -141,10 +142,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	}
 
 	@Override
-	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
-			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName, Integer limit,
-			Integer offset) {
-
+	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, ParamsDebtors4Clerk params) {
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select ");
 		sqlBuilder.append("o.debtor_id,d.short_name,d.full_name,max(control_date) as control ");
@@ -159,23 +157,14 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		Criteria criteria = new Criteria();
 		criteria.setSql(sqlBuilder.toString());
 
-		criteria.addFilter("o.clerk_id=?", "AND", null);
-		Object[] newObj = new Object[] { clerkId };
+		criteria.addFilter("o.clerk_id=?", "AND", clerkId);
 
-		if (searchShotName != null && !searchShotName.isEmpty()) {
-			criteria.addFilter("d.short_name LIKE ?", "AND", null);
-			newObj = appendValue(newObj, searchShotName);
-		}
-		if (searchFullName != null && !searchFullName.isEmpty()) {
-			criteria.addFilter("d.full_name LIKE ?", "AND", null);
-			newObj = appendValue(newObj, searchFullName);
-		}
+		Date equal2Date = params.getEqual2Date();
 		if (equal2Date != null) {
-			criteria.addFilter("od.control_date = ?", "AND", null);
-			newObj = appendValue(newObj, equal2Date);
+			criteria.addFilter("od.control_date = ?", "AND", equal2Date);
 		}
-		criteria.addFilter("debtor_id, short_name, full_name", "group by", null);
 
+		Boolean sortControl = params.getSortControl();
 		if (sortControl != null) {
 			switch (sortControl.toString()) {
 			case "true":
@@ -188,72 +177,23 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 				break;
 			}
 		}
-		if (sortShortName != null) {
-			switch (sortShortName.toString()) {
-			case "true":
-				criteria.addSort("short_name", "asc");
-				break;
-			case "false":
-				criteria.addSort("short_name", "desc");
-				break;
-			default:
-				break;
-			}
-		}
-		if (sortFullName != null) {
-			switch (sortFullName.toString()) {
-			case "true":
-				criteria.addSort("full_name", "asc");
-				break;
-			case "false":
-				criteria.addSort("full_name", "desc");
-				break;
-			default:
-				break;
-			}
-		}
-		if (limit != null && limit > 0) {
-			criteria.setLimit(limit);
-		}
-		if (offset != null && offset > 0) {
-			criteria.setOffset(offset);
-		}
-		String sql = criteria.getCriteriaSql();
-		System.out.println(sql);
+		setCriteria4Debtor(params, criteria);
+		criteria.addFilter("debtor_id, short_name, full_name", "group by", null);
+		LOGGER.debug("getDebtors4Clerk sql:{}", criteria.getCriteriaSql());
 
 		DebtorControlRowMapper rm = new DebtorControlRowMapper();
+		Object[] newObj = criteria.getObjects();
 		return getCriteriaRowMapper(criteria, newObj, rm);
-	}
-
-	private Object[] appendValue(Object[] obj, Object newObj) {
-		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
-		temp.add(newObj);
-		return temp.toArray();
-	}
-
-	@Override
-	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, ParamsDebtors4Clerk params) {
-		// TODO REfactor for param
-		return null;
 	}
 
 	@Override
 	public List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params) {
-		final String sql = "select d.id as debtor_id,d.short_name,d.full_name," + " case " + "when o.action_id=9 then true"
-				+ " when o.action_id=1 then FALSE" + " end as active " + "from oper o"
+		final String sql = "select d.id as debtor_id,d.short_name,d.full_name," + " case "
+				+ "when o.action_id=9 then true" + " when o.action_id=1 then FALSE" + " end as active " + "from oper o"
 				+ " join debtor d on(o.debtor_id=d.id) " + "where (o.action_id=1 or o.action_id=9)";
 		Criteria criteria = new Criteria();
 		criteria.setSql(sql);
 
-		String searchShotName = params.getSearchShortName();
-		if (searchShotName != null && !searchShotName.isEmpty()) {
-			criteria.addFilter("d.short_name LIKE ?", "AND", searchShotName);
-		}
-		String searchFullName = params.getSeachFullName();
-		if (searchFullName != null && !searchFullName.isEmpty()) {
-			criteria.addFilter("d.short_name LIKE ?", "AND", searchFullName);
-		}
-		
 		if (params.getSortActive() != null) {
 			switch (params.getSortActive().toString()) {
 			case "true":
@@ -265,6 +205,24 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 			default:
 				break;
 			}
+		}
+		setCriteria4Debtor(params, criteria);
+
+		LOGGER.debug("getDebtors4Boss sql:{}", criteria.getCriteriaSql());
+
+		DebtorStateRowMapper rm = new DebtorStateRowMapper();
+		Object[] newObj = criteria.getObjects();
+		return getCriteriaRowMapper(criteria, newObj, rm);
+	}
+
+	private <R extends ParamsDebtor> void setCriteria4Debtor(R params, Criteria criteria) {
+		String searchShotName = params.getSearchShortName();
+		if (searchShotName != null && !searchShotName.isEmpty()) {
+			criteria.addFilter("d.short_name LIKE ?", "AND", searchShotName);
+		}
+		String searchFullName = params.getSeachFullName();
+		if (searchFullName != null && !searchFullName.isEmpty()) {
+			criteria.addFilter("d.short_name LIKE ?", "AND", searchFullName);
 		}
 		if (params.getSortShortName() != null) {
 			switch (params.getSortShortName().toString()) {
@@ -296,12 +254,6 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		if (params.getOffset() != null && params.getOffset() > 0) {
 			criteria.setOffset(params.getOffset());
 		}
-	 
-	LOGGER.debug("getDebtors4Boss sql:{}",criteria.getCriteriaSql());
-
-		DebtorStateRowMapper rm = new DebtorStateRowMapper();
-		Object[] newObj=criteria.getObjects();
-		return getCriteriaRowMapper(criteria, newObj, rm);
 	}
 
 }

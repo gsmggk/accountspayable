@@ -20,6 +20,7 @@ import org.springframework.util.Assert;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
@@ -103,19 +104,14 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void getDebtor4ClerkTest() {
 		Integer clerkId = 91;
-		String searchShotName = null;
-		String searchFullName = null;
-		Date equal2Date = null;
 		Boolean sortControl = true;
-		Boolean sortShortName = false;
-		Boolean sortFullName = null;
-		Integer limit = 5;
-		Integer offset = 5;
-		List<DebtorControl> debtors = service.getDebtors4Clerk(clerkId, searchShotName, searchFullName, equal2Date,
-				sortControl, sortShortName, sortFullName, limit, offset);
+		ParamsDebtors4Clerk params=new ParamsDebtors4Clerk();
+		params.setSortControl(sortControl);
+		params.setSortShortName(true);
+		List<DebtorControl> debtors = service.getDebtors4Clerk(clerkId,params );
 
 		int i = 0;
 		while (i < debtors.size()) {
@@ -147,9 +143,9 @@ public class DebtorServiceTest extends AbstractTest {
 	public void getDebtors4Boss() {
 	ParamsDebtors4Boss params=new ParamsDebtors4Boss();
 	//params.setSearchShortName("%нуш%");
-	params.setSortActive(true);
+	params.setSortActive(false);
 	params.setSortShortName(true);
-	params.setLimit(5);
+	//params.setLimit(5);
     List<DebtorState> debtorStates=  service.getDebtors4Boss(params);
     int i = 0;
 	while (i < debtorStates.size()) {

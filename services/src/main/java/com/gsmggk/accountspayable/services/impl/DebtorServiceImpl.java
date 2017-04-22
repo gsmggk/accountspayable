@@ -78,18 +78,14 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId) {
-		return debtorDao.getDebtors4Clerk(clerkId, null, null, null, true, null, null, null, null);
+		ParamsDebtors4Clerk params=new ParamsDebtors4Clerk();
+		params.setSortControl(true);
+		params.setSortShortName(true);
+		return debtorDao.getDebtors4Clerk(clerkId,params);
 
 	}
 
-	@Override
-	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
-			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName, Integer limit,
-			Integer offset) {
-
-		return debtorDao.getDebtors4Clerk(clerkId, searchShotName, searchFullName, equal2Date, sortControl,
-				sortShortName, sortFullName, limit, offset);
-	}
+	
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, ParamsDebtors4Clerk params) {
 		
@@ -184,6 +180,14 @@ public class DebtorServiceImpl implements IDebtorService {
 		return debtorDao.getDebtors4Boss(params);
 	}
 
+	@Override
+	public List<DebtorState> getDebtors4Boss() {
+	ParamsDebtors4Boss params= new ParamsDebtors4Boss();
+	params.setSortActive(false);
+	params.setSortShortName(true);
+		return debtorDao.getDebtors4Boss(params);
+	}
 
+	
 
 }
