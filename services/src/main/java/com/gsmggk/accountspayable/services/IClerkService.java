@@ -2,29 +2,46 @@ package com.gsmggk.accountspayable.services;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Role;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 
 public interface IClerkService {
 
-	@Transactional
 	void save(Clerk clerk);
 
 	List<Clerk> getAll();
 
 	Clerk get(Integer id);
 
-	@Transactional
 	void delete(Clerk clerk);
-	
-	/**
-	 * Try Log in to Application 
-	 * @param login -Login name
-	 * @param password -password
-	 * @return return <b>Clerk</b> is success or generate exceptions
-	 */
-	Clerk loginCheck(String login,String password);
-	
 
+	/**
+	 * Try Login to Application.
+	 * And save clerk id, full name into CurrentLayer property.
+	 * @param login
+	 *            -Login name
+	 * @param password
+	 *            -password
+	 * @return return <b>Clerk</b> if success or generate exceptions
+	 * 
+	 */
+	Clerk loginCheck(String login, String password) throws IllegalArgumentException;
+
+	void addRole2Clerk(Clerk clerk, Role role);
+	 /**
+	 * Check access clerk to action.
+	 * @param clerkId
+	 * @param actionId
+	 * @return true - if approved <br>
+	 * false - if denied 
+	 */
+	Boolean checkAction4Clerk(Integer clerkId, Integer actionId);
+
+	/**
+	 * Get  clerks list allocated to debtor 
+	 * @param debtorId -debtor id
+	 * @return List<Clerk>
+	 */
+	List<Clerk> getClerks4Debtor(Integer debtorId);
 }

@@ -66,4 +66,10 @@ public class Debtor extends AbstractTable {
 		this.other = other;
 	}
 
+	@Override
+	public String toString() {
+		return "Debtor [shortName=" + shortName + ", fullName=" + fullName + ", address=" + address + ", phones="
+				+ phones + ", jobe=" + jobe + ", family=" + family + ", other=" + other + ", id=" + id + "]";
+	}
+
 }

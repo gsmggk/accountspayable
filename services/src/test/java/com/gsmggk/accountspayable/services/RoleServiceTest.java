@@ -1,16 +1,16 @@
 package com.gsmggk.accountspayable.services;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.datamodel.Role;
 
-@Transactional
 public class RoleServiceTest extends AbstractTest {
 	@Inject
 	private IRoleService roleService;
@@ -39,9 +39,7 @@ public class RoleServiceTest extends AbstractTest {
 		role.setRoleName(roleName);
 	}
 
-	/**
-	 * 
-	 */
+	
 	@Test
 	@Rollback(true)
 	public void insertTest() {
@@ -80,4 +78,9 @@ public class RoleServiceTest extends AbstractTest {
 		Assert.isNull(roleFromDb, "Role must be null after delete");
 	}
 
+	@Test
+	public void getAllTest(){
+		List<Role> roles=roleService.getAll();
+		Assert.notEmpty(roles, "List of roles must be not empty");
+	}
 }

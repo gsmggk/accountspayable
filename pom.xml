@@ -9,20 +9,21 @@
 
 	<packaging>pom</packaging>
 
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<common.project.version>1.0.1</common.project.version>
-		<spring.version>4.3.7.RELEASE</spring.version>
-		<jetty9.version>9.2.13.v20150730</jetty9.version>
+		<spring.version>4.0.3.RELEASE</spring.version>
+		<jetty9.version>9.4.3.v20170317</jetty9.version>
 		<logj.version>2.8.1</logj.version>
 	</properties>
 
 	<modules>
 		<module>datamodel</module>
-		<module>dao-api</module>
-		<module>dao-impl-db</module>
-		<!--module>dao-impl-xml</module -->
+		<module>dao4api</module>
+		<module>dao4db</module>
+		<module>dao4xml</module>
 		<module>services</module>
 		<module>webapp</module>
 	</modules>
@@ -38,18 +39,21 @@
 
 			<dependency>
 				<groupId>com.gsmggk.accountspayable</groupId>
-				<artifactId>dao-api</artifactId>
+				<artifactId>dao4api</artifactId>
 				<version>${common.project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.gsmggk.accountspayable</groupId>
-				<artifactId>dao-impl-db</artifactId>
+				<artifactId>dao4db</artifactId>
 				<version>${common.project.version}</version>
 			</dependency>
 
-			<!--dependency> <groupId>com.gsmggk.accountspayable</groupId> <artifactId>dao-impl-xml</artifactId> 
-				<version>1.0.0</version> </dependency -->
+			<dependency>
+				<groupId>com.gsmggk.accountspayable</groupId>
+				<artifactId>dao4xml</artifactId>
+				<version>${common.project.version}</version>
+			</dependency>
 
 
 			<dependency>
@@ -99,7 +103,11 @@
 				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
-
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
 			<!-- Spring framework -->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -212,7 +220,14 @@
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>1.9.13</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.0.pr2</version>
+</dependency>
+
+			<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream 
+				For deploy XML file -->
 			<dependency>
 				<groupId>com.thoughtworks.xstream</groupId>
 				<artifactId>xstream</artifactId>

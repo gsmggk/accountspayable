@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 
 public class Account extends AbstractTable {
 	private String accountName;
-	private BigDecimal money;
+	private BigDecimal summ;
 	private Integer debtorId;
 
 	@Override
 	public String toString() {
-		return "Account [accountName=" + accountName + ", money=" + money + ", debtorId=" + debtorId + ", id=" + id
+		return "Account [accountName=" + accountName + ", summ=" + summ + ", debtorId=" + debtorId + ", id=" + id
 				+ "]";
 	}
 
@@ -21,12 +21,12 @@ public class Account extends AbstractTable {
 		this.accountName = accountName;
 	}
 
-	public BigDecimal getMoney() {
-		return money;
+	public BigDecimal getSumm() {
+		return summ;
 	}
 
-	public void setMoney(BigDecimal money) {
-		this.money = money;
+	public void setSumm(BigDecimal summ) {
+		this.summ = summ;
 	}
 
 	public Integer getDebtorId() {
@@ -35,6 +35,35 @@ public class Account extends AbstractTable {
 
 	public void setDebtorId(Integer debtorId) {
 		this.debtorId = debtorId;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (accountName == null) {
+			if (other.accountName != null)
+				return false;
+		} else if (!accountName.equals(other.accountName))
+			return false;
+		if (debtorId == null) {
+			if (other.debtorId != null)
+				return false;
+		} else if (!debtorId.equals(other.debtorId))
+			return false;
+		if (summ == null) {
+			if (other.summ != null)
+				return false;
+		} else if (!summ.equals(other.summ))
+			return false;
+		return true;
 	}
 
 }

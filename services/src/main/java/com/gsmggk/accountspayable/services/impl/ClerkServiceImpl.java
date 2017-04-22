@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao.impl.db.IClerkDao;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadPasswordException;
+import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
+import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
 public class ClerkServiceImpl implements IClerkService {
@@ -47,13 +49,13 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public void delete(Clerk clerk) {
-		LOGGER.debug("delete clerk");
-		clerkDao.delete(clerk);
+		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}", clerk.getId().toString(), clerk.getClerkLoginName());
+		clerkDao.delete(clerk.getId());
 
 	}
 
 	@Override
-	public Clerk loginCheck(String login, String password) {
+	public Clerk loginCheck(String login, String password) throws IllegalArgumentException {
 		if (login == null) {
 			LOGGER.warn("login is null");
 			throw new IllegalArgumentException();
@@ -65,6 +67,9 @@ public class ClerkServiceImpl implements IClerkService {
 			// Check password
 			if (clerk.getPassword().equals(password)) {
 				LOGGER.debug("login is ok");
+				// Write CurrentLayer properties
+				CurrentLayer.setClerkId(clerk.getId());
+				CurrentLayer.setClerkFullName(clerk.getClerkFullName());
 				return clerk;
 			} else {
 				LOGGER.warn("passwor is wrong");
@@ -75,5 +80,23 @@ public class ClerkServiceImpl implements IClerkService {
 			throw new MyBadLoginNameException("Login name is invalid.");
 
 		}
+	}
+
+	@Override
+	public void addRole2Clerk(Clerk clerk, Role role) {
+		clerk.setRoleId(role.getId());
+		clerkDao.update(clerk);
+	}
+
+	@Override
+	public Boolean checkAction4Clerk(Integer clerkId, Integer actionId) {
+		
+		return clerkDao.checkAction4Clerk(clerkId, actionId);
+	}
+
+	@Override
+	public List<Clerk> getClerks4Debtor(Integer debtorId) {
+		
+		return clerkDao.getClerks4Debtor(debtorId);
 	}
 }

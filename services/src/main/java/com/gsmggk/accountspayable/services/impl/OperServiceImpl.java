@@ -1,47 +1,204 @@
 package com.gsmggk.accountspayable.services.impl;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.gsmggk.accountspayable.dao.impl.db.IOperDao;
+import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.IDebtorDao;
+import com.gsmggk.accountspayable.dao4api.IOperDao;
+import com.gsmggk.accountspayable.dao4api.IRoleDao;
+import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
+import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IOperService;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
+import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
-public class OperServiceImpl implements IOperService{
+public class OperServiceImpl implements IOperService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperServiceImpl.class);
+
 	@Inject
 	private IOperDao operDao;
+
+	@Inject
+	private IClerkDao clerkDao;
+	@Inject
+	private IDebtorDao debtorDao;
+	@Inject
+	private IRoleDao roleDao;
 
 	@Override
 	public void save(Oper oper) {
 		if (oper.getId() == null) {
-
 			operDao.insert(oper);
+			LOGGER.info("insert Oper: " + oper);
 		} else {
 
 			operDao.update(oper);
 		}
-		
+
 	}
 
 	@Override
 	public List<Oper> getAll() {
-		
+
 		return operDao.getAll();
 	}
 
 	@Override
 	public Oper get(Integer id) {
-		
+
 		return operDao.read(id);
 	}
 
 	@Override
 	public void delete(Oper oper) {
-		operDao.delete(oper);
+		operDao.delete(oper.getId());
+
+	}
+
+	@Override
+	public void linkDebtor2Clerk(Integer conductClerkId, Integer debtorId, Integer clerkId) {
+
+		if (!clerkDao.checkAction4Clerk(conductClerkId, DefaultValue.ALLOCATE_DEBTOR_ACTION.getCode())) {
+			LOGGER.warn("Clerk id:{} access denid to allocate debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Allocate debtor access denied");
+		}
+
+		Oper oper = operDao.checkAllocated(debtorId, clerkId);
+		if (oper == null) {
+			
+			 oper = new Oper();// insert new operation link
+			prepareLinkDebtor2Clerk(true, conductClerkId, debtorId, clerkId, oper);
+			operDao.insert(oper);
+			return;
+		}
+		if (oper.getActionId() == DefaultValue.ALLOCATE_DEBTOR_ACTION.getCode()) {
+			LOGGER.debug("Debtor id:{} allready allocated to Clerk id:{}", debtorId, clerkId);
+			throw new MyNotFoundException("Debtor allready allocated");
+		}
+
+		prepareLinkDebtor2Clerk(true, conductClerkId, debtorId, clerkId, oper);
+		operDao.update(oper);
+	}
+
+	private void prepareLinkDebtor2Clerk(Boolean flagUpdate, Integer conductClerkId, Integer debtorId, Integer clerkId,
+			Oper oper) {
+
+		oper.setActionId(DefaultValue.ALLOCATE_DEBTOR_ACTION.getCode());
+		oper.setActionDate(new Timestamp(new Date().getTime()));
+		oper.setControlDate(new Date(new Date().getTime()));
+		oper.setDebtorId(debtorId);
+		oper.setClerkId(clerkId);
+
+		StringBuilder desc = new StringBuilder();
+		if (flagUpdate) {
+			desc.append(oper.getOperDesc()+ "\n");
+		}
+		desc.append(oper.getActionDate().toString() + "\n");
 		
+		desc.append(String.format("Клерк %s НАЗНАЧИЛ должника %s - клерку %s   ",
+				clerkDao.read(conductClerkId).getClerkFullName(), debtorDao.read(debtorId).getShortName(),
+				clerkDao.read(clerkId).getClerkFullName()));
+		
+		oper.setOperDesc(desc.toString());
+		LOGGER.info("Allocate Debtor: Clerk id-{} Allocate Debtor id-{}  to clerk id-{}", conductClerkId, debtorId,
+				clerkId);
+	}
+
+	@Override
+	public void unlinkDebtor2Clerk(Integer conductClerkId, Integer debtorId, Integer clerkId) {
+
+		if (!clerkDao.checkAction4Clerk(conductClerkId, DefaultValue.UNLOCATE_DEBTOR_ACTION.getCode())) {
+			LOGGER.warn("Clerk id:{} access denid to unlocate debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Unlocate debtor access denied");
+		}
+		Oper oper = operDao.checkAllocated(debtorId, clerkId);
+		if (oper == null || oper.getActionId() == DefaultValue.UNLOCATE_DEBTOR_ACTION.getCode()) {
+			LOGGER.debug("Debtor id:{} not allocated to Clerk id:{}", debtorId, clerkId);
+			throw new MyNotFoundException("Debtor not allocated to Clerk");
+		}
+
+		oper.setActionId(DefaultValue.UNLOCATE_DEBTOR_ACTION.getCode());
+		oper.setActionDate(new Timestamp(new Date().getTime()));
+		oper.setControlDate(new Date(new Date().getTime()));
+		oper.setDebtorId(debtorId);
+		oper.setClerkId(clerkId);
+
+		StringBuilder desc = new StringBuilder();
+		desc.append(oper.getOperDesc() + "\n");
+		desc.append(oper.getActionDate().toString() + "\n");
+
+		desc.append(String.format("Клерк %s СНЯЛ НАЗНАЧЕНИЕ должника %s - клерку %s   ",
+				clerkDao.read(conductClerkId).getClerkFullName(), debtorDao.read(debtorId).getShortName(),
+				clerkDao.read(clerkId).getClerkFullName()));
+		oper.setOperDesc(desc.toString());
+		LOGGER.info("Allocate Debtor: Clerk id-{} Allocate Debtor id-{}  to clerk id-{}", conductClerkId, debtorId,
+				clerkId);
+		operDao.update(oper);
+	}
+
+	@Override
+	public void addOper(Oper oper) {
+		oper.setActionDate(new Timestamp(new Date().getTime()));
+
+		Integer clerkId = oper.getClerkId();
+		Integer actionId = oper.getActionId();
+		if (!clerkDao.checkAction4Clerk(clerkId, actionId)) {
+			LOGGER.error("Clerk id:{} have access denide to Add operation with action id:{}", clerkId, actionId);
+			throw new MyAccessDeniedException("Access clerk to operation denieded");
+		}
+		;
+		operDao.insert(oper);
+		LOGGER.info("Operatin id:{} inserted- debtor id:{} action id:{} clerk id:{}", oper.getId(), oper.getDebtorId(),
+				oper.getActionId(), oper.getClerkId());
+	}
+
+	@Override
+	public Oper getOper(Integer operId) {
+
+		return operDao.getOper(operId);
+	}
+
+	@Override
+	public void updateOper(Integer conductClerkId, Oper oper) {
+
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
+			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+					oper.getActionId());
+			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+		}
+
+		operDao.update(oper);
+		LOGGER.info("Operatin id:{} updated- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),
+				oper.getDebtorId(), oper.getActionId(), conductClerkId);
+	}
+
+	@Override
+	public List<Oper> getOpers4Debtor(Integer debtorId) {
+
+		return operDao.getOpers4Debtor(debtorId);
+	}
+
+	@Override
+	public void deleteOper(Integer conductClerkId, Oper oper) {
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
+			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+					oper.getActionId());
+			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+		}
+		operDao.delete(oper.getId());
+		LOGGER.warn("Operatin id:{} delete- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),
+				oper.getDebtorId(), oper.getActionId(), conductClerkId);
+
 	}
 }

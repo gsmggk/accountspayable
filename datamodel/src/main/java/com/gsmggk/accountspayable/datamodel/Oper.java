@@ -1,12 +1,13 @@
 package com.gsmggk.accountspayable.datamodel;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Oper extends AbstractTable {
 	private Integer debtorId;
 	private Integer clerkId;
 	private Integer actionId;
-	private Date actionDate;
+	private Timestamp actionDate;
 	private Date controlDate;
 	private String operDesc;
 
@@ -40,11 +41,11 @@ public class Oper extends AbstractTable {
 		this.actionId = actionId;
 	}
 
-	public Date getActionDate() {
+	public Timestamp getActionDate() {
 		return actionDate;
 	}
 
-	public void setActionDate(Date actionDate) {
+	public void setActionDate(Timestamp actionDate) {
 		this.actionDate = actionDate;
 	}
 
@@ -62,6 +63,49 @@ public class Oper extends AbstractTable {
 
 	public void setOperDesc(String operDesc) {
 		this.operDesc = operDesc;
+	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Oper other = (Oper) obj;
+		if (actionDate == null) {
+			if (other.actionDate != null)
+				return false;
+		} else if (!actionDate.equals(other.actionDate))
+			return false;
+		if (actionId == null) {
+			if (other.actionId != null)
+				return false;
+		} else if (!actionId.equals(other.actionId))
+			return false;
+		if (clerkId == null) {
+			if (other.clerkId != null)
+				return false;
+		} else if (!clerkId.equals(other.clerkId))
+			return false;
+		if (controlDate == null) {
+			if (other.controlDate != null)
+				return false;
+		} else if (!controlDate.equals(other.controlDate))
+			return false;
+		if (debtorId == null) {
+			if (other.debtorId != null)
+				return false;
+		} else if (!debtorId.equals(other.debtorId))
+			return false;
+		if (operDesc == null) {
+			if (other.operDesc != null)
+				return false;
+		} else if (!operDesc.equals(other.operDesc))
+			return false;
+		return true;
 	}
 
 }

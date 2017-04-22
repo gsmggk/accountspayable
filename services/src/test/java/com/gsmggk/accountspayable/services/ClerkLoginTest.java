@@ -3,16 +3,18 @@ package com.gsmggk.accountspayable.services;
 import javax.inject.Inject;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadLoginNameException;
-import com.gsmggk.accountspayable.dao.impl.db.except.MyBadPasswordException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 
-@Transactional
+
+
 public class ClerkLoginTest extends AbstractTest {
 
 	@Inject
