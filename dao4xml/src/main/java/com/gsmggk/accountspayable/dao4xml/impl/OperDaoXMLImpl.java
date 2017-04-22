@@ -24,13 +24,24 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 		return "oper.xml";
 	}
 
+
 	@Override
-	public Boolean checkAllocated(Integer debtorID, Integer clerkId) {
+	public Oper getOper(Integer operId) {
 		throw new NotSupportedMethodException();
 	}
 
 	@Override
-	public Oper getOper(Integer operId) {
+	public Oper checkAllocated(Integer debtorID, Integer clerkId) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public List<Oper> getOpers4Debtor(Integer debtorId) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public Oper getDebtorStateOper(Integer debtorId) {
 		throw new NotSupportedMethodException();
 	}
 

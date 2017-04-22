@@ -10,6 +10,10 @@ import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.filter.Filter;
 import com.gsmggk.accountspayable.dao4api.filter.SortData;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
+import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Debtor;
@@ -28,11 +32,7 @@ public class DebtorDaoXMLImpl extends GenericDaoXMLImpl<Debtor> implements IDebt
 		return "debtor.xml";
 	}
 
-	@Override
-	public List<Debtor> getAllocatedDebtor(Boolean allocated) {
-		throw new NotSupportedMethodException();
-	}
-
+	
 	
 
 	@Override
@@ -41,11 +41,27 @@ public class DebtorDaoXMLImpl extends GenericDaoXMLImpl<Debtor> implements IDebt
 	}
 
 	@Override
-	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, String searchShotName, String searchFullName,
-			Date equal2Date, Boolean sortControl, Boolean sortShortName, Boolean sortFullName,Integer limit
-			,Integer offset) {
+	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
 		throw new NotSupportedMethodException();
 	}
+
+	@Override
+	public void updateDebtor(Debtor debtor, Oper oper) {
+		throw new NotSupportedMethodException();
+		
+	}
+
+	@Override
+	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, ParamsDebtors4Clerk params) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params) {
+		throw new NotSupportedMethodException();
+	}
+
+	
 
 	
 
