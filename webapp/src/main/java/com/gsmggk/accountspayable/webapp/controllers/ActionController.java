@@ -39,7 +39,7 @@ public class ActionController {
 
 		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
 	}
-//, produces=MediaType.APPLICATION_JSON_VALUE
+
 	 @RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	    public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam) {
 	        Action action = actionService.get(actionIdParam);
@@ -85,7 +85,7 @@ public class ActionController {
 		ActionModel model = new ActionModel();
 		model.setActionName(action.getActionName());
 		model.setDuration(action.getDuration());
-		model.setCode(action.getId());
+		model.setId(action.getId());
 		return model;
 	}
 
