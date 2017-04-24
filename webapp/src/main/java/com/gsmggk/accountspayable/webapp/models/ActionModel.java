@@ -1,7 +1,16 @@
 package com.gsmggk.accountspayable.webapp.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class ActionModel {
+	@NotNull(message = "Action name  must be not null")
+	@NotEmpty(message = "Action name must be not empty")
+	@Size(min=3,max=5,message = "Action name must be on 3 to 5")
 	private String actionName;
+	@NotNull(message = "Duration must be not null")
 	private Integer duration;
 	private Integer Id;
 

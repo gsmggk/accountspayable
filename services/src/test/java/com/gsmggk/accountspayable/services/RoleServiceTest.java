@@ -35,7 +35,7 @@ public class RoleServiceTest extends AbstractTest {
 		role = new Role();
 		roleFromDb = new Role();
 		// Add value to roleName
-		roleName = "TEst";
+		roleName = "My New testeerer role";
 		role.setRoleName(roleName);
 	}
 
