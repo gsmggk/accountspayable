@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +26,7 @@ import com.gsmggk.accountspayable.webapp.models.RoleModel;
 public class RoleController {
 	@Inject
 	private IRoleService roleService;
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<RoleModel>> getAll() {
 		List<Role> allRoles;
@@ -46,14 +48,14 @@ public class RoleController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createAction(@RequestBody RoleModel roleModel) {
+	public ResponseEntity<?> createAction( @RequestBody  RoleModel roleModel) {
 		Role role = model2entity(roleModel);
 		roleService.save(role);
 		return new ResponseEntity<IdModel>(new IdModel(role.getId()), HttpStatus.CREATED);
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateAction(@RequestBody RoleModel roleModel,
+	public ResponseEntity<?> updateAction( @RequestBody  RoleModel roleModel,
 			@PathVariable(value = "id") Integer roleIdParam) {
 		Role role = roleService.get(roleIdParam);
 
@@ -79,8 +81,9 @@ public class RoleController {
 
 	private RoleModel entity2model(Role role) {
 		RoleModel model = new RoleModel();
-		model.setRoleName(role.getRoleName());
 		model.setId(role.getId());
+		model.setRoleName(role.getRoleName());
+		
 		return model;
 	}
 }

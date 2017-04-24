@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDuplicateKeyException;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
 public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {
@@ -116,8 +118,12 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 			}
 
 		};
-
+       try {
 		jdbcTemplate.update(psc, keyHolder);
+	} catch (DuplicateKeyException e) {
+		throw new MyDuplicateKeyException(e.getMessage(),e);
+	} 
+		
 
 		object.setId(keyHolder.getKey().intValue());
 
