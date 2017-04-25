@@ -1,5 +1,6 @@
 package com.gsmggk.accountspayable.webapp.models;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -8,9 +9,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ActionModel {
 	@NotNull(message = "Action name  must be not null")
 	@NotEmpty(message = "Action name must be not empty")
-	@Size(min=3,max=5,message = "Action name must be on 3 to 5")
+	@Size(min=3,max=30,message = "Action name must be on 5 to 30")
 	private String actionName;
-	@NotNull(message = "Duration must be not null")
+	@Max(value = 365,message = "Duration is so big")
 	private Integer duration;
 	private Integer Id;
 

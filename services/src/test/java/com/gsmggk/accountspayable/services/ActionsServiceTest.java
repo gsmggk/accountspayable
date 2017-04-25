@@ -16,7 +16,9 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 public class ActionsServiceTest extends AbstractTest {
 	@Inject
 	private IActionService modelService;
-
+	@Inject
+	private IRoleService roleService;
+	
 	private Action model;
 	private Action modelFromDb;
 
@@ -110,5 +112,16 @@ public class ActionsServiceTest extends AbstractTest {
 		List<Action> actions=modelService.getAll();
 		Assert.notEmpty(actions,"List of actions must be not empty");
 	}
-
+	@Test
+	public void getActions4RoleTest(){
+		Integer id=10;
+		List<Action> actions=roleService.getActions4Role(id);
+		Assert.notEmpty(actions,"List of actions must be not empty");
+	}
+	@Test
+	public void getTest(){
+		Integer id=9;
+		Action action=modelService.get(id);
+		Assert.notNull(action,"List of actions must be not empty");
+	}
 }

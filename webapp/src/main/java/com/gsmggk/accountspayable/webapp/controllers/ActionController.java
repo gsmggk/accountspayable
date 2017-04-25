@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.services.IActionService;
+import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.webapp.models.ActionModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ErrorModel;
@@ -29,6 +30,25 @@ import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 public class ActionController {
 	@Inject
 	private IActionService actionService;
+	@Inject
+	private IRoleService roleService;
+
+	@RequestMapping(value = "/4role/{id}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<?> getActions4Role(
+			@PathVariable(value = "id") Integer roleIdParam) {
+		List<Action> allActions;
+		allActions = roleService.getActions4Role(roleIdParam);
+		if (allActions.isEmpty()) {
+			   String bodyOfResponse = "{\"error\":\"Role not exists.\"}";
+			return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		}
+		List<ActionModel> converterModel = new ArrayList<>();
+		for (Action action : allActions) {
+			converterModel.add(entity2model(action));
+		}
+
+		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<ActionModel>> getAll() {
@@ -46,6 +66,12 @@ public class ActionController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam) {
 		Action action = actionService.get(actionIdParam);
+		if (action==null){
+			   String bodyOfResponse = "{\"error\":\"Action not exists.\"}";
+				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		}
+		
+		
 		ActionModel actionModel = entity2model(action);
 		return new ResponseEntity<ActionModel>(actionModel, HttpStatus.OK);
 	}
@@ -53,17 +79,18 @@ public class ActionController {
 	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
 
 	public ResponseEntity<?> createAction(@Valid @RequestBody ActionModel actionModel, Errors e) {
-		Action action = model2entity(actionModel);
+
 		if (e.hasErrors()) {
-			 return new ValidationErrorRestonse().getValidationErrorRestonse(e);
-				}
+			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+		}
+		Action action = model2entity(actionModel);
 		actionService.save(action);
 		return new ResponseEntity<IdModel>(new IdModel(action.getId()), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateAction(@Valid @RequestBody ActionModel actionModel,Errors e,
-			@PathVariable(value = "id") Integer actionIdParam ) {
+	public ResponseEntity<?> updateAction(@Valid @RequestBody ActionModel actionModel, Errors e,
+			@PathVariable(value = "id") Integer actionIdParam) {
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
