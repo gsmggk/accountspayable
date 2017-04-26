@@ -44,7 +44,10 @@ public class ClerkControler {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer clerkIdParam) {
 		Clerk clerk = clerkService.get(clerkIdParam);
-		
+		if (clerk==null){
+			   String bodyOfResponse = "{\"error\":\"Clerk not exists.\"}";
+				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		}
 		ClerkModel clerkModel = entity2model(clerk);
 		return new ResponseEntity<ClerkModel>(clerkModel, HttpStatus.OK);
 	}

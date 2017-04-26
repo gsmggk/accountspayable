@@ -59,7 +59,7 @@ public class RoleController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createAction(@Valid @RequestBody  RoleModel roleModel,Errors e) {
+	public ResponseEntity<?> createRole(@Valid @RequestBody  RoleModel roleModel,Errors e) {
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
@@ -69,7 +69,7 @@ public class RoleController {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateAction( @Valid @RequestBody  RoleModel roleModel,Errors e,
+	public ResponseEntity<?> updateRole( @Valid @RequestBody  RoleModel roleModel,Errors e,
 			@PathVariable(value = "id") Integer roleIdParam) {
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
@@ -83,7 +83,7 @@ public class RoleController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteAction(@PathVariable(value = "id") Integer roleIdParam) {
+	public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer roleIdParam) {
 		Role role = new Role();
 		role = roleService.get(roleIdParam);
 		roleService.delete(role);

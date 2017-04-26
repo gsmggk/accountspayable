@@ -32,6 +32,30 @@ public class ActionController {
 	private IActionService actionService;
 	@Inject
 	private IRoleService roleService;
+	
+	@RequestMapping(value = "/{actionid}/add2role/{roleid}", method = RequestMethod.PUT)
+	public ResponseEntity<?> addAction2Role(
+			@PathVariable(value = "actionid") Integer actionIdParam,
+			@PathVariable(value = "roleid") Integer roleIdParam
+			) {
+	
+	     roleService.addAction2Role(actionIdParam, roleIdParam);
+
+	     return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/{actionid}/clear2role/{roleid}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteAction2Role(
+			@PathVariable(value = "actionid") Integer actionIdParam,
+			@PathVariable(value = "roleid") Integer roleIdParam
+			) {
+	
+	     roleService.deleteAction2Role(actionIdParam, roleIdParam);
+
+	     return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 
 	@RequestMapping(value = "/4role/{id}", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<?> getActions4Role(
