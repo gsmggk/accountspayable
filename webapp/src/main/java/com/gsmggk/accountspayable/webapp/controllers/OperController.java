@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.webapp;
+package com.gsmggk.accountspayable.webapp.controllers;
 
 import java.util.ArrayList;
 import java.util.List;

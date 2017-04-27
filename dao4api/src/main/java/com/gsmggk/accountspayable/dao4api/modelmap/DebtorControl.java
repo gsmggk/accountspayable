@@ -2,8 +2,6 @@ package com.gsmggk.accountspayable.dao4api.modelmap;
 
 import java.util.Date;
 
-import com.gsmggk.accountspayable.datamodel.Debtor;
-
 public class DebtorControl {
 private Integer debtorId;
 private String shortName;

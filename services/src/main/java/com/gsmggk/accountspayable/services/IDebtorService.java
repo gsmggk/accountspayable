@@ -30,8 +30,8 @@ public interface IDebtorService {
 	void delete(Debtor debtor);
 
 	/**
-	 * This method return list debtors those have or have'nt allocated with
-	 * clerk for managing. Debtors must have add operation in oper table.
+	 * This method return list debtors those have or have'nt allocation link with
+	 * clerk for managing. Debtors must have add operation (9) in oper table.
 	 * 
 	 * @param allocated
 	 *            <br>
