@@ -103,7 +103,6 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 		List<T> models = wrapper.getRows();
 		for (T modelItem : models) {
 			if (modelItem.getId().equals(object.getId())) {
-				// TODO copy all properties
 				getPropert4Update(modelItem, object);
 				break;
 			}

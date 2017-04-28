@@ -15,7 +15,12 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 
 	@Override
 	public void getPropert4Update(Oper modelItem, Oper object) {
-		// TODO Auto-generated method stub
+		modelItem.setClerkId(object.getClerkId());
+		modelItem.setDebtorId(object.getDebtorId());
+		modelItem.setActionId(object.getActionId());
+		modelItem.setActionDate(object.getActionDate());
+		modelItem.setControlDate(object.getControlDate());
+		modelItem.setOperDesc(object.getOperDesc());
 
 	}
 

@@ -16,7 +16,7 @@ public class ActionDaoXMLImpl extends GenericDaoXMLImpl<Action> implements IActi
 	public void getPropert4Update(Action newObject, Action oldObject) {
 		newObject.setActionName(oldObject.getActionName());
 		newObject.setDuration(oldObject.getDuration());
-		
+	
 	}
 
 	@Override

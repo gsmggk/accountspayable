@@ -20,8 +20,10 @@ public class ClerkDaoXMLImpl extends GenericDaoXMLImpl<Clerk> implements IClerkD
 
 	@Override
 	public void getPropert4Update(Clerk modelItem, Clerk object) {
-		// TODO Auto-generated method stub
-
+		modelItem.setClerkLoginName(object.getClerkLoginName());
+		modelItem.setClerkFullName(object.getClerkFullName());
+		modelItem.setPassword(object.getPassword());
+		modelItem.setRoleId(object.getRoleId());
 	}
 
 	@Override
