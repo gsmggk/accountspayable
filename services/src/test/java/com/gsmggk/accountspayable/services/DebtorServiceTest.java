@@ -1,6 +1,7 @@
 package com.gsmggk.accountspayable.services;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -176,6 +179,54 @@ public class DebtorServiceTest extends AbstractTest {
 			i++;
 		}
 		Assert.notEmpty(debtorStates, "List DebtorState must be not empty");
+	}
+
+	// -----------------------report tests-------------------------
+	@Test
+
+	public void repoClerksTest() {
+
+		List<ClerkRepo> clerkRepo = clerkService.getClerkRepo();
+		System.out.println("repoClerksTest");
+		int i = 0;
+		while (i < clerkRepo.size()) {
+
+			System.out.println(clerkRepo.get(i));
+			i++;
+		}
+		Assert.notEmpty(clerkRepo, "List ClerkRepo must be not empty");
+	}
+
+	@Test
+	public void repoDebtorTest() {
+		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String fromStr="20/04/2017";
+		String toStr="21/04/2017";
+		Date from = null;
+		try {
+			from = sdf.parse(fromStr+" 00:00:00");
+		} catch (ParseException e) {
+						e.printStackTrace();
+		};
+		Date to = null;
+		try {
+			to = sdf.parse(toStr+" 29:59:59");
+		} catch (ParseException e) {
+					e.printStackTrace();
+		}
+		ParamsDebtor params = new ParamsDebtor();
+		params.setSortShortName(true);
+		List<DebtorRepo> clerkRepo = service.getDebtorRepo(from,to,params);
+		
+		System.out.println("repoDebtorTest");
+		int i = 0;
+		while (i < clerkRepo.size()) {
+
+			System.out.println(clerkRepo.get(i));
+			i++;
+		}
+		Assert.notEmpty(clerkRepo, "List ClerkRepo must be not empty");
+
 	}
 
 }

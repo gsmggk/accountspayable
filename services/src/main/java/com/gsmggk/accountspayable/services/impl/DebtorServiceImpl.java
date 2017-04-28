@@ -14,6 +14,7 @@ import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -228,6 +229,12 @@ public class DebtorServiceImpl implements IDebtorService {
 	      operDao.update(operInit);
 	      LOGGER.warn("Clerk id:{} Close debtor id:{}",clerkId,debtorId);
 		
+	}
+
+	@Override
+	public List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params) {
+	
+		return debtorDao.getDebtorRepo(from,  to,  params) ;
 	}
 
 	

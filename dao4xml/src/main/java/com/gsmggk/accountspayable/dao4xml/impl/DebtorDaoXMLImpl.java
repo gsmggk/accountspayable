@@ -1,11 +1,13 @@
 package com.gsmggk.accountspayable.dao4xml.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -57,6 +59,11 @@ public class DebtorDaoXMLImpl extends GenericDaoXMLImpl<Debtor> implements IDebt
 
 	@Override
 	public List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params) {
 		throw new NotSupportedMethodException();
 	}
 
