@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
@@ -98,5 +99,11 @@ public class ClerkServiceImpl implements IClerkService {
 	public List<Clerk> getClerks4Debtor(Integer debtorId) {
 		
 		return clerkDao.getClerks4Debtor(debtorId);
+	}
+
+	@Override
+	public List<ClerkRepo> getClerkRepo() {
+		
+		return clerkDao.getClerkRepo();
 	}
 }
