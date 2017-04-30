@@ -23,13 +23,17 @@ import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/{prefix}/accounts")
 public class AccountController {
 	@Inject
 	private IAccountService accountService;
 	
 	@RequestMapping(value = "/4debtor/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getAccounts4Debtor(@PathVariable(value = "id") Integer debtorIdParam) {
+	public ResponseEntity<?> getAccounts4Debtor(
+			@PathVariable(value = "prefix") String prefix,
+			@PathVariable(value = "id") Integer debtorIdParam) {
+		if (!prefix.equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		List<Account> allAccounts = accountService.getAccounts4Debtor(debtorIdParam);
 		/*if (accounts.isEmpty()){
 			   String bodyOfResponse = "{\"error\":\"Account not exists.\"}";
