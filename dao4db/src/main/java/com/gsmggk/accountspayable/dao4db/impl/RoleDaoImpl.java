@@ -29,12 +29,12 @@ import com.gsmggk.accountspayable.datamodel.Role;
 public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleDaoImpl.class);
 
-	private String[] fieldsList = new String[] { "role_name", "id" };
+	private String[] fieldsList = new String[] { "role_name","layer", "id" };
 	private String readSql = "select * from role where id = ? ";
 	private String deleteSql = "delete from role where id=";
 	private String selectSql = "select * from role";
-	private String insertSql = "insert into role (%s) values(?)";
-	private String updateSql = "update role set %s=? where id=?";
+	private String insertSql = "insert into role (%s,%s) values(?,?)";
+	private String updateSql = "update role set %s=?,%s=? where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Role> getRowMapper() {
@@ -50,7 +50,8 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 			{
 				int i = 1;
 				ps.setString(i++, object.getRoleName());
-
+				ps.setString(i++, object.getLayer());
+				
 				ps.setInt(i++, object.getId());
 			}
 		} catch (Exception e) {

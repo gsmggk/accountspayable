@@ -49,7 +49,7 @@
 			additivity="false">
 			<AppenderRef ref="HTMLfileLogger" />
 		</Logger>
-		!-- TODO delete after test -->
+		<!-- TODO delete after test -->
 		<Logger level="info" name="com.gsmggk.accountspayable"
 			additivity="false">
 			<AppenderRef ref="RollingFile" />

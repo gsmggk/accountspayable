@@ -17,11 +17,7 @@ import com.gsmggk.accountspayable.services.IRoleService;
 public class RoleServiceImpl implements IRoleService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-	/*
-	 * @Value("${key1}") private String key1;
-	 * 
-	 * @Value("${key2}") private Integer key2;
-	 */
+	
 
 	@Inject
 	private IRoleDao roleDao;

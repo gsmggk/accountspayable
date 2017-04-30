@@ -17,6 +17,7 @@ public class RoleServiceTest extends AbstractTest {
 
 	private Role role;
 	private String roleName = null;
+	private String layer = "WORK";
 	private Role roleFromDb;
 	private Integer savedRoleId;
 
@@ -35,8 +36,9 @@ public class RoleServiceTest extends AbstractTest {
 		role = new Role();
 		roleFromDb = new Role();
 		// Add value to roleName
-		roleName = "TEst";
+		roleName = "My New testeerer role";
 		role.setRoleName(roleName);
+		role.setLayer(layer);
 	}
 
 	
@@ -83,4 +85,13 @@ public class RoleServiceTest extends AbstractTest {
 		List<Role> roles=roleService.getAll();
 		Assert.notEmpty(roles, "List of roles must be not empty");
 	}
+	@Test
+	public void getLayerTest(){
+		
+	Integer id=0;
+	Role role=roleService.get(id);
+	String layer=role.getLayer();
+		Assert.isTrue(layer.equals("ADMIN"), "layer admin not equal");
+	}
+	
 }

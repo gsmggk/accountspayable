@@ -2,6 +2,7 @@ package com.gsmggk.accountspayable.services;
 
 import java.util.List;
 
+import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
@@ -44,4 +45,26 @@ public interface IClerkService {
 	 * @return List<Clerk>
 	 */
 	List<Clerk> getClerks4Debtor(Integer debtorId);
+
+	/**
+	 * Generate clerks report - count of debtors allocated to the clerk 
+	 * 
+	 * @return
+	 */
+	List<ClerkRepo> getClerkRepo();
+
+	/**
+	 * Set  password hash to clerk table
+	 * @param clerkId clerk id
+	 * @param password string
+	 */
+	void allocatePassword(Integer clerkId, String password);
+
+	
+	/**
+	 * Save session into DB
+	 * @param clerkId
+	 * @param token
+	 */
+	void addSession(Integer clerkId, String token);
 }

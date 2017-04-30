@@ -19,9 +19,7 @@
 	<import resource="classpath:dao-context.xml" />
 	<context:component-scan base-package="com.gsmggk.accountspayable.services.impl" />
 
-	<!-- Load properties from file -->
-	<context:property-placeholder
-		ignore-unresolvable="true" location="classpath:app.properties" />
+	
 
 	
 

@@ -41,7 +41,7 @@ public class StartJetty {
 
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setOutputBufferSize(32768);
-
+       
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
         http.setPort(port);
         http.setIdleTimeout(1000 * 60 * 60);
@@ -52,7 +52,7 @@ public class StartJetty {
         bb.setServer(server);
         bb.setContextPath("/");
         bb.setWar("src/main/webapp");
-
+       
         server.setHandler(bb);
 
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();

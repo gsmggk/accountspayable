@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +19,61 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.services.IActionService;
+import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.webapp.models.ActionModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
+import com.gsmggk.accountspayable.webapp.validate.ErrorModel;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
 @RequestMapping("/actions")
 public class ActionController {
 	@Inject
 	private IActionService actionService;
-
+	@Inject
+	private IRoleService roleService;
 	
+	@RequestMapping(value = "/{actionid}/add2role/{roleid}", method = RequestMethod.PUT)
+	public ResponseEntity<?> addAction2Role(
+			@PathVariable(value = "actionid") Integer actionIdParam,
+			@PathVariable(value = "roleid") Integer roleIdParam
+			) {
+	
+	     roleService.addAction2Role(actionIdParam, roleIdParam);
+
+	     return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/{actionid}/clear2role/{roleid}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteAction2Role(
+			@PathVariable(value = "actionid") Integer actionIdParam,
+			@PathVariable(value = "roleid") Integer roleIdParam
+			) {
+	
+	     roleService.deleteAction2Role(actionIdParam, roleIdParam);
+
+	     return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/4role/{id}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<?> getActions4Role(
+			@PathVariable(value = "id") Integer roleIdParam) {
+		List<Action> allActions;
+		allActions = roleService.getActions4Role(roleIdParam);
+		if (allActions.isEmpty()) {
+			   String bodyOfResponse = "{\"error\":\"Role not exists.\"}";
+			return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		}
+		List<ActionModel> converterModel = new ArrayList<>();
+		for (Action action : allActions) {
+			converterModel.add(entity2model(action));
+		}
+
+		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<ActionModel>> getAll() {
 		List<Action> allActions;
@@ -39,53 +86,70 @@ public class ActionController {
 
 		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
 	}
-//, produces=MediaType.APPLICATION_JSON_VALUE
-	 @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	    public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam) {
-	        Action action = actionService.get(actionIdParam);
-	        ActionModel actionModel = entity2model(action);
-	        return new ResponseEntity<ActionModel>(actionModel, HttpStatus.OK);
-	    }
-	 
-	 @RequestMapping(method = RequestMethod.POST)
-	    public ResponseEntity<?> createAction(@RequestBody ActionModel actionModel) {
-	        Action action = model2entity(actionModel);
-	        actionService.save(action);
-	        return new ResponseEntity<IdModel>(new IdModel(action.getId()), HttpStatus.CREATED);
-	    }
-	 @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	    public ResponseEntity<?> updateAction(@RequestBody ActionModel actionModel,
-	            @PathVariable(value = "id") Integer actionIdParam) {
-	        Action action = actionService.get(actionIdParam);
 
-	        action.setActionName(actionModel.getActionName());
-	        action.setDuration(actionModel.getDuration());
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam) {
+		Action action = actionService.get(actionIdParam);
+		if (action==null){
+			   String bodyOfResponse = "{\"error\":\"Action not exists.\"}";
+				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		ActionModel actionModel = entity2model(action);
+		return new ResponseEntity<ActionModel>(actionModel, HttpStatus.OK);
+	}
 
-	        actionService.save(action);
-	        return new ResponseEntity<IdModel>(HttpStatus.OK);
-	    }
+	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
 
-	 @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	    public ResponseEntity<?> deleteAction(@PathVariable(value = "id") Integer actionIdParam) {
-		    Action action=new Action();
-		    action= actionService.get(actionIdParam);
-	        actionService.delete(action);
-	        return new ResponseEntity<IdModel>(HttpStatus.OK);
-	    }
+	public ResponseEntity<?> createAction(@Valid @RequestBody ActionModel actionModel, Errors e) {
 
+		if (e.hasErrors()) {
+			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+		}
+		Action action = model2entity(actionModel);
+		actionService.save(action);
+		return new ResponseEntity<IdModel>(new IdModel(action.getId()), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateAction(@Valid @RequestBody ActionModel actionModel, Errors e,
+			@PathVariable(value = "id") Integer actionIdParam) {
+		if (e.hasErrors()) {
+			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+		}
+
+		Action action = actionService.get(actionIdParam);
+
+		action.setActionName(actionModel.getActionName());
+		action.setDuration(actionModel.getDuration());
+
+		actionService.save(action);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteAction(@PathVariable(value = "id") Integer actionIdParam) {
+		Action action = new Action();
+		action = actionService.get(actionIdParam);
+		actionService.delete(action);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
 
 	private Action model2entity(ActionModel model) {
 		Action action = new Action();
 		action.setActionName(model.getActionName());
 		action.setDuration(model.getDuration());
-		
+
 		return action;
 	}
+
 	private ActionModel entity2model(Action action) {
 		ActionModel model = new ActionModel();
+		model.setId(action.getId());
 		model.setActionName(action.getActionName());
 		model.setDuration(action.getDuration());
-		model.setCode(action.getId());
+
 		return model;
 	}
 

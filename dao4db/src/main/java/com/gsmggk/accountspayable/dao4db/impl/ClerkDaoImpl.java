@@ -13,12 +13,17 @@ import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
+import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
+import com.gsmggk.accountspayable.dao4db.mapper.ClerkRepoRowMapper;
+import com.gsmggk.accountspayable.dao4db.mapper.DebtorControlRowMapper;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
 @Repository
@@ -96,12 +101,7 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
-		/*
-		readSql="select * from clerk where clerk_login_name = ? ";
 		
-       Clerk clerk=new Clerk();
-       clerk=super.read(new Object[] { login },Clerk.class);
-       return clerk;*/
 	}
 
 	@Override
@@ -118,6 +118,46 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 	  criteria.setSql(sql);
 	  criteria.addFilter("o.debtor_id=?", "AND", debtorId);
 	  return super.getCriteriaRowMapper(criteria, criteria.getObjects(), getRowMapper());
+	}
+
+	@Override
+	public List<ClerkRepo> getClerkRepo() {
+		String sql="select c.id,c.clerk_full_name,count(clerk_id) as debtors from clerk c join oper o on (o.clerk_id=c.id and o.action_id=11) group by c.id,clerk_login_name,clerk_full_name";
+		Criteria criteria=new Criteria();
+       criteria.setSql(sql);
+       ClerkRepoRowMapper rm = new ClerkRepoRowMapper();
+		
+		return getCriteriaRowMapper(criteria, null, rm); 
+      
+	}
+
+	@Override
+	public SessionModel readSession(Integer clerkId) {
+		try {
+			return jdbcTemplate.queryForObject("select * from session where id = ? ",
+					new Object[] { clerkId }, new BeanPropertyRowMapper<SessionModel>(SessionModel.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	@Override
+	@Transactional
+	public void insertSession(SessionModel session) {
+		String sql = String.format("insert into session (%s,%s) values(?,?)",
+				(Object[]) new String[] {"id" ,"value" });
+		jdbcTemplate.update(sql, session.getId(), session.getValue());
+
+		
+	}
+
+	@Override
+	@Transactional
+	public void updateSession(SessionModel session) {
+		String sql = String.format("update session set  %s=?  where id=?",
+				(Object[]) new String[] {  "value", "id" });
+		jdbcTemplate.update(sql,  session.getValue(),session.getId());
+		
 	}
 
 	
