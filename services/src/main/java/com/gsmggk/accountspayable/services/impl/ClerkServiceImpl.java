@@ -1,5 +1,7 @@
 package com.gsmggk.accountspayable.services.impl;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,12 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
+import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
+import com.gsmggk.accountspayable.services.util.PasswordHash;
 
 @Service
 public class ClerkServiceImpl implements IClerkService {
@@ -66,7 +70,19 @@ public class ClerkServiceImpl implements IClerkService {
 		clerk = clerkDao.loginCheck(login);
 		if (clerk != null) {
 			// Check password
-			if (clerk.getPassword().equals(password)) {
+			Boolean flag = null;
+
+			try {
+				flag = PasswordHash.validatePassword(password, clerk.getPassword());
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			} catch (InvalidKeySpecException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+
+			if (flag) {
 				LOGGER.debug("login is ok");
 				// Write CurrentLayer properties
 				CurrentLayer.setClerkId(clerk.getId());
@@ -91,19 +107,56 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public Boolean checkAction4Clerk(Integer clerkId, Integer actionId) {
-		
+
 		return clerkDao.checkAction4Clerk(clerkId, actionId);
 	}
 
 	@Override
 	public List<Clerk> getClerks4Debtor(Integer debtorId) {
-		
+
 		return clerkDao.getClerks4Debtor(debtorId);
 	}
 
 	@Override
 	public List<ClerkRepo> getClerkRepo() {
-		
+
 		return clerkDao.getClerkRepo();
+	}
+
+	@Override
+	public void allocatePassword(Integer clerkId, String password) {
+		String passwordHash = null;
+		try {
+			passwordHash = PasswordHash.createHash(password);
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error("Password allocated error to clerk id:{} error:{} ", clerkId, e.getMessage());
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			LOGGER.error("Password allocated error to clerk id:{} error:{} ", clerkId, e.getMessage());
+			e.printStackTrace();
+		}
+
+		Clerk clerk = clerkDao.read(clerkId);
+		clerk.setPassword(passwordHash);
+		LOGGER.debug("Password allocated to clerk id:{}", clerkId);
+		clerkDao.update(clerk);
+
+	}
+
+	@Override
+	public void addSession(Integer clerkId, String token) {
+		SessionModel session;
+		session = clerkDao.readSession(clerkId);
+		if (session == null) {
+			 session = new SessionModel();
+			LOGGER.debug("insert session");
+			session.setId(clerkId);
+			session.setValue(token);
+			clerkDao.insertSession(session);
+		} else {
+			LOGGER.debug("update session");
+			session.setValue(token);
+			clerkDao.updateSession(session);
+		}
 	}
 }

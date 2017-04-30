@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
+import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Clerk;
@@ -45,6 +46,23 @@ public class ClerkDaoXMLImpl extends GenericDaoXMLImpl<Clerk> implements IClerkD
 	@Override
 	public List<ClerkRepo> getClerkRepo() {
 		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public SessionModel readSession(Integer clerkId) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public void insertSession(SessionModel session) {
+		throw new NotSupportedMethodException();
+		
+	}
+
+	@Override
+	public void updateSession(SessionModel session) {
+		throw new NotSupportedMethodException();
+		
 	}
 
 	

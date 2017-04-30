@@ -3,6 +3,7 @@ package com.gsmggk.accountspayable.datamodel;
 public class Role extends AbstractTable {
 
 	private String roleName;
+	private String layer;
 
 	public String getRoleName() {
 		return roleName;
@@ -14,7 +15,15 @@ public class Role extends AbstractTable {
 
 	@Override
 	public String toString() {
-		return "Role [id=" + id + ", roleName=" + roleName + "]";
+		return "Role [id=" + id + ", roleName=" + roleName +  ", layer=" + layer + "]";
 
+	}
+
+	public String getLayer() {
+		return layer;
+	}
+
+	public void setLayer(String layer) {
+		this.layer = layer;
 	}
 }

@@ -23,11 +23,14 @@ import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/clerks")
+@RequestMapping("/{prefix}/clerks")
 public class ClerkControler {
 	@Inject
 	private IClerkService clerkService;
 
+	
+	
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<ClerkModel>> getAll() {
 		List<Clerk> allClerks;

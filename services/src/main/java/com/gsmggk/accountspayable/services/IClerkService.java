@@ -52,4 +52,19 @@ public interface IClerkService {
 	 * @return
 	 */
 	List<ClerkRepo> getClerkRepo();
+
+	/**
+	 * Set  password hash to clerk table
+	 * @param clerkId clerk id
+	 * @param password string
+	 */
+	void allocatePassword(Integer clerkId, String password);
+
+	
+	/**
+	 * Save session into DB
+	 * @param clerkId
+	 * @param token
+	 */
+	void addSession(Integer clerkId, String token);
 }

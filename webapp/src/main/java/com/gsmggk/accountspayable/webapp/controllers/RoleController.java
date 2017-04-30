@@ -78,6 +78,7 @@ public class RoleController {
 		Role role = roleService.get(roleIdParam);
 
 		role.setRoleName(roleModel.getRoleName());
+		role.setLayer(roleModel.getLayer());
 		roleService.save(role);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
@@ -94,6 +95,7 @@ public class RoleController {
 		Role role = new Role();
 		role.setId(model.getId());
 		role.setRoleName(model.getRoleName());
+		role.setLayer(model.getLayer());
 		return role;
 	}
 
@@ -101,7 +103,7 @@ public class RoleController {
 		RoleModel model = new RoleModel();
 		model.setId(role.getId());
 		model.setRoleName(role.getRoleName());
-		
+		model.setLayer(role.getLayer());
 		return model;
 	}
 }

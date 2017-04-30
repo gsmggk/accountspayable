@@ -10,7 +10,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,21 +17,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
+import com.gsmggk.accountspayable.datamodel.Role;
+import com.gsmggk.accountspayable.services.IActionService;
 import com.gsmggk.accountspayable.services.IClerkService;
+import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.services.impl.UserSessionStorage;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 
 public class SessionFilter implements Filter {
-
-	/*private static final Map<String, Integer> USERS_DB = new HashMap<>();
-	static {
-		USERS_DB.put("admin", 1);
-		USERS_DB.put("NeAdmin", 2);
-	}
-*/
-	private IClerkService service;
+	private IRoleService roleService;
+	private IClerkService clerkService;
+	
 
 	private ApplicationContext appContext;
 
@@ -41,76 +39,81 @@ public class SessionFilter implements Filter {
 
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(config.getServletContext());
-		service = context.getBean(IClerkService.class);
+		clerkService = context.getBean(IClerkService.class);
+		roleService =context.getBean(IRoleService.class);
 		appContext = context;
 	}
 
 	@Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws java.io.IOException, ServletException {
-        HttpServletResponse res = (HttpServletResponse) response;
-     
-     //   if (!isAuthRequired(req)) { chain.doFilter(request, response); }
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws java.io.IOException, ServletException {
+		HttpServletResponse res = (HttpServletResponse) response;
+		HttpServletRequest req = (HttpServletRequest) request;
 
-        UserSessionStorage userDataStorage = appContext.getBean(UserSessionStorage.class);
+		if (!isAuthRequired(req)) {
+			chain.doFilter(request, response);
+			return;
+		}
 
-        String[] credentials = resolveCredentials((HttpServletRequest) request);
+		UserSessionStorage userDataStorage = appContext.getBean(UserSessionStorage.class);
 
-        boolean isCredentialsResolved = credentials != null && credentials.length == 2;
-        if (!isCredentialsResolved) {
-            res.sendError(401);
-            return;
-        }
+		String[] credentials = resolveCredentials((HttpServletRequest) request);
 
-        String username = credentials[0];
-        String password = credentials[1];
-        
-        Clerk clerk=new Clerk();   
-        try {
-		 clerk=  
-    	service.loginCheck(username, password);
+		boolean isCredentialsResolved = credentials != null && credentials.length == 2;
+		if (!isCredentialsResolved) {
+			res.sendError(401);
+			return;
+		}
+
+		String username = credentials[0];
+		String password = credentials[1];
+
+		Clerk clerk = new Clerk();
+		try {
+			clerk = clerkService.loginCheck(username, password);
 		} catch (MyBadLoginNameException e) {
-			  res.sendError(401);
+			res.sendError(401);
 		}
 
-        catch (MyBadPasswordException e) {
-			  res.sendError(401);
+		catch (MyBadPasswordException e) {
+			res.sendError(401);
+		}
+		
+		Integer roleId = clerk.getRoleId();
+		Role role =new Role();
+		role= roleService.get(roleId);
+		String layer = role.getLayer();
+		
+		
+		
+		// TODO get prefix if
+		if (!chekUser2LayerAccess(req, layer)) {
+			res.sendError(401);
 		}
 
-        // TODO get prefix if 
-        
-        
-        userDataStorage.setId(clerk.getId());
-        chain.doFilter(request, response);
-        
-       /* // TODO query to DB instead of MAP
-        Integer userId = USERS_DB.get(username);
-        if (validateUserPassword(userId, password)) {
+		userDataStorage.setId(clerk.getId());
+		chain.doFilter(request, res);
 
-            userDataStorage.setId(userId);
-            chain.doFilter(request, response);
-        } else {
-            res.sendError(401);
-        }
-*/
-    }
+	}
+
+	private boolean chekUser2LayerAccess(HttpServletRequest req, String role) {
+		if (req.getRequestURI().toLowerCase().equals("/login")) {
+			return true;
+		}
+		if (req.getRequestURI().toLowerCase().startsWith("/"+role.toLowerCase())) {
+			return true;
+		}
+
+		return false;
+	}
 
 	private boolean isAuthRequired(HttpServletRequest req) {
-		if (req.getMethod().toUpperCase().equals("GET")) {
+
+		if (req.getMethod().toUpperCase().equals("GET") && req.getRequestURI().toLowerCase().equals("/login")) {
 			return false;
 		}
 		// TODO other variants
 		return true;
-	}
-
-	private boolean validateUserPassword(Integer userId, String password) {
-		// TODO get user from DB by username and check password
-
-		if (userId == null) {
-			return false;
-		}
-
-		return "password".equals(password);
 	}
 
 	private String[] resolveCredentials(HttpServletRequest req) {

@@ -32,13 +32,10 @@ public class AccountController {
 	public ResponseEntity<?> getAccounts4Debtor(
 			@PathVariable(value = "prefix") String prefix,
 			@PathVariable(value = "id") Integer debtorIdParam) {
-		if (!prefix.equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		if (!prefix.toLowerCase().equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
 		
 		List<Account> allAccounts = accountService.getAccounts4Debtor(debtorIdParam);
-		/*if (accounts.isEmpty()){
-			   String bodyOfResponse = "{\"error\":\"Account not exists.\"}";
-				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
-		}*/
+		
 		
 		List<AccountModel> converterModel = new ArrayList<>();
 		for (Account account : allAccounts) {
@@ -49,7 +46,9 @@ public class AccountController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<AccountModel>> getAll() {
+	public @ResponseBody ResponseEntity<List<AccountModel>> getAll(@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		List<Account> allAccounts;
 		allAccounts = accountService.getAll();
 

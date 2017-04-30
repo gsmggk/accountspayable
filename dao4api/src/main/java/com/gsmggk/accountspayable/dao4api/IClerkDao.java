@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
+import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
 public interface IClerkDao  extends IGenericDao<Clerk>{
@@ -34,4 +35,12 @@ public interface IClerkDao  extends IGenericDao<Clerk>{
 	List<Clerk> getClerks4Debtor(Integer debtorId);
 
 	List<ClerkRepo> getClerkRepo();
+
+	SessionModel readSession(Integer clerkId);
+
+	void insertSession(SessionModel session);
+
+	void updateSession(SessionModel session);
+
+	
 }

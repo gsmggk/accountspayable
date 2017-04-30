@@ -31,6 +31,7 @@ public class ClerkLoginTest extends AbstractTest {
 	private  void initData() {
 		role = new Role();
 		role.setRoleName("Testers");
+		role.setLayer("WORK");
 		roleService.save(role);
 		Integer role_id = role.getId();
 
@@ -38,9 +39,10 @@ public class ClerkLoginTest extends AbstractTest {
 		clerkAfter = new Clerk();
 		clerk.setClerkFullName("Петров Петр Петрович");
 		clerk.setClerkLoginName("Tester");
-		clerk.setPassword("111111");
+	
 		clerk.setRoleId(role_id);
 		clerkService.save(clerk);
+		clerkService.allocatePassword(clerk.getId(), "111111");
 	}
 
 	
