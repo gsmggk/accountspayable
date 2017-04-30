@@ -33,7 +33,7 @@ import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/debtors")
+@RequestMapping("/{prefix}/debtors")
 public class DebtorController {
 
 	@Inject
@@ -41,7 +41,10 @@ public class DebtorController {
 
 	@RequestMapping(value = "/4clerk/{id}", method = RequestMethod.POST)
 	public ResponseEntity<?> getDebtors4Clerk(@Valid @RequestBody ParamsDebtors4Clerk params, Errors e,
+			@PathVariable(value = "prefix") String prefix,
 			@PathVariable(value = "id") Integer clerkIdParam) {
+		if (!prefix.toLowerCase().equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		List<DebtorControl> allDebtors;
 		if (params == null) {
 			allDebtors = debtorService.getDebtors4Clerk(clerkIdParam);
