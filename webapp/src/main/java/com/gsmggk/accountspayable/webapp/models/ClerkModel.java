@@ -8,8 +8,7 @@ public class ClerkModel {
 	@NotNull(message="Clerk login name not null")
 	@Size(min=5, max=50,message = "Clerk login name must be on 5 to 50")
 	private String clerkLoginName;
-	@Size( max=10,message = "Clerk password must be max to 10")
-	private String password;
+	
 	private Integer roleId;
 	@NotNull(message="Clerk full name not null")
 	@Size(min=5, max=50,message = "Clerk full name must be on 5 to 100")
@@ -26,12 +25,7 @@ public class ClerkModel {
 	public void setClerkLoginName(String clerkLoginName) {
 		this.clerkLoginName = clerkLoginName;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	
 	public Integer getRoleId() {
 		return roleId;
 	}
