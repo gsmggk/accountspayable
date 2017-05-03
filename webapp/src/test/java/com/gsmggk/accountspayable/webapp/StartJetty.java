@@ -36,22 +36,14 @@ public class StartJetty {
     }
 
     private static void startInstance(int port) {
-    	/*try {
-			Log.setLog(new JavaUtilLog());
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+    	
     	
     	System.setProperty("org.jboss.logging.provider", "slf4j");
     	
     	
-    	LOGGER.debug("My_LOG");
+    	
         Server server = new Server();
-        LOGGER.debug("Jetty server start");
-    	LOGGER.info("Jetty server start");
-    	LOGGER.warn("Jetty server start");
-    	LOGGER.error("Jetty server start");
+        
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setOutputBufferSize(32768);
        
@@ -76,8 +68,7 @@ public class StartJetty {
         try {
         	LOGGER.debug("Jetty server start");
         	LOGGER.info("Jetty server start");
-        	LOGGER.warn("Jetty server start");
-        	LOGGER.error("Jetty server start");
+        	LOGGER.info("Jetty server start");
             server.start();
           
         } catch (Exception e) {
