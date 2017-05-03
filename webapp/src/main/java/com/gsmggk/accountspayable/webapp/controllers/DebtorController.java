@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -26,6 +27,7 @@ import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.services.IDebtorService;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 import com.gsmggk.accountspayable.webapp.models.DebtorControlModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorStateModel;
@@ -35,17 +37,22 @@ import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 @RestController
 @RequestMapping("/{prefix}/debtors")
 public class DebtorController {
-
+	
+	@Inject
+	private ApplicationContext appContext;
 	@Inject
 	private IDebtorService debtorService;
 
-	@RequestMapping(value = "/4clerk/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/4clerk", method = RequestMethod.POST)
 	public ResponseEntity<?> getDebtors4Clerk(@Valid @RequestBody ParamsDebtors4Clerk params, Errors e,
-			@PathVariable(value = "prefix") String prefix,
-			@PathVariable(value = "id") Integer clerkIdParam) {
+			@PathVariable(value = "prefix") String prefix) {
 		if (!prefix.toLowerCase().equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
 		
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		Integer clerkIdParam=storage.getId();
+		
 		List<DebtorControl> allDebtors;
+		
 		if (params == null) {
 			allDebtors = debtorService.getDebtors4Clerk(clerkIdParam);
 		} else {

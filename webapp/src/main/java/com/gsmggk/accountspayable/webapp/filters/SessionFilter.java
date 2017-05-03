@@ -1,7 +1,5 @@
 package com.gsmggk.accountspayable.webapp.filters;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -25,21 +23,20 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.IRoleService;
-import com.gsmggk.accountspayable.services.impl.UserSessionStorage;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
-
-import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.OperationTimeoutException;
+import com.gsmggk.accountspayable.services.util.MemClient;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 
 public class SessionFilter implements Filter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionFilter.class);
 	private IRoleService roleService;
 	private IClerkService clerkService;
+	private MemClient client;
 
 	private ApplicationContext appContext;
 
-	private MemcachedClient memClient;
+	// private MemcachedClient memClient;
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
@@ -48,19 +45,9 @@ public class SessionFilter implements Filter {
 				.getRequiredWebApplicationContext(config.getServletContext());
 		clerkService = context.getBean(IClerkService.class);
 		roleService = context.getBean(IRoleService.class);
+		client = context.getBean(MemClient.class);
 		appContext = context;
-	
-		try {
-			memClient = new MemcachedClient(
-					new InetSocketAddress("localhost", 11211));
-		} 
-		
 
-		catch (IOException e) {
-			LOGGER.error("memcached init error");
-		//	e.printStackTrace();
-		}
-		
 	}
 
 	@Override
@@ -81,35 +68,29 @@ public class SessionFilter implements Filter {
 			res.sendError(401);
 			return;
 		}
-
-		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
-
+		String username = credentials[0];
+		String password = credentials[1];
 		// ==========================================
 		// try get storage from memcached
 		//
 		// ==========================================
 		String base64 = resolveBase64(req);
 
-		try {
-				storage = (UserSessionStorage) memClient.get(base64);
+		UserSessionStorage storageFromCache = client.getCach(base64);
 
-			if (storage != null) {
-				if (!chekUser2LayerAccess(req, storage.getLayer())) {
-					res.sendError(401);
-				}
-				chain.doFilter(request, res);
-				return;
+		if (storageFromCache != null) {
+			if (!chekUser2LayerAccess(req, storageFromCache.getLayer())) {
+				
+
+				res.sendError(401);
 			}
-
-		} catch (OperationTimeoutException e) {
-			LOGGER.error("memcached timeout error");
-			e.printStackTrace();
+			UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+				storage.setId(storageFromCache.getId());
+				storage.setLayer(storageFromCache.getLayer());
 			
+			chain.doFilter(request, res);
+			return;
 		}
-		UserSessionStorage storageDb = appContext.getBean(UserSessionStorage.class);
-
-		String username = credentials[0];
-		String password = credentials[1];
 
 		Clerk clerk = new Clerk();
 		try {
@@ -131,7 +112,7 @@ public class SessionFilter implements Filter {
 		if (!chekUser2LayerAccess(req, layer)) {
 			res.sendError(401);
 		}
-
+		UserSessionStorage storageDb = appContext.getBean(UserSessionStorage.class);
 		storageDb.setId(clerk.getId());
 		storageDb.setLayer(layer);
 		// ==========================================
@@ -139,15 +120,7 @@ public class SessionFilter implements Filter {
 		// load cross link to memcached
 		// ==========================================
 
-		try {
-		
-			memClient.set(base64, 3600, storageDb);
-			memClient.set(storageDb.getId().toString(), 3600, base64);
-	
-		} catch (OperationTimeoutException e) {
-			LOGGER.error("memcached timeout error");
-			e.printStackTrace();
-		}
+		client.setCach(base64, storageDb);
 
 		chain.doFilter(request, res);
 

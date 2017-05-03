@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.services.IClerkService;
+import com.gsmggk.accountspayable.services.util.MemClient;
 import com.gsmggk.accountspayable.webapp.models.ClerkModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.PasswordModel;
@@ -31,8 +32,9 @@ public class ClerkControler {
 
 	@Inject
 	private IClerkService clerkService;
+	@Inject
+	private MemClient client;
 
-	
 	@RequestMapping(value = "/{id}/apassword", method = RequestMethod.PUT)
 	public ResponseEntity<?> allocatePassword(@Valid @RequestBody PasswordModel model, Errors e,
 			@PathVariable(value = "id") Integer clerkIdParam, @PathVariable(value = "prefix") String prefix) {
@@ -50,11 +52,11 @@ public class ClerkControler {
 		}
 		clerkService.allocatePassword(clerkIdParam, model.getValue());
 
-	
+		client.deleteMemCached(clerkIdParam);// delete memcached link
+
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
-	
-	
+
 	// ==========================default controllers=================
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<ClerkModel>> getAll(@PathVariable(value = "prefix") String prefix) {
@@ -124,6 +126,7 @@ public class ClerkControler {
 		clerk.setRoleId(clerkModel.getRoleId());
 
 		clerkService.save(clerk);
+		client.deleteMemCached(clerkIdParam);// delete memcached link
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
@@ -139,6 +142,7 @@ public class ClerkControler {
 			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
 		}
 		clerkService.delete(clerk);
+		client.deleteMemCached(clerkIdParam);// delete memcached link
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 

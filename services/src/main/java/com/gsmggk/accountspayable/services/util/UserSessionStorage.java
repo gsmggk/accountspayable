@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.services.impl;
+package com.gsmggk.accountspayable.services.util;
 
 import java.io.Serializable;
 

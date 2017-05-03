@@ -18,7 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.gsmggk.accountspayable.services.IClerkService;
-import com.gsmggk.accountspayable.services.impl.UserSessionStorage;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 
 @RestController
 @RequestMapping("/login")
