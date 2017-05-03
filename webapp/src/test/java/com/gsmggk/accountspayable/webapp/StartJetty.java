@@ -13,8 +13,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
-
 /**
  * Separate startup class for people that want to run the examples directly. Use
  * parameter -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect
@@ -29,6 +27,7 @@ public class StartJetty {
      * @param args
      */
     public static void main(String[] args) {
+    	
     
         startInstance(8081);
        //  startInstance(8082);
@@ -37,8 +36,22 @@ public class StartJetty {
     }
 
     private static void startInstance(int port) {
+    	/*try {
+			Log.setLog(new JavaUtilLog());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+    	
+    	System.setProperty("org.jboss.logging.provider", "slf4j");
+    	
+    	
+    	LOGGER.debug("My_LOG");
         Server server = new Server();
-
+        LOGGER.debug("Jetty server start");
+    	LOGGER.info("Jetty server start");
+    	LOGGER.warn("Jetty server start");
+    	LOGGER.error("Jetty server start");
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setOutputBufferSize(32768);
        
@@ -61,9 +74,12 @@ public class StartJetty {
         server.addBean(mBeanContainer);
 
         try {
+        	LOGGER.debug("Jetty server start");
         	LOGGER.info("Jetty server start");
+        	LOGGER.warn("Jetty server start");
+        	LOGGER.error("Jetty server start");
             server.start();
-            // server.join();
+          
         } catch (Exception e) {
         	LOGGER.error("Jetty server error:", e.getMessage());
             e.printStackTrace();

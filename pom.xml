@@ -15,8 +15,8 @@
 
 		<common.project.version>1.0.1</common.project.version>
 		<spring.version>4.0.3.RELEASE</spring.version>
-		<jetty9.version>9.4.3.v20170317</jetty9.version>
-		<logj.version>2.8.1</logj.version>
+		<jetty9.version>9.4.4.v20170414</jetty9.version>
+		<logj.version>2.8.2</logj.version>
 	</properties>
 
 	<modules>
@@ -157,6 +157,7 @@
 			</dependency>
 
 
+
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
@@ -167,17 +168,22 @@
 				<artifactId>log4j-core</artifactId>
 				<version>${logj.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
 				<version>${logj.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-jcl</artifactId>
 				<version>${logj.version}</version>
-
-
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-ext</artifactId>
+				<version>1.7.24</version>
 			</dependency>
 
 

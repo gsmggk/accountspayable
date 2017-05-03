@@ -7,7 +7,7 @@
 	
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="{  11  } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+				pattern="{  12  } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 
@@ -18,9 +18,7 @@
 
 		<RollingFile name="RollingFile" fileName="${basePath}/admin/accontspayable.log"
 			filePattern="${basePath}/admin/arhive/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-			<PatternLayout>
-			<pattern> "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" </pattern>
-			</PatternLayout>
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 				<SizeBasedTriggeringPolicy size="250 MB" />
@@ -45,19 +43,17 @@
 		</Root>
 
 		<Logger level="debug" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="ConsoleMy" />
-		</Logger>  
-		
-		
+		</Logger>
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="HTMLfileLogger" />
 		</Logger>
 

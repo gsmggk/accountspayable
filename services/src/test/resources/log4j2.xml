@@ -1,59 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Test config -->
+
 <Configuration>
-<Properties>
-		<Property name="basePath">d:\\epam\eclipse\accountspayable\logs</Property>
-	</Properties>
+	
 	<Appenders>
+	
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="{    } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<PatternLayout
+				pattern="{    } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+
+		<Console name="ConsoleMy" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="{MLOG} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 		
-		<Console name="ConsoleTest" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="{TEST} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-		</Console>
-		
-		 <RollingFile name="HTMLfileLogger" fileName="${basePath}/develope/app-info.html"
-                     filePattern="${basePath}/develope/arhive/app-info-%d{yyyy-MM-dd}.html">
-            <HTMLLayout charset="UTF-8" title="AccountPeable Info Logs" locationInfo="true" />
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="7" modulate="true" />
-                <SizeBasedTriggeringPolicy size="10 MB" />
-            </Policies>
-        </RollingFile>
-        <RollingFile name="RollingFile" fileName="${basePath}/admin/accontspayable.log"
-			filePattern="${basePath}/admin/arhive/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-			<Policies>
-				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="250 MB" />
-			</Policies>
-		</RollingFile>
-        
 	</Appenders>
 
 	<Loggers>
-		<Root level="debug" >
+		<Root level="debug">
 			<AppenderRef ref="Console" />
 		</Root>
-			
+
 		<Logger level="debug" name="com.gsmggk.accountspayable"
 			additivity="false">
-			<AppenderRef ref="ConsoleTest" />
+			<AppenderRef ref="ConsoleMy" />
 		</Logger>
-		
-		<!-- TODO delete after test -->
-		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="false">
-			<AppenderRef ref="HTMLfileLogger" />
-		</Logger>
-		<!-- TODO delete after test -->
-		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="false">
-			<AppenderRef ref="RollingFile" />
-		</Logger>
+
 	</Loggers>
 
 

@@ -45,19 +45,19 @@
 		</Root>
 
 		<Logger level="debug" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="ConsoleMy" />
 		</Logger>  
 		
 		
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="HTMLfileLogger" />
 		</Logger>
 
