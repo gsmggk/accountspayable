@@ -4,10 +4,10 @@
 		<Property name="basePath">d:\\epam\eclipse\accountspayable\logs</Property>
 	</Properties>
 	<Appenders>
-	
+	<Syslog name="syslog" host="localhost" port="514" protocol="UDP"/>
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="{  11  } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+				pattern="{    } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 
@@ -16,10 +16,10 @@
 				pattern="{MLOG} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
-		<RollingFile name="RollingFile" fileName="${basePath}/admin/accontspayable.log"
+		<RollingFile name="MyRollingFile" fileName="${basePath}/admin/accontspayable.log"
 			filePattern="${basePath}/admin/arhive/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
 			<PatternLayout>
-			<pattern> "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" </pattern>
+			<pattern>%d{dd/MM/yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36} - %m%n</pattern>
 			</PatternLayout>
 			<Policies>
 				<TimeBasedTriggeringPolicy />
@@ -44,21 +44,24 @@
 			<AppenderRef ref="Console" />
 		</Root>
 
-		<Logger level="debug" name="com.gsmggk.accountspayable"
-			additivity="true">
-			<AppenderRef ref="ConsoleMy" />
-		</Logger>  
-		
-		
-
-		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
-			<AppenderRef ref="RollingFile" />
+		<Logger level="debug" name="com.gsmggk"
+			additivity="false">
+			<AppenderRef ref="ConsoleMy"/>
 		</Logger>
+		
+		<Logger level="info" name="org.eclipse.jetty"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>  
+
+		
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
-			additivity="true">
+			additivity="false">
 			<AppenderRef ref="HTMLfileLogger" />
+			<AppenderRef ref="MyRollingFile" />
+			<AppenderRef ref="ConsoleMy"/>
+			<AppenderRef ref="syslog"/>
 		</Logger>
 
 	</Loggers>

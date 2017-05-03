@@ -66,9 +66,9 @@ public class StartJetty {
         server.addBean(mBeanContainer);
 
         try {
-        	LOGGER.debug("Jetty server start");
+        
         	LOGGER.info("Jetty server start");
-        	LOGGER.info("Jetty server start");
+        
             server.start();
           
         } catch (Exception e) {
