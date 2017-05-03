@@ -138,7 +138,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 		Clerk clerk = clerkDao.read(clerkId);
 		clerk.setPassword(passwordHash);
-		LOGGER.debug("Password allocated to clerk id:{}", clerkId);
+		LOGGER.info("Password allocated to clerk id:{}", clerkId);
 		clerkDao.update(clerk);
 
 	}

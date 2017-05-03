@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +21,14 @@ import com.gsmggk.accountspayable.services.IActionService;
 import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.webapp.models.ActionModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
-import com.gsmggk.accountspayable.webapp.validate.ErrorModel;
+import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/actions")
+@RequestMapping("/{prefix}/actions")
 public class ActionController {
+	private static final String NOT_FOUND_MES="Action not found";
+
 	@Inject
 	private IActionService actionService;
 	@Inject
@@ -36,7 +37,8 @@ public class ActionController {
 	@RequestMapping(value = "/{actionid}/add2role/{roleid}", method = RequestMethod.PUT)
 	public ResponseEntity<?> addAction2Role(
 			@PathVariable(value = "actionid") Integer actionIdParam,
-			@PathVariable(value = "roleid") Integer roleIdParam
+			@PathVariable(value = "roleid") Integer roleIdParam,
+			@PathVariable(value = "prefix") String prefix
 			) {
 	
 	     roleService.addAction2Role(actionIdParam, roleIdParam);
@@ -48,7 +50,8 @@ public class ActionController {
 	@RequestMapping(value = "/{actionid}/clear2role/{roleid}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteAction2Role(
 			@PathVariable(value = "actionid") Integer actionIdParam,
-			@PathVariable(value = "roleid") Integer roleIdParam
+			@PathVariable(value = "roleid") Integer roleIdParam,
+			@PathVariable(value = "prefix") String prefix
 			) {
 	
 	     roleService.deleteAction2Role(actionIdParam, roleIdParam);
@@ -59,6 +62,7 @@ public class ActionController {
 
 	@RequestMapping(value = "/4role/{id}", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<?> getActions4Role(
+			@PathVariable(value = "prefix") String prefix,
 			@PathVariable(value = "id") Integer roleIdParam) {
 		List<Action> allActions;
 		allActions = roleService.getActions4Role(roleIdParam);
@@ -75,7 +79,9 @@ public class ActionController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<ActionModel>> getAll() {
+	public @ResponseBody ResponseEntity<List<ActionModel>> getAll(@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		List<Action> allActions;
 		allActions = actionService.getAll();
 
@@ -88,12 +94,13 @@ public class ActionController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam) {
+	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer actionIdParam,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		Action action = actionService.get(actionIdParam);
 		if (action==null){
-			   String bodyOfResponse = "{\"error\":\"Action not exists.\"}";
-				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
-		}
+			   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);		}
 		
 		
 		ActionModel actionModel = entity2model(action);
@@ -102,8 +109,10 @@ public class ActionController {
 
 	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
 
-	public ResponseEntity<?> createAction(@Valid @RequestBody ActionModel actionModel, Errors e) {
-
+	public ResponseEntity<?> createAction(@Valid @RequestBody ActionModel actionModel, Errors e,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
@@ -114,13 +123,18 @@ public class ActionController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateAction(@Valid @RequestBody ActionModel actionModel, Errors e,
+			@PathVariable(value = "prefix") String prefix,
 			@PathVariable(value = "id") Integer actionIdParam) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
 
 		Action action = actionService.get(actionIdParam);
-
+		if (action==null){
+			 return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		action.setActionName(actionModel.getActionName());
 		action.setDuration(actionModel.getDuration());
 
@@ -129,9 +143,15 @@ public class ActionController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteAction(@PathVariable(value = "id") Integer actionIdParam) {
+	public ResponseEntity<?> deleteAction(@PathVariable(value = "id") Integer actionIdParam,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		Action action = new Action();
 		action = actionService.get(actionIdParam);
+		if (action==null){
+			 return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		actionService.delete(action);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}

@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,24 +16,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.RoleModel;
+import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/{prefix}/roles")
 public class RoleController {
+	private static final String NOT_FOUND_MES="Role not found";
+	
 	@Inject
 	private IRoleService roleService;
 	
 	
 	
 	
+	
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<RoleModel>> getAll() {
+	public @ResponseBody ResponseEntity<List<RoleModel>> getAll(
+			@PathVariable(value = "prefix") String prefix
+			) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		List<Role> allRoles;
 		allRoles = roleService.getAll();
 
@@ -47,19 +53,23 @@ public class RoleController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer roleIdParam) {
-		Role role = roleService.get(roleIdParam);
-		if(role==null){
-			   String bodyOfResponse = "{\"error\":\"Role not exists.\"}";
-				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer roleIdParam,
+			@PathVariable(value = "prefix") String prefix
+			) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
 		
+		Role role = roleService.get(roleIdParam);
+		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
+	
 		RoleModel roleModel = entity2model(role);
 		return new ResponseEntity<RoleModel>(roleModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createRole(@Valid @RequestBody  RoleModel roleModel,Errors e) {
+	public ResponseEntity<?> createRole(@Valid @RequestBody  RoleModel roleModel,Errors e,
+			@PathVariable(value = "prefix") String prefix
+			) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
@@ -70,23 +80,32 @@ public class RoleController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateRole( @Valid @RequestBody  RoleModel roleModel,Errors e,
-			@PathVariable(value = "id") Integer roleIdParam) {
+			@PathVariable(value = "id") Integer roleIdParam,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
 		
 		Role role = roleService.get(roleIdParam);
-
+		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
 		role.setRoleName(roleModel.getRoleName());
 		role.setLayer(roleModel.getLayer());
 		roleService.save(role);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer roleIdParam) {
-		Role role = new Role();
-		role = roleService.get(roleIdParam);
+	public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer roleIdParam,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+		
+        Role role = new Role();
+      	
+        role = roleService.get(roleIdParam);
+		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
 		roleService.delete(role);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}

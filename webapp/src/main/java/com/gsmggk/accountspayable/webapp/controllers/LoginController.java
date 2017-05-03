@@ -18,7 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.gsmggk.accountspayable.services.IClerkService;
-import com.gsmggk.accountspayable.services.impl.UserSessionStorage;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 
 @RestController
 @RequestMapping("/login")
@@ -37,6 +37,15 @@ public class LoginController {
 		return new ResponseEntity<>( HttpStatus.OK);
 	}	
 	
+	/*@RequestMapping(method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<?> getLog(ServletResponse response) {
+		   // "/" is relative to the context root (your web-app name)
+        RequestDispatcher view = req.getRequestDispatcher("/path/to/file.html");
+        // don't add your web-app name to the path
+
+        view.forward(req, resp);    
+		return new ResponseEntity<>( HttpStatus.OK);
+	}	*/
 	
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<?> login(HttpSession sess,ServletResponse response) {

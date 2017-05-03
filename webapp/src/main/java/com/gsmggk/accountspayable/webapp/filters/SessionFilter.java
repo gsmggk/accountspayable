@@ -13,6 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -21,16 +23,20 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.IRoleService;
-import com.gsmggk.accountspayable.services.impl.UserSessionStorage;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
+import com.gsmggk.accountspayable.services.util.MemClient;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 
 public class SessionFilter implements Filter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionFilter.class);
 	private IRoleService roleService;
 	private IClerkService clerkService;
-	
+	private MemClient client;
 
 	private ApplicationContext appContext;
+
+	// private MemcachedClient memClient;
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
@@ -38,8 +44,10 @@ public class SessionFilter implements Filter {
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(config.getServletContext());
 		clerkService = context.getBean(IClerkService.class);
-		roleService =context.getBean(IRoleService.class);
+		roleService = context.getBean(IRoleService.class);
+		client = context.getBean(MemClient.class);
 		appContext = context;
+
 	}
 
 	@Override
@@ -53,8 +61,6 @@ public class SessionFilter implements Filter {
 			return;
 		}
 
-		UserSessionStorage userDataStorage = appContext.getBean(UserSessionStorage.class);
-
 		String[] credentials = resolveCredentials((HttpServletRequest) request);
 
 		boolean isCredentialsResolved = credentials != null && credentials.length == 2;
@@ -62,9 +68,29 @@ public class SessionFilter implements Filter {
 			res.sendError(401);
 			return;
 		}
-
 		String username = credentials[0];
 		String password = credentials[1];
+		// ==========================================
+		// try get storage from memcached
+		//
+		// ==========================================
+		String base64 = resolveBase64(req);
+
+		UserSessionStorage storageFromCache = client.getCach(base64);
+
+		if (storageFromCache != null) {
+			if (!chekUser2LayerAccess(req, storageFromCache.getLayer())) {
+				
+
+				res.sendError(401);
+			}
+			UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+				storage.setId(storageFromCache.getId());
+				storage.setLayer(storageFromCache.getLayer());
+			
+			chain.doFilter(request, res);
+			return;
+		}
 
 		Clerk clerk = new Clerk();
 		try {
@@ -76,29 +102,35 @@ public class SessionFilter implements Filter {
 		catch (MyBadPasswordException e) {
 			res.sendError(401);
 		}
-		
+
 		Integer roleId = clerk.getRoleId();
-		Role role =new Role();
-		role= roleService.get(roleId);
+		Role role = new Role();
+		role = roleService.get(roleId);
 		String layer = role.getLayer();
-		
-		
-		
+
 		// TODO get prefix if
 		if (!chekUser2LayerAccess(req, layer)) {
 			res.sendError(401);
 		}
+		UserSessionStorage storageDb = appContext.getBean(UserSessionStorage.class);
+		storageDb.setId(clerk.getId());
+		storageDb.setLayer(layer);
+		// ==========================================
+		// load storage to memcached
+		// load cross link to memcached
+		// ==========================================
 
-		userDataStorage.setId(clerk.getId());
+		client.setCach(base64, storageDb);
+
 		chain.doFilter(request, res);
 
 	}
 
-	private boolean chekUser2LayerAccess(HttpServletRequest req, String role) {
+	private boolean chekUser2LayerAccess(HttpServletRequest req, String layer) {
 		if (req.getRequestURI().toLowerCase().equals("/login")) {
 			return true;
 		}
-		if (req.getRequestURI().toLowerCase().startsWith("/"+role.toLowerCase())) {
+		if (req.getRequestURI().toLowerCase().startsWith("/" + layer.toLowerCase())) {
 			return true;
 		}
 
@@ -116,14 +148,19 @@ public class SessionFilter implements Filter {
 
 	private String[] resolveCredentials(HttpServletRequest req) {
 		try {
-			Enumeration<String> headers = req.getHeaders("Authorization");
-			String nextElement = headers.nextElement();
-			String base64Credentials = nextElement.substring("Basic".length()).trim();
+			String base64Credentials = resolveBase64(req);
 			String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
 			return credentials.split(":", 2);
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	private String resolveBase64(HttpServletRequest req) {
+		Enumeration<String> headers = req.getHeaders("Authorization");
+		String nextElement = headers.nextElement();
+		String base64Credentials = nextElement.substring("Basic".length()).trim();
+		return base64Credentials;
 	}
 
 	@Override
