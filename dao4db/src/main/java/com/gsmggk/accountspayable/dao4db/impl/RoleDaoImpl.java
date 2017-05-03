@@ -104,7 +104,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		}
 	}
 
-	// TODO refactor to generik
+	
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
