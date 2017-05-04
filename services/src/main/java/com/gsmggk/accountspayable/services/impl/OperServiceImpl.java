@@ -153,11 +153,16 @@ public class OperServiceImpl implements IOperService {
 
 		Integer clerkId = oper.getClerkId();
 		Integer actionId = oper.getActionId();
+		Integer debtorId=oper.getDebtorId();
 		if (!clerkDao.checkAction4Clerk(clerkId, actionId)) {
-			LOGGER.error("Clerk id:{} have access denide to Add operation with action id:{}", clerkId, actionId);
+			LOGGER.error("Clerk id:{}  access denide to Add operation with action id:{}", clerkId, actionId);
 			throw new MyAccessDeniedException("Access clerk to operation denieded");
 		}
-		;
+	
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Access clerk to operation denieded");
+		}
 		operDao.insert(oper);
 		LOGGER.info("Operatin id:{} inserted- debtor id:{} action id:{} clerk id:{}", oper.getId(), oper.getDebtorId(),
 				oper.getActionId(), oper.getClerkId());

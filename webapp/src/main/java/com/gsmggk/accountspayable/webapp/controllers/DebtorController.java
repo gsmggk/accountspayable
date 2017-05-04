@@ -1,9 +1,6 @@
 package com.gsmggk.accountspayable.webapp.controllers;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,28 +29,56 @@ import com.gsmggk.accountspayable.webapp.models.DebtorControlModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorStateModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
+import com.gsmggk.accountspayable.webapp.models.utils.ConvertUtils;
+import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
 @RequestMapping("/{prefix}/debtors")
 public class DebtorController {
-	
+	private static final String NOT_FOUND_MES = "Debrot not found";
 	@Inject
 	private ApplicationContext appContext;
 	@Inject
 	private IDebtorService debtorService;
 
-	@RequestMapping(value = "/4clerk", method = RequestMethod.POST)
-	public ResponseEntity<?> getDebtors4Clerk(@Valid @RequestBody ParamsDebtors4Clerk params, Errors e,
-			@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+	
+	@RequestMapping(value = "/save/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> saveDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
+			@PathVariable(value = "id") Integer debtorIdParam) {
 		
+
+		if (e.hasErrors()) {
+			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+		}
+
+		Debtor debtor = debtorService.get(debtorIdParam);
+		if (debtor == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
+		loadFromModel(debtorModel, debtor);
 		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
-		Integer clerkIdParam=storage.getId();
-		
+		Integer clerkId = storage.getId();
+		debtorService.saveDebtor(clerkId, debtor);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+	
+	/**
+	 * Get list debtors with control date sort by control date. Can sort,
+	 * search, paginate list.Used be Work layer.
+	 * 
+	 * @author Gena
+	 *
+	 */
+	@RequestMapping(value = "/4clerk", method = RequestMethod.POST)
+	public ResponseEntity<?> getDebtors4Clerk(@Valid @RequestBody ParamsDebtors4Clerk params, Errors e) {
+
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		Integer clerkIdParam = storage.getId();
+
 		List<DebtorControl> allDebtors;
-		
-		if (params == null) {
+
+		if (params == null || params.nullable()) {
 			allDebtors = debtorService.getDebtors4Clerk(clerkIdParam);
 		} else {
 			allDebtors = debtorService.getDebtors4Clerk(clerkIdParam, params);
@@ -64,15 +89,14 @@ public class DebtorController {
 		}
 		return new ResponseEntity<List<DebtorControlModel>>(converterModel, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/4boss", method = RequestMethod.POST)
-	public ResponseEntity<?> getDebtors4Boss(@Valid @RequestBody ParamsDebtors4Boss params, Errors e
-			) {
+	public ResponseEntity<?> getDebtors4Boss(@Valid @RequestBody ParamsDebtors4Boss params, Errors e) {
 		List<DebtorState> allDebtors;
-		if (params == null) {
+		if (params == null || params.nullable()) {
 			allDebtors = debtorService.getDebtors4Boss();
 		} else {
-			allDebtors = debtorService.getDebtors4Boss( params);
+			allDebtors = debtorService.getDebtors4Boss(params);
 		}
 		List<DebtorStateModel> converterModel = new ArrayList<>();
 		for (DebtorState debtor : allDebtors) {
@@ -80,7 +104,7 @@ public class DebtorController {
 		}
 		return new ResponseEntity<List<DebtorStateModel>>(converterModel, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/alloc/{flag}", method = RequestMethod.POST)
 	public ResponseEntity<?> getAllocatedDebtors(@Valid @RequestBody ParamsDebtor params, Errors e,
 			@PathVariable(value = "flag") Boolean flag) {
@@ -96,16 +120,12 @@ public class DebtorController {
 		}
 		return new ResponseEntity<List<DebtorModel>>(converterModel, HttpStatus.OK);
 	}
-	
-	
-	
-	
-	
 
 	// ---------------- defaults-------------------------------------
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<DebtorModel>> getAll() {
+	public @ResponseBody ResponseEntity<List<DebtorModel>> getAll(@PathVariable(value = "prefix") String prefix) {
+		
 		List<Debtor> allDebtors;
 		allDebtors = debtorService.getAll();
 
@@ -117,12 +137,17 @@ public class DebtorController {
 		return new ResponseEntity<List<DebtorModel>>(converterModel, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	/**
+	 * Get Debtor by id. Can be use in Admin and Work layers.
+	 * @param debtorIdParam
+	 * @return
+	 */
+	@RequestMapping(value = { "/{id}", "/get/{id}" }, method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer debtorIdParam) {
+		
 		Debtor debtor = debtorService.get(debtorIdParam);
 		if (debtor == null) {
-			String bodyOfResponse = "{\"error\":\"Debtor not exists.\"}";
-			return new ResponseEntity<String>(bodyOfResponse, HttpStatus.BAD_REQUEST);
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
 		}
 		DebtorModel debtorModel = entity2model(debtor);
 		return new ResponseEntity<DebtorModel>(debtorModel, HttpStatus.OK);
@@ -130,7 +155,12 @@ public class DebtorController {
 
 	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
 
-	public ResponseEntity<?> createDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e) {
+	public ResponseEntity<?> createDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
@@ -141,16 +171,37 @@ public class DebtorController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
-			@PathVariable(value = "id") Integer debtorIdParam) {
+			@PathVariable(value = "id") Integer debtorIdParam, @PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
 
 		Debtor debtor = debtorService.get(debtorIdParam);
-
+		if (debtor == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		loadFromModel(debtorModel, debtor);
 
 		debtorService.save(debtor);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteDebtor(@PathVariable(value = "id") Integer debtorIdParam,
+			@PathVariable(value = "prefix") String prefix) {
+		if (!prefix.toLowerCase().equals("admin")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		Debtor debtor = new Debtor();
+		debtor = debtorService.get(debtorIdParam);
+		if (debtor == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
+		debtorService.delete(debtor);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
@@ -162,14 +213,6 @@ public class DebtorController {
 		debtor.setFamily(debtorModel.getFamily());
 		debtor.setJobe(debtorModel.getJobe());
 		debtor.setOther(debtorModel.getOther());
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteDebtor(@PathVariable(value = "id") Integer debtorIdParam) {
-		Debtor debtor = new Debtor();
-		debtor = debtorService.get(debtorIdParam);
-		debtorService.delete(debtor);
-		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
 	private Debtor model2entity(DebtorModel model) {
@@ -199,17 +242,10 @@ public class DebtorController {
 		model.setId(debtor.getDebtorId());
 		model.setShortName(debtor.getShortName());
 		model.setFullName(debtor.getFullName());
-		Date dateFrom = debtor.getControl();
-		if (dateFrom == null) {
-			model.setControl("Не установлена");
-			return model;
-		}
-		DateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-		model.setControl(dFormat.format(dateFrom));
-
+		model.setControl(ConvertUtils.date2string(debtor.getControl()));
 		return model;
 	}
+
 	private DebtorStateModel entity2DSmodel(DebtorState debtor) {
 		DebtorStateModel model = new DebtorStateModel();
 		model.setId(debtor.getDebtorId());

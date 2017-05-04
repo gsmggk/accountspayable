@@ -26,6 +26,8 @@ import com.gsmggk.accountspayable.dao4db.mapper.ClerkRepoRowMapper;
 import com.gsmggk.accountspayable.dao4db.mapper.DebtorControlRowMapper;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
+import javafx.animation.KeyValue.Type;
+
 @Repository
 public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClerkDaoImpl.class);
@@ -103,6 +105,18 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		}
 		
 	}
+	@Override
+	public Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId) {
+		readSql = "select count(*) from oper o where o.action_id=11 and o.clerk_id=? and o.debtor_id=?";
+		Object[] objects = new Object[] { clerkId, debtorId };
+		Integer rs = super.read(objects, Integer.class);
+
+		if (rs == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	@Override
 	public Boolean checkAction4Clerk(Integer clerkId, Integer actionId) {
@@ -159,6 +173,8 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		jdbcTemplate.update(sql,  session.getValue(),session.getId());
 		
 	}
+
+	
 
 	
 

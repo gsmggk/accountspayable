@@ -18,37 +18,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.services.IAccountService;
+import com.gsmggk.accountspayable.webapp.models.Account4DebtorModel;
 import com.gsmggk.accountspayable.webapp.models.AccountModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
+import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
 @RequestMapping("/{prefix}/accounts")
 public class AccountController {
+	private static final String NOT_FOUND_MES = "Account not found";
 	@Inject
 	private IAccountService accountService;
-	
+
+	/**
+	 * Get accounts for debtor. Used be Work layer.
+	 * 
+	 * @param debtorIdParam
+	 * @return
+	 */
 	@RequestMapping(value = "/4debtor/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getAccounts4Debtor(
-			@PathVariable(value = "prefix") String prefix,
-			@PathVariable(value = "id") Integer debtorIdParam) {
-		if (!prefix.toLowerCase().equals("work")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
+	public ResponseEntity<?> getAccounts4Debtor(@PathVariable(value = "id") Integer debtorIdParam) {
+
 		List<Account> allAccounts = accountService.getAccounts4Debtor(debtorIdParam);
-		
-		
-		List<AccountModel> converterModel = new ArrayList<>();
+
+		List<Account4DebtorModel> converterModel = new ArrayList<>();
 		for (Account account : allAccounts) {
-			converterModel.add(entity2model(account));
+			converterModel.add(entity2ADmodel(account));
 		}
-	
-		return new ResponseEntity<List<AccountModel> >(converterModel, HttpStatus.OK);
+
+		return new ResponseEntity<List<Account4DebtorModel>>(converterModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<AccountModel>> getAll(@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
+	public @ResponseBody ResponseEntity<List<AccountModel>> getAll() {
+
 		List<Account> allAccounts;
 		allAccounts = accountService.getAll();
 
@@ -62,10 +66,10 @@ public class AccountController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer accountIdParam) {
+
 		Account account = accountService.get(accountIdParam);
-		if (account==null){
-			   String bodyOfResponse = "{\"error\":\"Account not exists.\"}";
-				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
+		if (account == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
 		}
 		AccountModel accountModel = entity2model(account);
 		return new ResponseEntity<AccountModel>(accountModel, HttpStatus.OK);
@@ -90,11 +94,12 @@ public class AccountController {
 		}
 
 		Account account = accountService.get(accountIdParam);
-
+		if (account == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		account.setAccountName(accountModel.getAccountName());
 		account.setSumm(accountModel.getSumm());
 		account.setDebtorId(accountModel.getDebtorId());
-		
 
 		accountService.save(account);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
@@ -104,6 +109,9 @@ public class AccountController {
 	public ResponseEntity<?> deleteAccount(@PathVariable(value = "id") Integer accountIdParam) {
 		Account account = new Account();
 		account = accountService.get(accountIdParam);
+		if (account == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		accountService.delete(account);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
@@ -128,4 +136,11 @@ public class AccountController {
 		return model;
 	}
 
+	private Account4DebtorModel entity2ADmodel(Account account) {
+		Account4DebtorModel model = new Account4DebtorModel();
+		model.setId(account.getId());
+		model.setAccountName(account.getAccountName());
+		model.setSumm(account.getSumm());
+		return model;
+	}
 }

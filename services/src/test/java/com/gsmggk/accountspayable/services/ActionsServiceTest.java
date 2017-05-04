@@ -124,4 +124,5 @@ public class ActionsServiceTest extends AbstractTest {
 		Action action=modelService.get(id);
 		Assert.notNull(action,"List of actions must be not empty");
 	}
+	
 }

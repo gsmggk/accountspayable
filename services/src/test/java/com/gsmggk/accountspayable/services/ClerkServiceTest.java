@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.util.Assert;
 
+import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
 
@@ -132,5 +133,18 @@ public class ClerkServiceTest extends AbstractTest {
 	Integer debtorId=44;
 	List<Clerk> clerks=	clerkService.getClerks4Debtor(debtorId);
 	Assert.notEmpty(clerks,"Clerk list must be not empty");
+	}
+	@Test
+	public void getActions4ClerkTest(){
+		Integer clerkId=90;
+		List<Action> actions=clerkService.getActions4Clerk(clerkId);
+		Assert.notEmpty(actions,"List of actions must be not empty");
+	}
+	@Test
+	public void chekDebtor4ClerkTest(){
+		Integer clerkId=91;
+		Integer debtorId=44;
+		Boolean chek= clerkService.chekDebtor4Clerk(clerkId,debtorId);
+		Assert.isTrue(chek, "This Clerk assignet to debtor");
 	}
 }

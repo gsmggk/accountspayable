@@ -83,6 +83,7 @@ public class SessionFilter implements Filter {
 				
 
 				res.sendError(401);
+				return;
 			}
 			UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
 				storage.setId(storageFromCache.getId());
@@ -97,10 +98,12 @@ public class SessionFilter implements Filter {
 			clerk = clerkService.loginCheck(username, password);
 		} catch (MyBadLoginNameException e) {
 			res.sendError(401);
+			return;
 		}
 
 		catch (MyBadPasswordException e) {
 			res.sendError(401);
+			return;
 		}
 
 		Integer roleId = clerk.getRoleId();
@@ -111,6 +114,7 @@ public class SessionFilter implements Filter {
 		// TODO get prefix if
 		if (!chekUser2LayerAccess(req, layer)) {
 			res.sendError(401);
+			return;
 		}
 		UserSessionStorage storageDb = appContext.getBean(UserSessionStorage.class);
 		storageDb.setId(clerk.getId());

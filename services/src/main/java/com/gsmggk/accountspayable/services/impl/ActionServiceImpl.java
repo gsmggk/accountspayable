@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
+import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.datamodel.Action;
+import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.services.IActionService;
 
 @Service
@@ -19,6 +21,9 @@ public class ActionServiceImpl implements IActionService {
 	
 	@Inject
 	private IActionDao actionDao;
+	
+	@Inject
+	private IRoleDao roleDao;
 	
 	@Override
 	public void save(Action action) {
@@ -49,5 +54,7 @@ public class ActionServiceImpl implements IActionService {
 		actionDao.delete(action.getId());
 
 	}
+
+	
 
 }

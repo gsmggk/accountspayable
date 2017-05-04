@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -18,19 +19,59 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.services.IOperService;
+import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 import com.gsmggk.accountspayable.webapp.models.OperModel;
+import com.gsmggk.accountspayable.webapp.models.utils.ConvertUtils;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
+import com.gsmggk.accountspayable.webapp.models.OperDebtorModel;
+import com.gsmggk.accountspayable.webapp.models.OperInsertModel;
+import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
 import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 
 @RestController
-@RequestMapping("/opers")
+@RequestMapping("/{prefix}/opers")
 public class OperController {
-
+	private static final String NOT_FOUND_MES = "Operation not found";
 	@Inject
 	private IOperService operService;
+	@Inject
+	private ApplicationContext appContext;
+	
+	
+	@RequestMapping(value = "/addoper",method = RequestMethod.POST)
+
+	public ResponseEntity<?> addOper(@Valid @RequestBody OperInsertModel operModel, Errors e) {
+		if (e.hasErrors()) {
+			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+		}
+		Oper oper = model2OIentity(operModel);
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		oper.setClerkId(storage.getId());
+		operService.addOper(oper);
+		return new ResponseEntity<IdModel>(new IdModel(oper.getId()), HttpStatus.CREATED);
+	}
 	
 	
 
+	/**
+	 * Get list of opers for debtor. Used by Work layer.
+	 * @param debtorIdParam debtor id
+	 * @return
+	 */
+	@RequestMapping(value = "/4debtor/{debtorId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getOpers4Debtor(@PathVariable(value = "debtorId") Integer debtorIdParam) {
+		List<Oper> allOpers;
+		allOpers = operService.getOpers4Debtor(debtorIdParam);
+
+		List<OperDebtorModel> converterModel = new ArrayList<>();
+		for (Oper oper : allOpers) {
+			converterModel.add(entity2ODmodel(oper));
+		}
+		return new ResponseEntity<List<OperDebtorModel>>(converterModel, HttpStatus.OK);
+	}
+
+	
+//============================default controlers=============================
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<OperModel>> getAll() {
 		List<Oper> allOpers;
@@ -47,15 +88,14 @@ public class OperController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer operIdParam) {
 		Oper oper = operService.get(operIdParam);
-		if (oper==null){
-			   String bodyOfResponse = "{\"error\":\"Oper not exists.\"}";
-				return new ResponseEntity<String>(bodyOfResponse,HttpStatus.BAD_REQUEST);
-		}
+		
+		if (oper == null) {	return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);}
+		
 		OperModel operModel = entity2model(oper);
 		return new ResponseEntity<OperModel>(operModel, HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
+	@RequestMapping(method = RequestMethod.POST)
 
 	public ResponseEntity<?> createOper(@Valid @RequestBody OperModel operModel, Errors e) {
 		if (e.hasErrors()) {
@@ -74,11 +114,21 @@ public class OperController {
 		}
 
 		Oper oper = operService.get(operIdParam);
-
+		if (oper == null) {	return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);}
+		
 		loadFromModel(operModel, oper);
-		
-		
+
 		operService.save(oper);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOper(@PathVariable(value = "id") Integer operIdParam) {
+		Oper oper = new Oper();
+	
+		oper = operService.get(operIdParam);
+			if (oper == null) {	return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);}
+		operService.delete(oper);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
@@ -89,14 +139,6 @@ public class OperController {
 		oper.setActionDate(operModel.getActionDate());
 		oper.setControlDate(operModel.getControlDate());
 		oper.setOperDesc(operModel.getOperDesc());
-	
-	}
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteOper(@PathVariable(value = "id") Integer operIdParam) {
-		Oper oper = new Oper();
-		oper = operService.get(operIdParam);
-		operService.delete(oper);
-		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
 	private Oper model2entity(OperModel model) {
@@ -119,5 +161,26 @@ public class OperController {
 
 		return model;
 	}
+	private OperDebtorModel entity2ODmodel(Oper oper) {
+		OperDebtorModel model = new OperDebtorModel();
+		model.setId(oper.getId());
+		
+		model.setClerkId(oper.getClerkId());
+		model.setActionId(oper.getActionId());
+		model.setActionDate(ConvertUtils.timestmp2string(oper.getActionDate()));
+		model.setControlDate(ConvertUtils.date2string(oper.getControlDate()));
+		model.setOperDesc(oper.getOperDesc());
 
+		return model;
+	}
+	
+	private Oper model2OIentity(OperInsertModel model) {
+		Oper oper = new Oper();
+		oper.setDebtorId(model.getDebtorId());
+		oper.setActionId(model.getActionId());
+		oper.setOperDesc(model.getOperDesc());
+		oper.setControlDate(ConvertUtils.string2date(model.getControlDate()));
+		
+		return oper;
+	}
 }

@@ -11,13 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
+import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyNotDistributedClerkException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
 import com.gsmggk.accountspayable.services.util.PasswordHash;
 
@@ -27,6 +31,8 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Inject
 	private IClerkDao clerkDao;
+	@Inject
+	private IRoleDao roleDao;
 
 	@Override
 	public void save(Clerk clerk) {
@@ -159,4 +165,19 @@ public class ClerkServiceImpl implements IClerkService {
 			clerkDao.updateSession(session);
 		}
 	}
+
+	@Override
+	public List<Action> getActions4Clerk(Integer clerkId) {
+		Clerk clerk =clerkDao.read(clerkId);
+		if (clerk==null){throw new MyNotFoundException("Clerk not found");}
+		if (clerk.getRoleId()==null){throw new MyNotDistributedClerkException("Clerk not allowed to role");}
+		return roleDao.getActions4Role(clerk.getRoleId());
+	}
+
+	@Override
+	public Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId) {
+		
+		return clerkDao.chekDebtor4Clerk( clerkId,  debtorId);
+	}
+	
 }

@@ -26,21 +26,14 @@ import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
 @RestController
 @RequestMapping("/{prefix}/roles")
 public class RoleController {
-	private static final String NOT_FOUND_MES="Role not found";
-	
+	private static final String NOT_FOUND_MES = "Role not found";
+
 	@Inject
 	private IRoleService roleService;
-	
-	
-	
-	
-	
+
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<RoleModel>> getAll(
-			@PathVariable(value = "prefix") String prefix
-			) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
+	public @ResponseBody ResponseEntity<List<RoleModel>> getAll() {
+
 		List<Role> allRoles;
 		allRoles = roleService.getAll();
 
@@ -53,23 +46,24 @@ public class RoleController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer roleIdParam,
-			@PathVariable(value = "prefix") String prefix
-			) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
+	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer roleIdParam
+
+	) {
+
 		Role role = roleService.get(roleIdParam);
-		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
-	
+		if (role == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
+
 		RoleModel roleModel = entity2model(role);
 		return new ResponseEntity<RoleModel>(roleModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createRole(@Valid @RequestBody  RoleModel roleModel,Errors e,
-			@PathVariable(value = "prefix") String prefix
-			) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+	public ResponseEntity<?> createRole(@Valid @RequestBody RoleModel roleModel, Errors e
+
+	) {
+
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
@@ -77,35 +71,34 @@ public class RoleController {
 		roleService.save(role);
 		return new ResponseEntity<IdModel>(new IdModel(role.getId()), HttpStatus.CREATED);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateRole( @Valid @RequestBody  RoleModel roleModel,Errors e,
-			@PathVariable(value = "id") Integer roleIdParam,
-			@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
+	public ResponseEntity<?> updateRole(@Valid @RequestBody RoleModel roleModel, Errors e,
+			@PathVariable(value = "id") Integer roleIdParam) {
+
 		if (e.hasErrors()) {
 			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
 		}
-		
+
 		Role role = roleService.get(roleIdParam);
-		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
+		if (role == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		role.setRoleName(roleModel.getRoleName());
 		role.setLayer(roleModel.getLayer());
 		roleService.save(role);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
-
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer roleIdParam,
-			@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")){ return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-		
-        Role role = new Role();
-      	
-        role = roleService.get(roleIdParam);
-		if(role==null){   return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);	}
+	public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer roleIdParam) {
+
+		Role role = new Role();
+
+		role = roleService.get(roleIdParam);
+		if (role == null) {
+			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
+		}
 		roleService.delete(role);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}

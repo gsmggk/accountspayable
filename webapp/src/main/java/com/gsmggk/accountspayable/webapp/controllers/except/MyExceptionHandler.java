@@ -9,13 +9,20 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDuplicateKeyException;
+import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
 @ControllerAdvice
 public class MyExceptionHandler extends ResponseEntityExceptionHandler {
 	 @ExceptionHandler(value = {MyDuplicateKeyException.class })
 	    protected ResponseEntity<?> handleConflictREE(RuntimeException ex, WebRequest request) {
-	      String bodyOfResponse = "{\"error\":\"Duplicate key Exception.\"}";
+	      String bodyOfResponse = "{\"error\":\"Allready exist.\"}";
 	   
 	        return handleExceptionInternal(ex, bodyOfResponse,  new HttpHeaders(), HttpStatus.CONFLICT, request);
+}
+	 @ExceptionHandler(value = {MyNotFoundException.class })
+	    protected ResponseEntity<?> handleConflictMNFE(RuntimeException ex, WebRequest request) {
+	      String bodyOfResponse = "{\"error\":\"Not found.\"}";
+	   
+	        return handleExceptionInternal(ex, bodyOfResponse,  new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 }
 	 
 	 @ExceptionHandler(value = {IllegalArgumentException.class })

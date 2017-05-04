@@ -65,6 +65,11 @@ public class ClerkDaoXMLImpl extends GenericDaoXMLImpl<Clerk> implements IClerkD
 		
 	}
 
+	@Override
+	public Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId) {
+		throw new NotSupportedMethodException();
+	}
+
 	
 
 }
