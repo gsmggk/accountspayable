@@ -19,13 +19,13 @@ import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IDebtorService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
-import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
 
 @Service
 public class DebtorServiceImpl implements IDebtorService {

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
-import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
 
 @Service
 public class OperServiceImpl implements IOperService {

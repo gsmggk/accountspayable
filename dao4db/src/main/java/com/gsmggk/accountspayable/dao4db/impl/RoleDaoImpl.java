@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Action;
@@ -87,6 +88,8 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
 		
+		chekExists(actionId, roleId);
+		
 		String sql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
 		Integer rs = super.readField(sql,objects, Integer.class);
@@ -96,6 +99,21 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * Check exist action with id <b>actionId</b> and role with <b>roleId</b>.
+	 * If exist do nothing. Else throw exceptions <b>MyNotFoundException</b>. 
+	 * @param actionId
+	 * @param roleId
+	 */ 
+	private void chekExists(Integer actionId, Integer roleId) {
+		String chekRoleSql="select r.id from role r where r.id=?";
+		Integer rId=super.readField(chekRoleSql, new Object[]{roleId}, Integer.class);
+		if (rId==null){throw new MyNotFoundException("Role not found");}
+		String chekActionSql="select a.id from action a where a.id=?";
+		Integer aId=super.readField(chekActionSql, new Object[]{actionId}, Integer.class);
+		if (aId==null){throw new MyNotFoundException("Action not found");}
 	}
 
 	
@@ -117,7 +135,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		final String DELETE_SQL = "delete from role2action as ra where ra.action_id=? and ra.role_id=?";
 
 		jdbcTemplate.update(DELETE_SQL, new Object[] { actionId, roleId });
-		LOGGER.info("Action:{} DELETE from Role:{}", actionId, roleId);
+		LOGGER.warn("Action:{} DELETE from Role:{}", actionId, roleId);
 
 	}
 

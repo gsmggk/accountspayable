@@ -37,6 +37,7 @@ public class PrefixFilter implements Filter {
 				"/work/accounts",
 				"/work/opers/4debtor/",
 				
+				"/admin/clerks",
 				"/admin/opers",
 				"/admin/roles",
 				"/admin/accounts",

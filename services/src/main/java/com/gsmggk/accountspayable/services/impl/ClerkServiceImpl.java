@@ -14,6 +14,7 @@ import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
@@ -21,7 +22,6 @@ import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyNotDistributedClerkException;
-import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
 import com.gsmggk.accountspayable.services.util.CurrentLayer;
 import com.gsmggk.accountspayable.services.util.PasswordHash;
 

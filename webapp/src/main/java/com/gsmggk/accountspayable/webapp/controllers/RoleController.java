@@ -30,7 +30,10 @@ public class RoleController {
 
 	@Inject
 	private IRoleService roleService;
-
+	
+	
+	
+//====================================Default controllers===========================
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<RoleModel>> getAll() {
 

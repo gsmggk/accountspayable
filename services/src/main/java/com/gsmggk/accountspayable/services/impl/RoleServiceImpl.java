@@ -58,6 +58,7 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public void addAction2Role(Integer actionId, Integer roleId) {
+		
 		if (!roleDao.chekAction2role(actionId, roleId)) {
 			roleDao.addAction2Role(actionId, roleId);
 		} 
@@ -66,7 +67,8 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public void deleteAction2Role(Integer actionId, Integer roleId) {
-	roleDao.deleteAction2Role(actionId, roleId);
+		if (roleDao.chekAction2role(actionId, roleId)) {
+	roleDao.deleteAction2Role(actionId, roleId);}
 		
 	}
 
