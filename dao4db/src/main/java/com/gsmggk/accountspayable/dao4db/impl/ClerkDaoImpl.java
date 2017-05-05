@@ -9,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +21,7 @@ import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.dao4db.mapper.ClerkRepoRowMapper;
-import com.gsmggk.accountspayable.dao4db.mapper.DebtorControlRowMapper;
 import com.gsmggk.accountspayable.datamodel.Clerk;
-
-import javafx.animation.KeyValue.Type;
 
 @Repository
 public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
@@ -38,12 +33,12 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
-	private String[] fieldsList = new String[] { "clerk_login_name", "password", "role_id", "clerk_full_name" };
-	private String readSql = "select * from clerk where id = ? ";
-	private String deleteSql = "delete from clerk where id=";
-	private String selectSql = "select * from clerk";
-	private String insertSql = "insert into clerk (%s,%s,%s,%s) values(?,?,?,?)";
-	private String updateSql = "update clerk set %s=?, %s=?, %s=?, %s=?  where id=?";
+	private static final String[] fieldsList = new String[] { "clerk_login_name", "password", "role_id", "clerk_full_name" };
+	private static final String readSql = "select * from clerk where id = ? ";
+	private static final String deleteSql = "delete from clerk where id=";
+	private static final String selectSql = "select * from clerk";
+	private static final String insertSql = "insert into clerk (%s,%s,%s,%s) values(?,?,?,?)";
+	private static final String updateSql = "update clerk set %s=?, %s=?, %s=?, %s=?  where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Clerk> getRowMapper() {
@@ -87,9 +82,9 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		prDao.setReadSql(readSql);
 		prDao.setDeleteSql(deleteSql);
 		prDao.setSelectSql(selectSql);
-		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		String insertSql = String.format(ClerkDaoImpl.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		String updateSql = String.format(ClerkDaoImpl.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 
@@ -107,9 +102,9 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 	}
 	@Override
 	public Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId) {
-		readSql = "select count(*) from oper o where o.action_id=11 and o.clerk_id=? and o.debtor_id=?";
+		final String sql = "select count(*) from oper o where o.action_id=11 and o.clerk_id=? and o.debtor_id=?";
 		Object[] objects = new Object[] { clerkId, debtorId };
-		Integer rs = super.read(objects, Integer.class);
+		Integer rs = readField(sql,objects, Integer.class);
 
 		if (rs == 0) {
 			return false;

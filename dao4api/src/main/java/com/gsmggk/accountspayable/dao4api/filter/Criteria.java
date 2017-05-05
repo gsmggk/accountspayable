@@ -21,13 +21,7 @@ public class Criteria {
 		this.objects = new Object[] {};
 	}
 
-	/*public void addFilter(String column, String operator, String value) {
-		Filter f = new Filter();
-		f.setField(column);
-		f.setOperator(operator);
-		f.setValue(value);
-		this.filters.add(f);
-	}*/
+	
 
 	public void addFilter(String column, String operator, Object newObj) {
 		Filter f = new Filter();
@@ -40,6 +34,12 @@ public class Criteria {
 		this.filters.add(f);
 	}
 
+	/**
+	 * Append into Object[] - array 
+	 * @param obj Array objects before append
+	 * @param newObj
+	 * @return new Object[]- objects array 
+	 */
 	private Object[] appendValue(Object[] obj, Object newObj) {
 		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
 		temp.add(newObj);

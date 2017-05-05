@@ -15,12 +15,12 @@ import com.gsmggk.accountspayable.datamodel.Action;
 public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionDaoImpl.class);	
 	
-	private String[] fieldsList = new String[] { "action_name", "duration" };
-	private String readSql = "select * from action where id = ? ";
-	private String deleteSql = "delete from action where id=";
-	private String selectSql = "select * from action";
-	private String insertSql = "insert into action (%s,%s) values(?,?)";
-	private String updateSql = "update action set %s=?, %s=? where id=?";
+	private static final String[] fieldsList = new String[] { "action_name", "duration" };
+	private static final String readSql = "select * from action where id = ? ";
+	private static final String deleteSql = "delete from action where id=";
+	private static final String selectSql = "select * from action";
+	private static final String insertSql = "insert into action (%s,%s) values(?,?)";
+	private static final String updateSql = "update action set %s=?, %s=? where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Action> getRowMapper() {

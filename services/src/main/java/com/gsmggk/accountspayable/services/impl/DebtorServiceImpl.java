@@ -116,6 +116,7 @@ public class DebtorServiceImpl implements IDebtorService {
 				throw new MyAccessDeniedException("Debtor create access denied");
 			}
 
+			
 			LOGGER.info("Clerk :{} Create Debtor:{} ", clerkId, debtor);
 			oper.setActionId(code);
 			StringBuilder desc=new StringBuilder();
@@ -134,7 +135,11 @@ public class DebtorServiceImpl implements IDebtorService {
 				LOGGER.warn("Clerk :{} try Update Debtor:{} ", clerkId, debtor);
 				throw new MyAccessDeniedException("Debtor update access denied");
 			}
-
+			Integer debtorId=debtor.getId();
+			if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+				LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+				throw new MyAccessDeniedException("Clerk not assigned ro debtor");
+			}
 			LOGGER.info("Clerk :{} Update Debtor:{} ", clerkId, debtor);
 			oper.setActionId(code);
 			StringBuilder desc=new StringBuilder();

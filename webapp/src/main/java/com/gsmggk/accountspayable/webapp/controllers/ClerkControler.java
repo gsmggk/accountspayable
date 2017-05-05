@@ -23,7 +23,7 @@ import com.gsmggk.accountspayable.webapp.models.ClerkModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.PasswordModel;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/clerks")
@@ -43,7 +43,7 @@ public class ClerkControler {
 		}
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Clerk clerk = clerkService.get(clerkIdParam);
@@ -99,7 +99,7 @@ public class ClerkControler {
 		}
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Clerk clerk = model2entity(clerkModel);
 		clerkService.save(clerk);
@@ -114,7 +114,7 @@ public class ClerkControler {
 		}
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Clerk clerk = clerkService.get(clerkIdParam);

@@ -1,20 +1,14 @@
 package com.gsmggk.accountspayable.dao4db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +23,12 @@ import com.gsmggk.accountspayable.datamodel.Role;
 public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleDaoImpl.class);
 
-	private String[] fieldsList = new String[] { "role_name","layer", "id" };
-	private String readSql = "select * from role where id = ? ";
-	private String deleteSql = "delete from role where id=";
-	private String selectSql = "select * from role";
-	private String insertSql = "insert into role (%s,%s) values(?,?)";
-	private String updateSql = "update role set %s=?,%s=? where id=?";
+	private static final String[] fieldsList = new String[] { "role_name","layer", "id" };
+	private static final String readSql = "select * from role where id = ? ";
+	private static final String deleteSql = "delete from role where id=";
+	private static final String selectSql = "select * from role";
+	private static final String insertSql = "insert into role (%s,%s) values(?,?)";
+	private static final String updateSql = "update role set %s=?,%s=? where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Role> getRowMapper() {
@@ -68,16 +62,16 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		prDao.setReadSql(readSql);
 		prDao.setDeleteSql(deleteSql);
 		prDao.setSelectSql(selectSql);
-		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		String insertSql = String.format(RoleDaoImpl.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		String updateSql = String.format(RoleDaoImpl.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 	}
 
 	@Override
 	public List<Action> getActions4Role(Integer roleId) {
-		final String SELECT_SQL = "select a.id,a.action_name " + "from role2action as ra "
+		final String SELECT_SQL = "select a.id,a.action_name,a.duration " + "from role2action as ra "
 				+ "JOIN action as a ON (ra.action_id=a.id)";// + "where
 															// ra.role_id=?";
 		Criteria cr = new Criteria();
@@ -93,9 +87,9 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
 		
-		readSql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
+		String sql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
-		Integer rs = super.read(objects, Integer.class);
+		Integer rs = super.readField(sql,objects, Integer.class);
 
 		if (rs == 0) {
 			return false;

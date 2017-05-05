@@ -21,7 +21,7 @@ import com.gsmggk.accountspayable.services.IRoleService;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.RoleModel;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/roles")
@@ -65,7 +65,7 @@ public class RoleController {
 	) {
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Role role = model2entity(roleModel);
 		roleService.save(role);
@@ -77,7 +77,7 @@ public class RoleController {
 			@PathVariable(value = "id") Integer roleIdParam) {
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Role role = roleService.get(roleIdParam);

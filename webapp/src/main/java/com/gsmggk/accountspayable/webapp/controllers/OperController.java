@@ -26,7 +26,7 @@ import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.OperDebtorModel;
 import com.gsmggk.accountspayable.webapp.models.OperInsertModel;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/opers")
@@ -37,12 +37,64 @@ public class OperController {
 	@Inject
 	private ApplicationContext appContext;
 	
+	/**
+	 * Clerk delete operation. If have access to operations action and debtor assigned to him.
+	 * @param operIdParam operation id
+	 * @return
+	 */
+	@RequestMapping(value = "/oper/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOperLog(@PathVariable(value = "id") Integer operIdParam) {
+		Oper oper = new Oper();
 	
-	@RequestMapping(value = "/addoper",method = RequestMethod.POST)
+		oper = operService.get(operIdParam);
+			if (oper == null) {	return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);}
+			UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);	
+		operService.deleteOper(storage.getId(), oper);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * 
+	 * Clerk edit debtors operation. Used in Work layer.
+	 * @param operModel
+	 * @param e
+	 * @param operIdParam
+	 * @return
+	 */
+	@RequestMapping(value = "/oper/{id}",method = RequestMethod.PUT)
+
+	public ResponseEntity<?> updateOper(@Valid @RequestBody OperInsertModel operModel, Errors e,
+			@PathVariable(value = "id") Integer operIdParam) {
+		if (e.hasErrors()) {
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
+		}
+		
+		Oper oper = operService.getOper(operIdParam);
+		if (oper == null) {	return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);}
+			
+		oper.setActionId(operModel.getActionId());
+		oper.setOperDesc(operModel.getOperDesc());
+		oper.setControlDate(ConvertUtils.string2date(operModel.getControlDate()));
+	
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+	
+		operService.updateOper(storage.getId(),oper);
+		return new ResponseEntity<>( HttpStatus.OK);
+	}
+	
+	/**
+	 * Clerk add operation for debtor. Debtor allocated with clerk.
+	 * Clerk have access to action. Used in Work layer.
+	 * @param operModel -operation detail
+	 * @param e
+	 * @return
+	 */
+	@RequestMapping(value = "/oper",method = RequestMethod.POST)
 
 	public ResponseEntity<?> addOper(@Valid @RequestBody OperInsertModel operModel, Errors e) {
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Oper oper = model2OIentity(operModel);
 		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
@@ -99,7 +151,7 @@ public class OperController {
 
 	public ResponseEntity<?> createOper(@Valid @RequestBody OperModel operModel, Errors e) {
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Oper oper = model2entity(operModel);
 		operService.save(oper);
@@ -110,7 +162,7 @@ public class OperController {
 	public ResponseEntity<?> updateOper(@Valid @RequestBody OperModel operModel, Errors e,
 			@PathVariable(value = "id") Integer operIdParam) {
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Oper oper = operService.get(operIdParam);

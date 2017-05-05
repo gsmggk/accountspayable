@@ -31,7 +31,7 @@ import com.gsmggk.accountspayable.webapp.models.DebtorStateModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.utils.ConvertUtils;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/debtors")
@@ -43,13 +43,22 @@ public class DebtorController {
 	private IDebtorService debtorService;
 
 	
+	/**
+	 * 
+	 * Clerk edit debtor contact information. Clerk allocated with debtor. Clerk have access to edit action (8).
+	 * Used in Work layer.
+	 * @param debtorModel debtor info
+	 * @param e
+	 * @param debtorIdParam debtor id
+	 * @return
+	 */
 	@RequestMapping(value = "/save/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> saveDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
 			@PathVariable(value = "id") Integer debtorIdParam) {
 		
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Debtor debtor = debtorService.get(debtorIdParam);
@@ -162,7 +171,7 @@ public class DebtorController {
 		}
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Debtor debtor = model2entity(debtorModel);
 		debtorService.save(debtor);
@@ -177,7 +186,7 @@ public class DebtorController {
 		}
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Debtor debtor = debtorService.get(debtorIdParam);

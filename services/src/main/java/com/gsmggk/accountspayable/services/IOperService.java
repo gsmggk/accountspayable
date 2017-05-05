@@ -54,12 +54,13 @@ public interface IOperService {
 
 	
 	/**
-	 *   Check clerk access for operation action.
+	 * Clerk modified debtors operation. Check if new and old operation for same debtor.
+	 *   Check clerk access for old and new operations action.
 	 * If access exist modify operation 
 	 * @param conductClerkId - clerk id who conduct update
 	 * @param oper operation
 	 */
-	void updateOper(Integer conductClerkId,Oper oper);
+	void updateOper(Integer conductClerkId, Oper newOper);
 
 	/**
 	 * Get operations for  debtor

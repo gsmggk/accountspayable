@@ -22,7 +22,7 @@ import com.gsmggk.accountspayable.webapp.models.Account4DebtorModel;
 import com.gsmggk.accountspayable.webapp.models.AccountModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/accounts")
@@ -79,7 +79,7 @@ public class AccountController {
 
 	public ResponseEntity<?> createAccount(@Valid @RequestBody AccountModel accountModel, Errors e) {
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Account account = model2entity(accountModel);
 		accountService.save(account);
@@ -90,7 +90,7 @@ public class AccountController {
 	public ResponseEntity<?> updateAccount(@Valid @RequestBody AccountModel accountModel, Errors e,
 			@PathVariable(value = "id") Integer accountIdParam) {
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Account account = accountService.get(accountIdParam);

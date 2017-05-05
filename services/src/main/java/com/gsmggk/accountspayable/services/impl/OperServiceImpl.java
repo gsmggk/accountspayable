@@ -12,15 +12,11 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
-import com.gsmggk.accountspayable.dao4api.IRoleDao;
-import com.gsmggk.accountspayable.datamodel.Clerk;
-import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
-import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
 public class OperServiceImpl implements IOperService {
@@ -33,8 +29,7 @@ public class OperServiceImpl implements IOperService {
 	private IClerkDao clerkDao;
 	@Inject
 	private IDebtorDao debtorDao;
-	@Inject
-	private IRoleDao roleDao;
+	
 
 	@Override
 	public void save(Oper oper) {
@@ -161,7 +156,7 @@ public class OperServiceImpl implements IOperService {
 	
 		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
 			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
-			throw new MyAccessDeniedException("Access clerk to operation denieded");
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
 		}
 		operDao.insert(oper);
 		LOGGER.info("Operatin id:{} inserted- debtor id:{} action id:{} clerk id:{}", oper.getId(), oper.getDebtorId(),
@@ -176,13 +171,25 @@ public class OperServiceImpl implements IOperService {
 
 	@Override
 	public void updateOper(Integer conductClerkId, Oper oper) {
-
-		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
-			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+		Oper oldOper=operDao.read(oper.getId());
+		
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oldOper.getActionId())) {
+			LOGGER.error("Clerk id:{} access denide Edit operation with old action id:{}", conductClerkId,
 					oper.getActionId());
-			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+			throw new MyAccessDeniedException("Access denied edit this operations action");
 		}
-
+		
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
+			LOGGER.error("Clerk id:{}  access denide  Edit operation with new action id:{}", conductClerkId,
+					oper.getActionId());
+			throw new MyAccessDeniedException("Access denied to this operations action");
+		}
+		Integer clerkId=conductClerkId;
+		Integer debtorId=oper.getDebtorId();
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
+		}
 		operDao.update(oper);
 		LOGGER.info("Operatin id:{} updated- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),
 				oper.getDebtorId(), oper.getActionId(), conductClerkId);
@@ -197,9 +204,15 @@ public class OperServiceImpl implements IOperService {
 	@Override
 	public void deleteOper(Integer conductClerkId, Oper oper) {
 		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
-			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+			LOGGER.error("Clerk id:{} have access denide to Delete operation with action id:{}", conductClerkId,
 					oper.getActionId());
-			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+			throw new MyAccessDeniedException("Access denied delete this operation");
+		}
+		Integer clerkId=conductClerkId;
+		Integer debtorId=oper.getDebtorId();
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
 		}
 		operDao.delete(oper.getId());
 		LOGGER.warn("Operatin id:{} delete- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),

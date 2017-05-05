@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 
-public  class ValidationErrorRestonse {
+public  class ValidationErrorResponse {
 	
-	 public ResponseEntity<?> getValidationErrorRestonse(Errors e) {
+	 public ResponseEntity<?> getValidationErrorResponse(Errors e) {
 		 ErrorModel error=new ErrorModel();
          error.setObject(e.getObjectName());
          error.setField(e.getFieldError().getField());

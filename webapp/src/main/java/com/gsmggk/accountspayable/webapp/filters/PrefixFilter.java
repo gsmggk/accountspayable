@@ -29,7 +29,7 @@ public class PrefixFilter implements Filter {
 	public void init(FilterConfig config) throws ServletException {
 		pathList = new String[] { 
 				
-				"/work/opers/addoper",
+				"/work/opers/oper",
 				"/work/actions/4clerk",
 				"/work/debtors/save/",
 				"/work/debtors/4clerk",

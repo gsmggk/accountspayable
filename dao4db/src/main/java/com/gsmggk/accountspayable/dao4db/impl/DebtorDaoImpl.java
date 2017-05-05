@@ -43,13 +43,13 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	@Inject
 	private IOperDao operDao;
 
-	private String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
+	private static final String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
 			"other" };
-	private String readSql = "select * from debtor where id = ? ";
-	private String deleteSql = "delete from debtor where id=";
-	private String selectSql = "select * from debtor";
-	private String insertSql = "insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)";
-	private String updateSql = "update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?";
+	private static final String readSql = "select * from debtor where id = ? ";
+	private static final String deleteSql = "delete from debtor where id=";
+	private static final String selectSql = "select * from debtor";
+	private static final String insertSql = "insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)";
+	private static final String updateSql = "update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Debtor> getRowMapper() {

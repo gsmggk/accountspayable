@@ -45,37 +45,37 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	}
 
 	/**
-	 * Read one property of model
+	 * Read one field of model
 	 *<b> DON'T USE WITH FOR DATA OBJECTS</b>
 	 * @param objects
 	 *            - field array
 	 * @param clazzz
-	 *            - f.e. <i>Integer.Class</i>
+	 *            - f.e.  <i>Integer.Class</i> <i>String.Class</i>
 	 * @return property value
 	 */
-	public <R> R read(Object[] objects, Class<R> clazzz) {
-		PropertyDao prDao = getPropertyDao();
-		final String READ_SQL = prDao.getReadSql();
+	public <R> R readField(String sql,Object[] objects, Class<R> clazzz) {
+	
 		try {
-			return jdbcTemplate.queryForObject(READ_SQL, objects, clazzz);
+			return jdbcTemplate.queryForObject(sql, objects, clazzz);
 		} catch (EmptyResultDataAccessException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 	/**
-	 * Read one row of model
+	 * Read one row of database object f.e. <i>clerk</i> <i>account</i>
+	 * @param sql  select sql string for read one 
 	 *
 	 * @param objects
 	 *            - field array
+	 * @param clazzz
 	
-	 * @return model
+	 * @return model 
 	 */
-	public T read(Object[] objects) {
-		PropertyDao prDao = getPropertyDao();
-		final String READ_SQL = prDao.getReadSql();
+	public T read(String sql, Object[] objects, Class<T> clazzz) {
+		
 		try {
-			return jdbcTemplate.queryForObject(READ_SQL, objects, getRowMapper());
+			return jdbcTemplate.queryForObject(sql, objects, getRowMapper());
 		} catch (EmptyResultDataAccessException e) {
 			e.printStackTrace();
 			return null;
@@ -136,7 +136,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	public void update(T object) {
 		PropertyDao prDao = getPropertyDao();
 		final String UPDATE_SQL = prDao.getUpdateSql();
-
+		  try {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
@@ -147,7 +147,10 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 				return ps;
 			}
 		});
-
+		  } catch (DuplicateKeyException e) {
+				throw new MyDuplicateKeyException(e.getMessage(),e);
+			} 
+				
 	}
 
 	/**

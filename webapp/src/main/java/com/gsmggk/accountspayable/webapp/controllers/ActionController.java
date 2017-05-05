@@ -25,7 +25,7 @@ import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 import com.gsmggk.accountspayable.webapp.models.ActionModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.validate.ParameterErrorResponse;
-import com.gsmggk.accountspayable.webapp.validate.ValidationErrorRestonse;
+import com.gsmggk.accountspayable.webapp.validate.ValidationErrorResponse;
 
 @RestController
 @RequestMapping("/{prefix}/actions")
@@ -113,7 +113,7 @@ public class ActionController {
 	public ResponseEntity<?> createAction(@Valid @RequestBody ActionModel actionModel, Errors e) {
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 		Action action = model2entity(actionModel);
 		actionService.save(action);
@@ -126,7 +126,7 @@ public class ActionController {
 			@PathVariable(value = "id") Integer actionIdParam) {
 
 		if (e.hasErrors()) {
-			return new ValidationErrorRestonse().getValidationErrorRestonse(e);
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
 		}
 
 		Action action = actionService.get(actionIdParam);

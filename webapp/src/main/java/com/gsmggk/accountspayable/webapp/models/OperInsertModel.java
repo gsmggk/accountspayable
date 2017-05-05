@@ -14,7 +14,7 @@ public class OperInsertModel {
 	@NotNull(message = "Action  must be not null")
 	private Integer actionId;
 	
-	@NotNull(message = "Control interval  must be not null")
+	@NotNull(message = "Control date  must be not null")
 	private String controlDate;
 	private String operDesc;
 	public Integer getDebtorId() {
