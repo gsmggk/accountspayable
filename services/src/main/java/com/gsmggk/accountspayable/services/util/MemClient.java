@@ -35,6 +35,9 @@ public class MemClient {
 
 	/**
 	 * Delete cached login info for clerk
+	 * Cascade delete: <br>
+	 * base64->Login detail <br>
+	 * clerkId->base64 <br>
 	 * 
 	 * @param clerkId
 	 *            clerk id
@@ -64,6 +67,13 @@ public class MemClient {
 		return storage;
 	}
 
+	/**
+	 * Cascade set cach. <br>
+	 * basse64-> Login info<br>
+	 * clerkId->base64
+	 * @param base64
+	 * @param storageDb
+	 */
 	public void setCach(String base64, UserSessionStorage storageDb) {
 		try {
 			memClient.set(base64, 3600, storageDb);

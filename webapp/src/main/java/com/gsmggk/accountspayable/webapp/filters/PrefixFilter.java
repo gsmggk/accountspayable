@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Access filter.Check request UID. If UID in path list then allow else denied.
+ * Access filter.Check request UID. If UID in pathList then allow else denied.
  * @author Gena
  *
  */
@@ -36,6 +36,9 @@ public class PrefixFilter implements Filter {
 				"/work/debtors/get/",
 				"/work/accounts",
 				"/work/opers/4debtor/",
+				
+				"/boss/research",
+				
 				
 				"/boss/clerks/repo",
 				"/boss/debtors/repo",

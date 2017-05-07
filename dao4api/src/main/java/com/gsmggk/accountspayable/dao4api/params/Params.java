@@ -1,6 +1,8 @@
 package com.gsmggk.accountspayable.dao4api.params;
 
-public class Params {
+import java.io.Serializable;
+
+public class Params implements Serializable{
 	private Integer limit;
 	private Integer offset;
 	public Integer getLimit() {

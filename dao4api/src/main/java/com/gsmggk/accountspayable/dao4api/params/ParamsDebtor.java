@@ -1,6 +1,8 @@
 package com.gsmggk.accountspayable.dao4api.params;
 
-public class ParamsDebtor extends Params {
+import java.io.Serializable;
+
+public class ParamsDebtor extends Params implements Serializable {
 	/**
 	 * Search string by debtor short name
 	 */
@@ -58,5 +60,12 @@ public class ParamsDebtor extends Params {
 			searchShortName==null) {return true;} else{
 		return false;}
 	}
+
+@Override
+public String toString() {
+	return "ParamsDebtor [searchShortName=" + searchShortName + ", seachFullName=" + seachFullName + ", sortShortName="
+			+ sortShortName + ", sortFullName=" + sortFullName + ", getLimit()=" + getLimit() + ", getOffset()="
+			+ getOffset() + "]";
+}
 
 }

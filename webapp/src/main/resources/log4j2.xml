@@ -63,7 +63,12 @@
 			<AppenderRef ref="ConsoleMy"/>
 			<AppenderRef ref="syslog"/>
 		</Logger>
-
+        <Logger level="info" name="ccom.gsmggk.accountspayable.webapp.controllers"
+			additivity="false">
+		
+			<AppenderRef ref="ConsoleMy"/>
+		
+		</Logger>
 	</Loggers>
 
 
