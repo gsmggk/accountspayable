@@ -3,10 +3,20 @@ package com.gsmggk.accountspayable.dao4api;
 import java.util.List;
 
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
+import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
+import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 
 public interface IClerkDao  extends IGenericDao<Clerk>{
 	
+	/**
+	 * Check debtor assigned to clerk.
+	 * @param clerkId clerk id
+	 * @param debtorId debtor id
+	 * @return true if assigned <br>
+	 * false if not
+	 */
+	Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId);
 
 	/**
 	 * query for Clerk with same login name as <b>login</b>
@@ -31,4 +41,14 @@ public interface IClerkDao  extends IGenericDao<Clerk>{
 	 * @return List<Clerk>
 	 */
 	List<Clerk> getClerks4Debtor(Integer debtorId);
+
+	List<ClerkRepo> getClerkRepo();
+
+	SessionModel readSession(Integer clerkId);
+
+	void insertSession(SessionModel session);
+
+	void updateSession(SessionModel session);
+	
+	
 }

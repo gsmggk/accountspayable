@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -30,8 +31,8 @@ public interface IDebtorService {
 	void delete(Debtor debtor);
 
 	/**
-	 * This method return list debtors those have or have'nt allocated with
-	 * clerk for managing. Debtors must have add operation in oper table.
+	 * This method return list debtors those have or have'nt allocation link with
+	 * clerk for managing. Debtors must have add operation (9) in oper table.
 	 * 
 	 * @param allocated
 	 *            <br>
@@ -106,5 +107,13 @@ public interface IDebtorService {
 	 * @param debtorId debtor id
 	 */
 	void reopenDedtor(Integer clerkId, Integer debtorId);
+
+	/**Generate debtors report. Get active state debtors with  operations count into the period. 
+	 * @param from start period date
+	 * @param to end period date
+	 * @param params Search/sort parameters
+	 * @return List<DebtorRepo>
+	 */
+	List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params);
 
 }

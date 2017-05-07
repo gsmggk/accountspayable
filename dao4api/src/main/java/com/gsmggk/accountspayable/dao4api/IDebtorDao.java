@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -57,5 +58,13 @@ public interface IDebtorDao extends IGenericDao<Debtor> {
 	 * @return List<DebtorState>
 	 */
 	List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params);
+	
+	/**Generate debtors report. Get active state debtors with  operations count into the period. 
+	 * @param from start period date
+	 * @param to end period date
+	 * @param params Search/sort parameters
+	 * @return List<DebtorRepo>
+	 */
+	List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params);
 
 }

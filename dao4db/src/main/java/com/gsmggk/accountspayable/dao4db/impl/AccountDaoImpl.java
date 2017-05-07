@@ -18,12 +18,12 @@ import com.gsmggk.accountspayable.datamodel.Account;
 public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountDaoImpl.class);
 
-	private String[] fieldsList = new String[] { "account_name", "summ", "debtor_id" };
-	private String readSql = "select * from account where id = ? ";
-	private String deleteSql = "delete from account where id=";
-	private String selectSql = "select * from account";
-	private String insertSql = "insert into account (%s,%s,%s) values(?,?,?)";
-	private String updateSql = "update account set %s=?, %s=?,%s=? where id=?";
+	private static final String[] fieldsList = new String[] { "account_name", "summ", "debtor_id" };
+	private static final String readSql = "select * from account where id = ? ";
+	private static final String deleteSql = "delete from account where id=";
+	private static final String selectSql = "select * from account";
+	private static final String insertSql = "insert into account (%s,%s,%s) values(?,?,?)";
+	private static final String updateSql = "update account set %s=?, %s=?,%s=? where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Account> getRowMapper() {

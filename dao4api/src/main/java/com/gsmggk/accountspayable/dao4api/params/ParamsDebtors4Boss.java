@@ -17,6 +17,12 @@ public class ParamsDebtors4Boss extends ParamsDebtor{
 	public void setSortActive(Boolean sortActive) {
 		this.sortActive = sortActive;
 	}
+	@Override
+	public boolean nullable() {
+		if (super.nullable()&&
+				sortActive==null){return true;} else{
+		return false;}
+	}
 	
 	
 

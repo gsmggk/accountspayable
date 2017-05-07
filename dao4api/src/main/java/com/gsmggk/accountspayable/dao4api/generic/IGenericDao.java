@@ -32,4 +32,13 @@ public interface  IGenericDao<T> {
 	void update(T object);
 	
 	
+	/**
+	 * Check <b>object</b> for exist row with <b>id</b>
+	
+	 * @param id- search for wits id
+	 * @return <b>true</b> if exist, <b>false</b> if not.
+	 */
+		public Boolean chekExist(Integer id) ;
+	
+	
 }

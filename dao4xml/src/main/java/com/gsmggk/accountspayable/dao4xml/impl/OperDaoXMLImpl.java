@@ -15,7 +15,12 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 
 	@Override
 	public void getPropert4Update(Oper modelItem, Oper object) {
-		// TODO Auto-generated method stub
+		modelItem.setClerkId(object.getClerkId());
+		modelItem.setDebtorId(object.getDebtorId());
+		modelItem.setActionId(object.getActionId());
+		modelItem.setActionDate(object.getActionDate());
+		modelItem.setControlDate(object.getControlDate());
+		modelItem.setOperDesc(object.getOperDesc());
 
 	}
 
@@ -24,13 +29,24 @@ public class OperDaoXMLImpl extends GenericDaoXMLImpl<Oper> implements IOperDao 
 		return "oper.xml";
 	}
 
+
 	@Override
-	public Boolean checkAllocated(Integer debtorID, Integer clerkId) {
+	public Oper getOper(Integer operId) {
 		throw new NotSupportedMethodException();
 	}
 
 	@Override
-	public Oper getOper(Integer operId) {
+	public Oper checkAllocated(Integer debtorID, Integer clerkId) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public List<Oper> getOpers4Debtor(Integer debtorId) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public Oper getDebtorStateOper(Integer debtorId) {
 		throw new NotSupportedMethodException();
 	}
 

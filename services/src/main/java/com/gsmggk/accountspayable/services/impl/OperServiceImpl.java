@@ -12,15 +12,11 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
-import com.gsmggk.accountspayable.dao4api.IRoleDao;
-import com.gsmggk.accountspayable.datamodel.Clerk;
-import com.gsmggk.accountspayable.datamodel.Debtor;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IOperService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
-import com.gsmggk.accountspayable.services.impl.exceptions.MyNotFoundException;
-import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 @Service
 public class OperServiceImpl implements IOperService {
@@ -33,8 +29,7 @@ public class OperServiceImpl implements IOperService {
 	private IClerkDao clerkDao;
 	@Inject
 	private IDebtorDao debtorDao;
-	@Inject
-	private IRoleDao roleDao;
+	
 
 	@Override
 	public void save(Oper oper) {
@@ -74,6 +69,8 @@ public class OperServiceImpl implements IOperService {
 			throw new MyAccessDeniedException("Allocate debtor access denied");
 		}
 
+		existsDebtorClerk(debtorId, clerkId);
+		
 		Oper oper = operDao.checkAllocated(debtorId, clerkId);
 		if (oper == null) {
 			
@@ -89,6 +86,16 @@ public class OperServiceImpl implements IOperService {
 
 		prepareLinkDebtor2Clerk(true, conductClerkId, debtorId, clerkId, oper);
 		operDao.update(oper);
+	}
+
+	/**
+	 * Check debtor, clerk exists
+	 * @param debtorId
+	 * @param clerkId
+	 */
+	private void existsDebtorClerk(Integer debtorId, Integer clerkId) {
+		if (!debtorDao.chekExist(debtorId)){throw new MyNotFoundException("Debtor not found");}
+		if (!clerkDao.chekExist(clerkId)){throw new MyNotFoundException("Clerk not found");}
 	}
 
 	private void prepareLinkDebtor2Clerk(Boolean flagUpdate, Integer conductClerkId, Integer debtorId, Integer clerkId,
@@ -122,6 +129,7 @@ public class OperServiceImpl implements IOperService {
 			LOGGER.warn("Clerk id:{} access denid to unlocate debtor id:{}", clerkId, debtorId);
 			throw new MyAccessDeniedException("Unlocate debtor access denied");
 		}
+		existsDebtorClerk(debtorId, clerkId);
 		Oper oper = operDao.checkAllocated(debtorId, clerkId);
 		if (oper == null || oper.getActionId() == DefaultValue.UNLOCATE_DEBTOR_ACTION.getCode()) {
 			LOGGER.debug("Debtor id:{} not allocated to Clerk id:{}", debtorId, clerkId);
@@ -153,11 +161,16 @@ public class OperServiceImpl implements IOperService {
 
 		Integer clerkId = oper.getClerkId();
 		Integer actionId = oper.getActionId();
+		Integer debtorId=oper.getDebtorId();
 		if (!clerkDao.checkAction4Clerk(clerkId, actionId)) {
-			LOGGER.error("Clerk id:{} have access denide to Add operation with action id:{}", clerkId, actionId);
+			LOGGER.error("Clerk id:{}  access denide to Add operation with action id:{}", clerkId, actionId);
 			throw new MyAccessDeniedException("Access clerk to operation denieded");
 		}
-		;
+	
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
+		}
 		operDao.insert(oper);
 		LOGGER.info("Operatin id:{} inserted- debtor id:{} action id:{} clerk id:{}", oper.getId(), oper.getDebtorId(),
 				oper.getActionId(), oper.getClerkId());
@@ -171,13 +184,25 @@ public class OperServiceImpl implements IOperService {
 
 	@Override
 	public void updateOper(Integer conductClerkId, Oper oper) {
-
-		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
-			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+		Oper oldOper=operDao.read(oper.getId());
+		
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oldOper.getActionId())) {
+			LOGGER.error("Clerk id:{} access denide Edit operation with old action id:{}", conductClerkId,
 					oper.getActionId());
-			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+			throw new MyAccessDeniedException("Access denied edit this operations action");
 		}
-
+		
+		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
+			LOGGER.error("Clerk id:{}  access denide  Edit operation with new action id:{}", conductClerkId,
+					oper.getActionId());
+			throw new MyAccessDeniedException("Access denied to this operations action");
+		}
+		Integer clerkId=conductClerkId;
+		Integer debtorId=oper.getDebtorId();
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
+		}
 		operDao.update(oper);
 		LOGGER.info("Operatin id:{} updated- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),
 				oper.getDebtorId(), oper.getActionId(), conductClerkId);
@@ -192,9 +217,15 @@ public class OperServiceImpl implements IOperService {
 	@Override
 	public void deleteOper(Integer conductClerkId, Oper oper) {
 		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {
-			LOGGER.error("Clerk id:{} have access denide to Edit operation with action id:{}", conductClerkId,
+			LOGGER.error("Clerk id:{} have access denide to Delete operation with action id:{}", conductClerkId,
 					oper.getActionId());
-			throw new MyAccessDeniedException("Access clerk to action Edit denieded");
+			throw new MyAccessDeniedException("Access denied delete this operation");
+		}
+		Integer clerkId=conductClerkId;
+		Integer debtorId=oper.getDebtorId();
+		if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
+			throw new MyAccessDeniedException("Clerk not assigned ro debtor");
 		}
 		operDao.delete(oper.getId());
 		LOGGER.warn("Operatin id:{} delete- debtor id:{} action id:{} conduct clerk id:{}", oper.getId(),

@@ -29,12 +29,12 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
-	private String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
-	private String readSql = "select * from oper where id = ? ";
-	private String deleteSql = "delete from oper where id=";
-	private String selectSql = "select * from oper";
-	private String insertSql = "insert into oper (%s,%s,%s) values(?,?,?)";
-	private String updateSql = "update oper set %s=?, %s=?, %s=? where id=?";
+	private static final String[] fieldsList = new String[] { "debtor_id", "clerk_id", "action_id" };
+	private static final String readSql = "select * from oper where id = ? ";
+	private static final String deleteSql = "delete from oper where id=";
+	private static final String selectSql = "select * from oper";
+	private static final String insertSql = "insert into oper (%s,%s,%s) values(?,?,?)";
+	private static final String updateSql = "update oper set %s=?, %s=?, %s=? where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Oper> getRowMapper() {
@@ -69,9 +69,9 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		prDao.setReadSql(readSql);
 		prDao.setDeleteSql(deleteSql);
 		prDao.setSelectSql(selectSql);
-		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		String insertSql = String.format(OperDaoImpl.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		String updateSql = String.format(OperDaoImpl.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 	}
@@ -108,9 +108,9 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 
 	@Override
 	public Oper checkAllocated(Integer debtorID, Integer clerkId) {
-		readSql = "select o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc from oper as o join oper_detail as od ON(od.oper_id=o.id)where (o.action_id=11 or o.action_id=2) and o.debtor_id=? and o.clerk_id=? ";
+		final String sql = "select o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc from oper as o join oper_detail as od ON(od.oper_id=o.id)where (o.action_id=11 or o.action_id=2) and o.debtor_id=? and o.clerk_id=? ";
 				Object[] objects = new Object[] { debtorID, clerkId };
-		Oper oper = super.read(objects);
+		Oper oper = super.read(sql,objects,Oper.class);
 		
 			return oper;
 		}
@@ -211,13 +211,13 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 				+ "join oper_detail as od ON(od.oper_id=o.id) "
 				+ "join debtor as d on (d.id=o.debtor_id) ";
 
-		Object[] objects = new Object[] { debtorId };
 
 		Criteria cr = new Criteria();
 		cr.setSql(sql);
-        cr.addFilter(" o.debtor_id=?", "where", null);
+        cr.addFilter(" o.debtor_id=?", "where", debtorId);
+        cr.addFilter(" od.action_date ", "order by", null);
 		OperRowMapper rm = new OperRowMapper();
-		List<Oper> opers = getCriteriaRowMapper(cr, objects, rm);
+		List<Oper> opers = getCriteriaRowMapper(cr, cr.getObjects(), rm);
 
 
 		return opers;}
@@ -225,8 +225,8 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	@Override
 	public Oper getDebtorStateOper(Integer debtorId) {
 		
-		readSql="select id,debtor_id,clerk_id,action_id,action_date,control_date,oper_desc from oper o join oper_detail op on (o.id=op.oper_id) where (o.action_id=9 or o.action_id=1) and o.debtor_id =?";
-		
-		return  read(debtorId);
+		final String sql="select id,debtor_id,clerk_id,action_id,action_date,control_date,oper_desc from oper o join oper_detail op on (o.id=op.oper_id) where (o.action_id=9 or o.action_id=1) and o.debtor_id =?";
+		 
+		return  super.read(sql,new Object[] { debtorId}, Oper.class);
 	}
 }

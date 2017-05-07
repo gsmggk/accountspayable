@@ -3,6 +3,8 @@ package com.gsmggk.accountspayable.dao4db.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -22,6 +24,7 @@ import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -29,6 +32,7 @@ import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.dao4db.mapper.DebtorControlRowMapper;
+import com.gsmggk.accountspayable.dao4db.mapper.DebtorRepoRowMapper;
 import com.gsmggk.accountspayable.dao4db.mapper.DebtorStateRowMapper;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
@@ -39,13 +43,13 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	@Inject
 	private IOperDao operDao;
 
-	private String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
+	private static final String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
 			"other" };
-	private String readSql = "select * from debtor where id = ? ";
-	private String deleteSql = "delete from debtor where id=";
-	private String selectSql = "select * from debtor";
-	private String insertSql = "insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)";
-	private String updateSql = "update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?";
+	private static final String readSql = "select * from debtor where id = ? ";
+	private static final String deleteSql = "delete from debtor where id=";
+	private static final String selectSql = "select * from debtor";
+	private static final String insertSql = "insert into debtor (%s,%s,%s,%s,%s,%s,%s) values(?,?,?,?,?,?,?)";
+	private static final String updateSql = "update debtor set %s=?, %s=?, %s=?, %s=?, %s=?, %s=?, %s=?  where id=?";
 
 	@Override
 	public BeanPropertyRowMapper<Debtor> getRowMapper() {
@@ -264,6 +268,31 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		if (params.getOffset() != null && params.getOffset() > 0) {
 			criteria.setOffset(params.getOffset());
 		}
+	}
+
+	@Override
+	public List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params) {
+		final String sql = "select  d.id,d.short_name,d.full_name,count(o1.action_id) from debtor d "
+				+ "join oper o on (o.debtor_id=d.id and o.action_id=9 ) "
+				+ "join oper o1 on(o.debtor_id=o1.debtor_id ) "
+				+ "join oper_detail od on(od.oper_id=o1.id) "
+				+ "where od.action_date  "
+				;
+		Criteria criteria = new Criteria();
+		criteria.setSql(sql);
+		
+	
+		criteria.addFilter("?", "BETWEEN", from);
+		criteria.addFilter("?", "AND", to);
+		criteria.addSort("count", "desc");
+		
+		setCriteria4Debtor(params, criteria);
+		criteria.addFilter("d.id", "group by", null);
+		LOGGER.debug("getDebtorRepo sql:{}", criteria.getCriteriaSql());
+
+		DebtorRepoRowMapper rm = new DebtorRepoRowMapper();
+		Object[] newObj = criteria.getObjects();
+		return getCriteriaRowMapper(criteria, newObj, rm);
 	}
 
 }

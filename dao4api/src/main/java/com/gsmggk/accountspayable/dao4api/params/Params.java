@@ -15,5 +15,9 @@ public class Params {
 	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
+	public boolean nullable() {
+		if (limit==null&&offset==null){return true;}else{
+		return false;}
+	}
 	
 }

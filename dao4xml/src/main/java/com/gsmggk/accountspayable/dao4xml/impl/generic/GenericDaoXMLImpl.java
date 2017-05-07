@@ -103,7 +103,6 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 		List<T> models = wrapper.getRows();
 		for (T modelItem : models) {
 			if (modelItem.getId().equals(object.getId())) {
-				// TODO copy all properties
 				getPropert4Update(modelItem, object);
 				break;
 			}
@@ -111,6 +110,15 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 
 		writeNewData(file, wrapper);
 
+	}
+
+	@Override
+	public Boolean chekExist(Integer id) {
+		if (read(id)!=null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	

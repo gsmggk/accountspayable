@@ -4,20 +4,23 @@
 		<Property name="basePath">d:\\epam\eclipse\accountspayable\logs</Property>
 	</Properties>
 	<Appenders>
+	
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="{    } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+				pattern="{  11  } %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 
 		<Console name="ConsoleMy" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="{My_L} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+				pattern="{MLOG} %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 
 		<RollingFile name="RollingFile" fileName="${basePath}/admin/accontspayable.log"
 			filePattern="${basePath}/admin/arhive/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<PatternLayout>
+			<pattern> "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" </pattern>
+			</PatternLayout>
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 				<SizeBasedTriggeringPolicy size="250 MB" />
@@ -32,7 +35,7 @@
                 <SizeBasedTriggeringPolicy size="10 MB" />
             </Policies>
         </RollingFile>
-
+  
 
 	</Appenders>
 
@@ -44,7 +47,9 @@
 		<Logger level="debug" name="com.gsmggk.accountspayable"
 			additivity="false">
 			<AppenderRef ref="ConsoleMy" />
-		</Logger>
+		</Logger>  
+		
+		
 
 		<Logger level="info" name="com.gsmggk.accountspayable"
 			additivity="false">
