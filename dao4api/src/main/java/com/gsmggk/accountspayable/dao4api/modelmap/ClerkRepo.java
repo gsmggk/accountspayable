@@ -2,6 +2,7 @@ package com.gsmggk.accountspayable.dao4api.modelmap;
 
 public class ClerkRepo {
 private Integer id;
+
 private String clerkFullName;
 private Integer debtors;
 public Integer getId() {
@@ -26,6 +27,8 @@ public void setDebtors(Integer debtors) {
 public String toString() {
 	return "ClerkRepo [id=" + id + ", clerkFullName=" + clerkFullName + ", debtors=" + debtors + "]";
 }
+
+
 
 	
 }

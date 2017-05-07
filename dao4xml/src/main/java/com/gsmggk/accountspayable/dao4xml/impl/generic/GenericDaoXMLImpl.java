@@ -112,5 +112,14 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 
 	}
 
+	@Override
+	public Boolean chekExist(Integer id) {
+		if (read(id)!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	
 }

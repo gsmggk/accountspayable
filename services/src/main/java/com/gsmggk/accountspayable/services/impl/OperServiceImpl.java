@@ -69,6 +69,8 @@ public class OperServiceImpl implements IOperService {
 			throw new MyAccessDeniedException("Allocate debtor access denied");
 		}
 
+		existsDebtorClerk(debtorId, clerkId);
+		
 		Oper oper = operDao.checkAllocated(debtorId, clerkId);
 		if (oper == null) {
 			
@@ -84,6 +86,16 @@ public class OperServiceImpl implements IOperService {
 
 		prepareLinkDebtor2Clerk(true, conductClerkId, debtorId, clerkId, oper);
 		operDao.update(oper);
+	}
+
+	/**
+	 * Check debtor, clerk exists
+	 * @param debtorId
+	 * @param clerkId
+	 */
+	private void existsDebtorClerk(Integer debtorId, Integer clerkId) {
+		if (!debtorDao.chekExist(debtorId)){throw new MyNotFoundException("Debtor not found");}
+		if (!clerkDao.chekExist(clerkId)){throw new MyNotFoundException("Clerk not found");}
 	}
 
 	private void prepareLinkDebtor2Clerk(Boolean flagUpdate, Integer conductClerkId, Integer debtorId, Integer clerkId,
@@ -117,6 +129,7 @@ public class OperServiceImpl implements IOperService {
 			LOGGER.warn("Clerk id:{} access denid to unlocate debtor id:{}", clerkId, debtorId);
 			throw new MyAccessDeniedException("Unlocate debtor access denied");
 		}
+		existsDebtorClerk(debtorId, clerkId);
 		Oper oper = operDao.checkAllocated(debtorId, clerkId);
 		if (oper == null || oper.getActionId() == DefaultValue.UNLOCATE_DEBTOR_ACTION.getCode()) {
 			LOGGER.debug("Debtor id:{} not allocated to Clerk id:{}", debtorId, clerkId);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,42 @@ public class OperController {
 	private IOperService operService;
 	@Inject
 	private ApplicationContext appContext;
+	
+	/**
+	 * Clear allocation debtor to clerk.
+	 * @param debtorIdParam
+	 * @param clerkIdParam
+	 * @return
+	 */
+	@RequestMapping(value = "/debtor2clerk/del",method = RequestMethod.DELETE)
+
+	public ResponseEntity<?> unlinkDebtor2ClerkOper(@RequestParam("debtorid") Integer debtorIdParam,
+			@RequestParam("clerkid") Integer clerkIdParam	) {
+		
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+	
+		operService.unlinkDebtor2Clerk(storage.getId(), debtorIdParam, clerkIdParam);
+		return new ResponseEntity<>( HttpStatus.OK);
+	}
+	
+	/**
+	 * Allocate debtor to clerk.
+	 * @param debtorIdParam
+	 * @param clerkIdParam
+	 * @return
+	 */
+	@RequestMapping(value = "/debtor2clerk/add",method = RequestMethod.PUT)
+
+	public ResponseEntity<?> linkDebtor2ClerkOper(@RequestParam("debtorid") Integer debtorIdParam,
+			@RequestParam("clerkid") Integer clerkIdParam	) {
+		
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+	
+		operService.linkDebtor2Clerk(storage.getId(), debtorIdParam, clerkIdParam);
+		return new ResponseEntity<>( HttpStatus.OK);
+	}
+	
+	
 	
 	/**
 	 * Clerk delete operation. If have access to operations action and debtor assigned to him.

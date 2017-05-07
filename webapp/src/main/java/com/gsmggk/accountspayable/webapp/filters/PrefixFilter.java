@@ -37,6 +37,18 @@ public class PrefixFilter implements Filter {
 				"/work/accounts",
 				"/work/opers/4debtor/",
 				
+				"/boss/clerks/repo",
+				"/boss/debtors/repo",
+				"/boss/debtors/4boss",
+				"/boss/debtors/reopen",
+				"/boss/debtors/close",
+				"/boss/debtors/add",
+				"/boss/debtors/save",
+				"/boss/debtors/alloc",
+				"/boss/clerks/getall",
+				"/boss/clerks/4debtor",
+				"/boss/opers/debtor2clerk/",
+				
 				"/admin/clerks",
 				"/admin/opers",
 				"/admin/roles",

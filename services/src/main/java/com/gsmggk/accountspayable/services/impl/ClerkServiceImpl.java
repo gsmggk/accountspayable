@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
+import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
@@ -31,6 +32,8 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Inject
 	private IClerkDao clerkDao;
+	@Inject
+	private IDebtorDao debtorDao;
 	@Inject
 	private IRoleDao roleDao;
 
@@ -119,7 +122,9 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public List<Clerk> getClerks4Debtor(Integer debtorId) {
-
+		if (!debtorDao.chekExist(debtorId)) {
+			throw new MyNotFoundException("Debtor not found");
+		}
 		return clerkDao.getClerks4Debtor(debtorId);
 	}
 
@@ -154,7 +159,7 @@ public class ClerkServiceImpl implements IClerkService {
 		SessionModel session;
 		session = clerkDao.readSession(clerkId);
 		if (session == null) {
-			 session = new SessionModel();
+			session = new SessionModel();
 			LOGGER.debug("insert session");
 			session.setId(clerkId);
 			session.setValue(token);
@@ -168,16 +173,20 @@ public class ClerkServiceImpl implements IClerkService {
 
 	@Override
 	public List<Action> getActions4Clerk(Integer clerkId) {
-		Clerk clerk =clerkDao.read(clerkId);
-		if (clerk==null){throw new MyNotFoundException("Clerk not found");}
-		if (clerk.getRoleId()==null){throw new MyNotDistributedClerkException("Clerk not allowed to role");}
+		Clerk clerk = clerkDao.read(clerkId);
+		if (clerk == null) {
+			throw new MyNotFoundException("Clerk not found");
+		}
+		if (clerk.getRoleId() == null) {
+			throw new MyNotDistributedClerkException("Clerk not allowed to role");
+		}
 		return roleDao.getActions4Role(clerk.getRoleId());
 	}
 
 	@Override
 	public Boolean chekDebtor4Clerk(Integer clerkId, Integer debtorId) {
-		
-		return clerkDao.chekDebtor4Clerk( clerkId,  debtorId);
+
+		return clerkDao.chekDebtor4Clerk(clerkId, debtorId);
 	}
-	
+
 }

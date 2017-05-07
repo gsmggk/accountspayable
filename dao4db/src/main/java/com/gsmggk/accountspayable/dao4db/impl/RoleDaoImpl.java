@@ -88,7 +88,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
 		
-		chekExists(actionId, roleId);
+	
 		
 		String sql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
@@ -101,21 +101,9 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		}
 	}
 
-	/**
-	 * Check exist action with id <b>actionId</b> and role with <b>roleId</b>.
-	 * If exist do nothing. Else throw exceptions <b>MyNotFoundException</b>. 
-	 * @param actionId
-	 * @param roleId
-	 */ 
-	private void chekExists(Integer actionId, Integer roleId) {
-		String chekRoleSql="select r.id from role r where r.id=?";
-		Integer rId=super.readField(chekRoleSql, new Object[]{roleId}, Integer.class);
-		if (rId==null){throw new MyNotFoundException("Role not found");}
-		String chekActionSql="select a.id from action a where a.id=?";
-		Integer aId=super.readField(chekActionSql, new Object[]{actionId}, Integer.class);
-		if (aId==null){throw new MyNotFoundException("Action not found");}
-	}
-
+	
+		
+	
 	
 
 	@Inject

@@ -22,8 +22,6 @@ public class ActionServiceImpl implements IActionService {
 	@Inject
 	private IActionDao actionDao;
 	
-	@Inject
-	private IRoleDao roleDao;
 	
 	@Override
 	public void save(Action action) {

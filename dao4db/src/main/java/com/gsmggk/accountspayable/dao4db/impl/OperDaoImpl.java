@@ -69,9 +69,9 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		prDao.setReadSql(readSql);
 		prDao.setDeleteSql(deleteSql);
 		prDao.setSelectSql(selectSql);
-		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		String insertSql = String.format(OperDaoImpl.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		String updateSql = String.format(OperDaoImpl.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 	}

@@ -74,31 +74,30 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public List<Debtor> getAllocatedDebtors(Boolean allocated) {
-		ParamsDebtor params=new ParamsDebtor();
+		ParamsDebtor params = new ParamsDebtor();
 		params.setSortShortName(true);
-		return debtorDao.getAllocatedDebtors(allocated,params);
-	}
-	@Override
-	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
-		
 		return debtorDao.getAllocatedDebtors(allocated, params);
 	}
 
+	@Override
+	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
+
+		return debtorDao.getAllocatedDebtors(allocated, params);
+	}
 
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId) {
-		ParamsDebtors4Clerk params=new ParamsDebtors4Clerk();
+		ParamsDebtors4Clerk params = new ParamsDebtors4Clerk();
 		params.setSortControl(true);
 		params.setSortShortName(true);
-		return debtorDao.getDebtors4Clerk(clerkId,params);
+		return debtorDao.getDebtors4Clerk(clerkId, params);
 
 	}
 
-	
 	@Override
 	public List<DebtorControl> getDebtors4Clerk(Integer clerkId, ParamsDebtors4Clerk params) {
-		
-		return debtorDao.getDebtors4Clerk(clerkId,params);
+
+		return debtorDao.getDebtors4Clerk(clerkId, params);
 	}
 
 	@Override
@@ -112,18 +111,17 @@ public class DebtorServiceImpl implements IDebtorService {
 
 			int code = DefaultValue.ADD_ACTION.getCode();
 			if (!roleDao.chekAction2role(code, clerk.getRoleId())) {
-				LOGGER.warn("Clerk :{} try Create Debtor:{} ", clerkId, debtor);
+				LOGGER.warn("Clerk :{} access denied Create Debtor:{} ", clerkId, debtor);
 				throw new MyAccessDeniedException("Debtor create access denied");
 			}
 
-			
 			LOGGER.info("Clerk :{} Create Debtor:{} ", clerkId, debtor);
 			oper.setActionId(code);
-			StringBuilder desc=new StringBuilder();
-			desc.append(oper.getActionDate().toString()+"\n");
-			desc.append( String.format("Клерк %s ДОБАВИЛ должника %s", clerk.getClerkFullName(),
-					debtor.getShortName())+"\n");
-			
+			StringBuilder desc = new StringBuilder();
+			desc.append(oper.getActionDate().toString() + "\n");
+			desc.append(String.format("Клерк %s ДОБАВИЛ должника %s", clerk.getClerkFullName(), debtor.getShortName())
+					+ "\n");
+
 			oper.setOperDesc(desc.toString());
 
 			debtorDao.creareDebtor(debtor, oper);
@@ -135,18 +133,19 @@ public class DebtorServiceImpl implements IDebtorService {
 				LOGGER.warn("Clerk :{} try Update Debtor:{} ", clerkId, debtor);
 				throw new MyAccessDeniedException("Debtor update access denied");
 			}
-			Integer debtorId=debtor.getId();
-			if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)){
+			Integer debtorId = debtor.getId();
+			if (!clerkDao.chekDebtor4Clerk(clerkId, debtorId)) {
 				LOGGER.error("Clerk id:{} not assigned to debtor id:{}", clerkId, debtorId);
 				throw new MyAccessDeniedException("Clerk not assigned ro debtor");
 			}
 			LOGGER.info("Clerk :{} Update Debtor:{} ", clerkId, debtor);
 			oper.setActionId(code);
-			StringBuilder desc=new StringBuilder();
-			desc.append(oper.getActionDate().toString()+"\n");
-			desc.append( String.format("Клерк %s МОДИФИЦИРОВАЛ должника %s", clerk.getClerkFullName(),
-					debtor.getShortName())+"\n");
-			
+			StringBuilder desc = new StringBuilder();
+			desc.append(oper.getActionDate().toString() + "\n");
+			desc.append(
+					String.format("Клерк %s МОДИФИЦИРОВАЛ должника %s", clerk.getClerkFullName(), debtor.getShortName())
+							+ "\n");
+
 			oper.setOperDesc(desc.toString());
 
 			debtorDao.updateDebtor(debtor, oper);
@@ -155,6 +154,9 @@ public class DebtorServiceImpl implements IDebtorService {
 
 	@Override
 	public void closeDedtor(Integer clerkId, Integer debtorId) {
+		if (!debtorDao.chekExist(debtorId)) {
+			throw new MyNotFoundException("Debtor not found");
+		}
 
 		if (!clerkDao.checkAction4Clerk(clerkId, DefaultValue.CLOSE_ACTION.getCode())) {
 			LOGGER.warn("Clerk id:{} access denid to close debtor id:{}", clerkId, debtorId);
@@ -173,35 +175,35 @@ public class DebtorServiceImpl implements IDebtorService {
 			LOGGER.debug("Debtor id:{} allready closed");
 			throw new MyNotFoundException("Debtor allready closed");
 		}
-     
-      operInit.setActionDate(new Timestamp(new Date().getTime()));
-      StringBuilder desc=new StringBuilder();
-      desc.append(operInit.getOperDesc()+"\n");
-      desc.append(operInit.getActionDate().toString()+"\n");
-      desc.append(String.format("Клерк %s ЗАКРЫЛ должника %s \n", 
-    		 clerkDao.read(clerkId).getClerkFullName(),
-			 debtorDao.read(debtorId).getShortName()));
-      operInit.setOperDesc(desc.toString());
-      operInit.setClerkId(clerkId);
-      operInit.setActionId(DefaultValue.CLOSE_ACTION.getCode());
-      operDao.update(operInit);
-      LOGGER.warn("Clerk id:{} Close debtor id:{}",clerkId,debtorId);
+
+		operInit.setActionDate(new Timestamp(new Date().getTime()));
+		StringBuilder desc = new StringBuilder();
+		desc.append(operInit.getOperDesc() + "\n");
+		desc.append(operInit.getActionDate().toString() + "\n");
+		desc.append(String.format("Клерк %s ЗАКРЫЛ должника %s \n", clerkDao.read(clerkId).getClerkFullName(),
+				debtorDao.read(debtorId).getShortName()));
+		operInit.setOperDesc(desc.toString());
+		operInit.setClerkId(clerkId);
+		operInit.setActionId(DefaultValue.CLOSE_ACTION.getCode());
+		operDao.update(operInit);
+		LOGGER.warn("Clerk id:{} Close debtor id:{}", clerkId, debtorId);
 	}
 
 	@Override
 	public List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params) {
-	
+
 		return debtorDao.getDebtors4Boss(params);
 	}
 
 	@Override
 	public List<DebtorState> getDebtors4Boss() {
-	ParamsDebtors4Boss params= new ParamsDebtors4Boss();
-	params.setSortActive(false);
-	params.setSortShortName(true);
+		ParamsDebtors4Boss params = new ParamsDebtors4Boss();
+		params.setSortActive(false);
+		params.setSortShortName(true);
 		return debtorDao.getDebtors4Boss(params);
 	}
 
+	
 	@Override
 	public void reopenDedtor(Integer clerkId, Integer debtorId) {
 		if (!clerkDao.checkAction4Clerk(clerkId, DefaultValue.ADD_ACTION.getCode())) {
@@ -209,40 +211,36 @@ public class DebtorServiceImpl implements IDebtorService {
 			throw new MyAccessDeniedException("Reopen debtor access denied");
 		}
 		Oper operInit = operDao.getDebtorStateOper(debtorId);
-		if (operInit.equals(null)) {
+		if (operInit==null) {
 			LOGGER.debug("Debtor id:{} not found");
 			throw new MyNotFoundException("Debtor not found");
 		}
-	
+
 		Integer isDebtorOpen = operInit.getActionId();
 
 		if (isDebtorOpen.equals(DefaultValue.ADD_ACTION.getCode())) {
 			LOGGER.debug("Debtor id:{} allready active");
 			throw new MyNotFoundException("Debtor allready active");
 		}
-		 operInit.setActionDate(new Timestamp(new Date().getTime()));
-		 operInit.setControlDate(new Date(new Date().getTime()));
-	      StringBuilder desc=new StringBuilder();
-	      desc.append(operInit.getOperDesc()+"\n");
-	      desc.append(operInit.getActionDate().toString()+"\n");
-	      desc.append(String.format("Клерк %s ОТКРЫЛ ПОВТОРНО должника %s \n", 
-	    		 clerkDao.read(clerkId).getClerkFullName(),
-				 debtorDao.read(debtorId).getShortName()));
-	      operInit.setOperDesc(desc.toString());
-	      operInit.setClerkId(clerkId);
-	      operInit.setActionId(DefaultValue.ADD_ACTION.getCode());
-	      operDao.update(operInit);
-	      LOGGER.warn("Clerk id:{} Close debtor id:{}",clerkId,debtorId);
-		
+		operInit.setActionDate(new Timestamp(new Date().getTime()));
+		operInit.setControlDate(new Date(new Date().getTime()));
+		StringBuilder desc = new StringBuilder();
+		desc.append(operInit.getOperDesc() + "\n");
+		desc.append(operInit.getActionDate().toString() + "\n");
+		desc.append(String.format("Клерк %s ОТКРЫЛ ПОВТОРНО должника %s \n", clerkDao.read(clerkId).getClerkFullName(),
+				debtorDao.read(debtorId).getShortName()));
+		operInit.setOperDesc(desc.toString());
+		operInit.setClerkId(clerkId);
+		operInit.setActionId(DefaultValue.ADD_ACTION.getCode());
+		operDao.update(operInit);
+		LOGGER.warn("Clerk id:{} Close debtor id:{}", clerkId, debtorId);
+
 	}
 
 	@Override
 	public List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params) {
-	
-		return debtorDao.getDebtorRepo(from,  to,  params) ;
-	}
 
-	
-	
+		return debtorDao.getDebtorRepo(from, to, params);
+	}
 
 }

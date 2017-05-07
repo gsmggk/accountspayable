@@ -1,6 +1,7 @@
 package com.gsmggk.accountspayable.webapp.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
+import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
@@ -27,6 +30,7 @@ import com.gsmggk.accountspayable.services.IDebtorService;
 import com.gsmggk.accountspayable.services.util.UserSessionStorage;
 import com.gsmggk.accountspayable.webapp.models.DebtorControlModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorModel;
+import com.gsmggk.accountspayable.webapp.models.DebtorRepoModel;
 import com.gsmggk.accountspayable.webapp.models.DebtorStateModel;
 import com.gsmggk.accountspayable.webapp.models.IdModel;
 import com.gsmggk.accountspayable.webapp.models.utils.ConvertUtils;
@@ -41,21 +45,98 @@ public class DebtorController {
 	private ApplicationContext appContext;
 	@Inject
 	private IDebtorService debtorService;
-
 	
 	/**
-	 * 
-	 * Clerk edit debtor contact information. Clerk allocated with debtor. Clerk have access to edit action (8).
-	 * Used in Work layer.
-	 * @param debtorModel debtor info
+	 * Get debtors report. Count all operations for each debtor, from-to date period. Use in Boss layer.
+	 * @param params search, sort, pagination parameter
 	 * @param e
+	 * @param from date from
+	 * @param to date to
+	 * @return list debtors with operations count
+	 */
+	@RequestMapping(value = "/repo", method = RequestMethod.POST)
+	public ResponseEntity<?> getDebtorRepo(@Valid @RequestBody ParamsDebtor params, Errors e,
+			@RequestParam("from") Date from,@RequestParam("to") Date to) {
+		List<DebtorRepo> allDebtors;
+
+	
+			allDebtors = debtorService.getDebtorRepo(from, to, params);
+		
+		List<DebtorRepoModel> converterModel = new ArrayList<>();
+		for (DebtorRepo debtor : allDebtors) {
+			converterModel.add(entity2DRmodel(debtor));
+		}
+		return new ResponseEntity<List<DebtorRepoModel>>(converterModel, HttpStatus.OK);
+	}
+	
+
+	
+
+	/**
+	 * Reopen debtors act. Change act with action (9) to action (1).
+	 * @param debtorIdParam
+	 * @return
+	 */
+	@RequestMapping(value = "/reopen/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> reopenDebtorAct(@PathVariable(value = "id") Integer debtorIdParam) {
+
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		debtorService.reopenDedtor(storage.getId(), debtorIdParam);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * Close debtor act. Use in Boss layer.
 	 * @param debtorIdParam debtor id
+	 * @return
+	 */
+	@RequestMapping(value = "/close/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> closeDebtorAct(@PathVariable(value = "id") Integer debtorIdParam) {
+
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		debtorService.closeDedtor(storage.getId(), debtorIdParam);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	/**
+	 * Add new debtor. Insert operation with action (9) for new debtor. Clerk
+	 * conduct this operation have access create debtors. Use in Boss layer.
+	 * 
+	 * @param debtorModel
+	 * @param e
+	 * @return
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ResponseEntity<?> insertDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e) {
+		if (e.hasErrors()) {
+			return new ValidationErrorResponse().getValidationErrorResponse(e);
+		}
+
+		Debtor debtor = new Debtor();
+		loadFromModel(debtorModel, debtor);
+		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
+		Integer clerkId = storage.getId();
+		debtorService.saveDebtor(clerkId, debtor);
+		return new ResponseEntity<IdModel>(new IdModel(debtor.getId()), HttpStatus.CREATED);
+	}
+
+	/**
+	 * 
+	 * Clerk edit debtor contact information. Clerk allocated with debtor. Clerk
+	 * have access to edit action (8). Used in Work layer.
+	 * 
+	 * @param debtorModel
+	 *            debtor info
+	 * @param e
+	 * @param debtorIdParam
+	 *            debtor id
 	 * @return
 	 */
 	@RequestMapping(value = "/save/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> saveDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
 			@PathVariable(value = "id") Integer debtorIdParam) {
-		
 
 		if (e.hasErrors()) {
 			return new ValidationErrorResponse().getValidationErrorResponse(e);
@@ -69,9 +150,9 @@ public class DebtorController {
 		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
 		Integer clerkId = storage.getId();
 		debtorService.saveDebtor(clerkId, debtor);
-		return new ResponseEntity<IdModel>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Get list debtors with control date sort by control date. Can sort,
 	 * search, paginate list.Used be Work layer.
@@ -99,6 +180,16 @@ public class DebtorController {
 		return new ResponseEntity<List<DebtorControlModel>>(converterModel, HttpStatus.OK);
 	}
 
+	/**
+	 * Get debtors list for boss.Include open or close state of debtor. Use in
+	 * Boss layer.
+	 * 
+	 * @param params
+	 *            Search, sort, paginate parameters
+	 * @param e
+	 *            validation error
+	 * @return DebtorStateModel list
+	 */
 	@RequestMapping(value = "/4boss", method = RequestMethod.POST)
 	public ResponseEntity<?> getDebtors4Boss(@Valid @RequestBody ParamsDebtors4Boss params, Errors e) {
 		List<DebtorState> allDebtors;
@@ -114,11 +205,23 @@ public class DebtorController {
 		return new ResponseEntity<List<DebtorStateModel>>(converterModel, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/alloc/{flag}", method = RequestMethod.POST)
+	/**
+	 * Get debtors list allocated or not to user. Use in Boss layer.
+	 * 
+	 * @param params
+	 *            sort, search, paginate parameter
+	 * @param e
+	 * @param flag
+	 *            allocated flag - if true select only debtors allocated to
+	 *            clerk. If false - debtors without allocation to clerk
+	 * @return
+	 */
+	@RequestMapping(value = "/alloc", method = RequestMethod.POST)
 	public ResponseEntity<?> getAllocatedDebtors(@Valid @RequestBody ParamsDebtor params, Errors e,
-			@PathVariable(value = "flag") Boolean flag) {
+			@RequestParam("allocated") Boolean flag) {
 		List<Debtor> allDebtors;
-		if (params == null) {
+
+		if (params == null || params.nullable()) {
 			allDebtors = debtorService.getAllocatedDebtors(flag);
 		} else {
 			allDebtors = debtorService.getAllocatedDebtors(flag, params);
@@ -133,8 +236,8 @@ public class DebtorController {
 	// ---------------- defaults-------------------------------------
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<DebtorModel>> getAll(@PathVariable(value = "prefix") String prefix) {
-		
+	public @ResponseBody ResponseEntity<List<DebtorModel>> getAll() {
+
 		List<Debtor> allDebtors;
 		allDebtors = debtorService.getAll();
 
@@ -148,12 +251,13 @@ public class DebtorController {
 
 	/**
 	 * Get Debtor by id. Can be use in Admin and Work layers.
+	 * 
 	 * @param debtorIdParam
 	 * @return
 	 */
 	@RequestMapping(value = { "/{id}", "/get/{id}" }, method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer debtorIdParam) {
-		
+
 		Debtor debtor = debtorService.get(debtorIdParam);
 		if (debtor == null) {
 			return ParameterErrorResponse.getNotFoundResponse(NOT_FOUND_MES);
@@ -164,11 +268,7 @@ public class DebtorController {
 
 	@RequestMapping(method = RequestMethod.POST, headers = "content-type= application/json; charset=UTF-8")
 
-	public ResponseEntity<?> createDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
-			@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+	public ResponseEntity<?> createDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e) {
 
 		if (e.hasErrors()) {
 			return new ValidationErrorResponse().getValidationErrorResponse(e);
@@ -180,10 +280,7 @@ public class DebtorController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDebtor(@Valid @RequestBody DebtorModel debtorModel, Errors e,
-			@PathVariable(value = "id") Integer debtorIdParam, @PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+			@PathVariable(value = "id") Integer debtorIdParam) {
 
 		if (e.hasErrors()) {
 			return new ValidationErrorResponse().getValidationErrorResponse(e);
@@ -200,11 +297,8 @@ public class DebtorController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteDebtor(@PathVariable(value = "id") Integer debtorIdParam,
-			@PathVariable(value = "prefix") String prefix) {
-		if (!prefix.toLowerCase().equals("admin")) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+	public ResponseEntity<?> deleteDebtor(@PathVariable(value = "id") Integer debtorIdParam) {
+
 		Debtor debtor = new Debtor();
 		debtor = debtorService.get(debtorIdParam);
 		if (debtor == null) {
@@ -263,4 +357,13 @@ public class DebtorController {
 		model.setActive(debtor.getActive().toString());
 		return model;
 	}
+	private DebtorRepoModel entity2DRmodel(DebtorRepo debtor) {
+		DebtorRepoModel model = new DebtorRepoModel();
+	
+		model.setShortName(debtor.getShortName());
+		model.setFullName(debtor.getFullName());
+		model.setCount(debtor.getCount());
+		return model;
+	}
+
 }
