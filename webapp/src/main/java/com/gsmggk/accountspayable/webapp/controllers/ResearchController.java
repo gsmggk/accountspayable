@@ -36,8 +36,7 @@ public class ResearchController {
 	@Inject
 	private SoftCach cach;
 
-	// ==========================TEST
-	// CONTROLLERS=======================================
+	// ============================================================================
 
 	@RequestMapping(value = "/cache2disk", method = RequestMethod.POST)
 	public ResponseEntity<?> cache2disk() {
@@ -45,15 +44,23 @@ public class ResearchController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/disk2cache", method = RequestMethod.POST) public
-	  ResponseEntity<?> disk2cache() {
-	  cach.disk2cache(); 
-	  return new  ResponseEntity<String>( HttpStatus.OK);
-	  
-	  }
+	@RequestMapping(value = "/disk2cache", method = RequestMethod.POST)
+	public ResponseEntity<?> disk2cache() {
+		cach.disk2cache();
+		return new ResponseEntity<String>(HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/flush", method = RequestMethod.DELETE)
+	public ResponseEntity<?> flush() {
+		cach.flush();
+		return new ResponseEntity<String>(HttpStatus.OK);
+
+	}
 
 	// =================================================================================
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/repo", method = RequestMethod.POST)
 	public ResponseEntity<?> getDebtorRepo(@Valid @RequestBody ParamsDebtor params, Errors e,
 			@RequestParam("from") Date from, @RequestParam("to") Date to) {
@@ -75,7 +82,7 @@ public class ResearchController {
 
 		converterModel = getResponseModel(allDebtors);
 		// Put object into cache
-		cach.putCache(key, 120, converterModel);
+		cach.putCache(key, 180, converterModel);
 		LOGGER.info("Return VALUE from PostgreSQL");
 		return new ResponseEntity<List<DebtorRepoModel>>(converterModel, HttpStatus.OK);
 	}

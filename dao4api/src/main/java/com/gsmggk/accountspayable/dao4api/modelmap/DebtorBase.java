@@ -1,6 +1,8 @@
 package com.gsmggk.accountspayable.dao4api.modelmap;
 
-public class DebtorBase {
+import java.io.Serializable;
+
+public class DebtorBase implements Serializable{
 	private Integer debtorId;
 	private String shortName;
 	private String fullName;

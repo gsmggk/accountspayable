@@ -1,6 +1,8 @@
 package com.gsmggk.accountspayable.dao4api.modelmap;
 
-public class DebtorRepo extends DebtorBase{
+import java.io.Serializable;
+
+public class DebtorRepo extends DebtorBase implements Serializable{
       private Integer count;
 
 	public Integer getCount() {
