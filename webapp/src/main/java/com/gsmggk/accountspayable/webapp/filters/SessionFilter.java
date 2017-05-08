@@ -36,7 +36,7 @@ public class SessionFilter implements Filter {
 
 	private ApplicationContext appContext;
 
-	// private MemcachedClient memClient;
+	
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {

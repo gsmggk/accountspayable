@@ -23,7 +23,6 @@ import com.gsmggk.accountspayable.services.IClerkService;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadLoginNameException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyBadPasswordException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyNotDistributedClerkException;
-import com.gsmggk.accountspayable.services.util.CurrentLayer;
 import com.gsmggk.accountspayable.services.util.PasswordHash;
 
 @Service
@@ -93,9 +92,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 			if (flag) {
 				LOGGER.debug("login is ok");
-				// Write CurrentLayer properties
-				CurrentLayer.setClerkId(clerk.getId());
-				CurrentLayer.setClerkFullName(clerk.getClerkFullName());
+				
 				return clerk;
 			} else {
 				LOGGER.warn("passwor is wrong");

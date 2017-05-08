@@ -1,6 +1,9 @@
 package com.gsmggk.accountspayable.webapp.models;
 
-public class DebtorRepoModel {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class DebtorRepoModel  implements Serializable{
 	private String shortName;
 	private String fullName;
 	 private Integer count;

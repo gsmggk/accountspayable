@@ -1,6 +1,8 @@
 package com.gsmggk.accountspayable.dao4api.modelmap;
 
-public class ClerkRepo {
+import java.io.Serializable;
+
+public class ClerkRepo  {
 private Integer id;
 
 private String clerkFullName;

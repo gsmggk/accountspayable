@@ -15,7 +15,8 @@
 	    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 
-
+<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:softcache.properties" />
 	<import resource="classpath:dao-context.xml" />
 	<context:component-scan base-package="com.gsmggk.accountspayable.services.impl,com.gsmggk.accountspayable.services.util" />
 

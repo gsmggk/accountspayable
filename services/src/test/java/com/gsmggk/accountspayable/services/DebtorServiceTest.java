@@ -9,15 +9,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
@@ -29,8 +25,6 @@ import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
-import com.gsmggk.accountspayable.services.impl.DebtorServiceImpl;
-import com.gsmggk.accountspayable.services.util.CurrentLayer;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations = "classpath:services-context.xml")
@@ -42,8 +36,7 @@ public class DebtorServiceTest extends AbstractTest {
 	public IDebtorService service;
 	@Inject
 	public IClerkService clerkService;
-	private Debtor model;
-
+	
 	@Before
 	public void runBefore() {
 
