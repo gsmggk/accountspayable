@@ -173,6 +173,7 @@ public class ActionController {
 		}
 		action.setActionName(actionModel.getActionName());
 		action.setDuration(actionModel.getDuration());
+		action.setActionDesc(actionModel.getActionDesc());
 
 		actionService.save(action);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
@@ -194,7 +195,7 @@ public class ActionController {
 		Action action = new Action();
 		action.setActionName(model.getActionName());
 		action.setDuration(model.getDuration());
-
+		action.setActionDesc(model.getActionDesc());
 		return action;
 	}
 
@@ -203,7 +204,7 @@ public class ActionController {
 		model.setId(action.getId());
 		model.setActionName(action.getActionName());
 		model.setDuration(action.getDuration());
-
+		model.setActionDesc(action.getActionDesc());
 		return model;
 	}
 

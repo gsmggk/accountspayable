@@ -2,8 +2,6 @@ package com.gsmggk.accountspayable.dao4api.generic;
 
 import java.util.List;
 
-import com.gsmggk.accountspayable.dao4api.filter.Criteria;
-
 /**
  * Generic DAO interface for CRUD operations
  * 

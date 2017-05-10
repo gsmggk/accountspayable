@@ -21,7 +21,6 @@ import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.services.util.SoftCach;
 import com.gsmggk.accountspayable.services.util.cach.CachKey;
 
-
 public class SoftCacheTest extends AbstractTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SoftCacheTest.class);
 	@Inject
@@ -38,7 +37,7 @@ public class SoftCacheTest extends AbstractTest {
 		try {
 			from = dFormat.parse("01/01/2017 00:00:00");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		ParamsDebtor params = new ParamsDebtor();
@@ -49,12 +48,12 @@ public class SoftCacheTest extends AbstractTest {
 			try {
 				to = dFormat.parse("31/12/2017 00:00:0" + i);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 			CachKey key = request2key(from, to, params); // Generate KEY
 
-			List<DebtorRepo>  value = service.getDebtorRepo(from, to, params);
+			List<DebtorRepo> value = service.getDebtorRepo(from, to, params);
 			cache.putCache(key, interval, value);
 		}
 

@@ -57,7 +57,7 @@ public class AccountParaTest extends AbstractTest {
 //	@Ignore
 	public void getAllTest() {
 		List<Account> accounts = accountService.getAll();
-		// TODO доделать тест
+		
 		System.out.println(accounts);
 		Assert.notEmpty(accounts, "List accounts not null");
 

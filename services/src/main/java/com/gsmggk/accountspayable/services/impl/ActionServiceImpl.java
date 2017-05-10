@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
-import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.datamodel.Action;
-import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.services.IActionService;
 
 @Service

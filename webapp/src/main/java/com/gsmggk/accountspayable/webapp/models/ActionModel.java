@@ -14,6 +14,7 @@ public class ActionModel {
 	@Max(value = 365,message = "Duration is so big")
 	private Integer duration;
 	private Integer Id;
+	private String actionDesc;
 
 	public String getActionName() {
 		return actionName;
@@ -37,6 +38,14 @@ public class ActionModel {
 
 	public void setId(Integer id) {
 		Id = id;
+	}
+
+	public String getActionDesc() {
+		return actionDesc;
+	}
+
+	public void setActionDesc(String actionDesc) {
+		this.actionDesc = actionDesc;
 	}
 
 	

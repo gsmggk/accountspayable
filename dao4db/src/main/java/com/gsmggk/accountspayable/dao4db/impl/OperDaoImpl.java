@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +16,7 @@ import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
-import com.gsmggk.accountspayable.dao4db.mapper.AccountRowMapper;
 import com.gsmggk.accountspayable.dao4db.mapper.OperRowMapper;
-import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.datamodel.Oper;
 
 @Repository
@@ -38,7 +35,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 
 	@Override
 	public BeanPropertyRowMapper<Oper> getRowMapper() {
-		// FIXME Тут не все в порядке может быть
+	
 		BeanPropertyRowMapper<Oper> rowMapper = new BeanPropertyRowMapper<Oper>(Oper.class);
 		return rowMapper;
 	}
@@ -56,8 +53,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 				ps.setInt(i++, object.getId());
 			}
 		} catch (Exception e) {
-			// FIXME это не тот уровень исключения хотя и работает
-			// e.printStackTrace();
+			
 		}
 
 	}

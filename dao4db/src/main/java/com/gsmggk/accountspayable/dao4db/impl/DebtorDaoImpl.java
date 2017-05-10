@@ -43,8 +43,8 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	@Inject
 	private IOperDao operDao;
 
-	private static final String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe", "family",
-			"other" };
+	private static final String[] fieldsList = new String[] { "short_name", "full_name", "address", "phones", "jobe",
+			"family", "other" };
 	private static final String readSql = "select * from debtor where id = ? ";
 	private static final String deleteSql = "delete from debtor where id=";
 	private static final String selectSql = "select * from debtor";
@@ -78,8 +78,6 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		}
 
 		catch (Exception e) {
-			// FIXME это не тот уровень исключения хотя и работает
-			// e.printStackTrace();
 		}
 
 	}
@@ -91,20 +89,18 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		prDao.setReadSql(readSql);
 		prDao.setDeleteSql(deleteSql);
 		prDao.setSelectSql(selectSql);
-		String insertSql = String.format(this.insertSql, (Object[]) fieldsList);
+		String insertSql = String.format(DebtorDaoImpl.insertSql, (Object[]) fieldsList);
 		prDao.setInsertSql(insertSql);
-		String updateSql = String.format(this.updateSql, (Object[]) fieldsList);
+		String updateSql = String.format(DebtorDaoImpl.updateSql, (Object[]) fieldsList);
 		prDao.setUpdateSql(updateSql);
 		return prDao;
 
 	}
 
-	
 	@Override
-	public List<Debtor> getAllocatedDebtors(Boolean allocated,ParamsDebtor params)
-	{
+	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
 
-		 String sql="select "
+		String sql = "select "
 				+ "d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o "
 				+ "join debtor as d on(o.debtor_id=d.id) " + "WHERE o.action_id=9 and %s EXISTS"
 				+ "(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)";
@@ -113,19 +109,18 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 			prefix = "NOT";
 		}
 		sql = String.format(sql, prefix);
-		
+
 		Criteria criteria = new Criteria();
 		criteria.setSql(sql);
 		setCriteria4Debtor(params, criteria);
 
 		LOGGER.debug("getAllocatedDebtor sql:{}", criteria.getCriteriaSql());
 
-		
 		Object[] newObj = criteria.getObjects();
 		return getCriteriaRowMapper(criteria, newObj, getRowMapper());
-		
-		
+
 	}
+
 	@Transactional
 	@Override
 	public Debtor creareDebtor(Debtor debtor, Oper oper) {
@@ -274,18 +269,15 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	public List<DebtorRepo> getDebtorRepo(Date from, Date to, ParamsDebtor params) {
 		final String sql = "select  d.id,d.short_name,d.full_name,count(o1.action_id) from debtor d "
 				+ "join oper o on (o.debtor_id=d.id and o.action_id=9 ) "
-				+ "join oper o1 on(o.debtor_id=o1.debtor_id ) "
-				+ "join oper_detail od on(od.oper_id=o1.id) "
-				+ "where od.action_date  "
-				;
+				+ "join oper o1 on(o.debtor_id=o1.debtor_id ) " + "join oper_detail od on(od.oper_id=o1.id) "
+				+ "where od.action_date  ";
 		Criteria criteria = new Criteria();
 		criteria.setSql(sql);
-		
-	
+
 		criteria.addFilter("?", "BETWEEN", from);
 		criteria.addFilter("?", "AND", to);
 		criteria.addSort("count", "desc");
-		
+
 		setCriteria4Debtor(params, criteria);
 		criteria.addFilter("d.id", "group by", null);
 		LOGGER.debug("getDebtorRepo sql:{}", criteria.getCriteriaSql());

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
+import com.gsmggk.accountspayable.dao4api.language.LanguageContainer;
 import com.gsmggk.accountspayable.dao4db.impl.gener.GenericDaoImpl;
 import com.gsmggk.accountspayable.dao4db.impl.gener.PropertyDao;
 import com.gsmggk.accountspayable.datamodel.Action;
@@ -24,7 +24,7 @@ import com.gsmggk.accountspayable.datamodel.Role;
 public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleDaoImpl.class);
 
-	private static final String[] fieldsList = new String[] { "role_name","layer", "id" };
+	private static final String[] fieldsList = new String[] { "role_name", "layer", "id" };
 	private static final String readSql = "select * from role where id = ? ";
 	private static final String deleteSql = "delete from role where id=";
 	private static final String selectSql = "select * from role";
@@ -33,7 +33,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 
 	@Override
 	public BeanPropertyRowMapper<Role> getRowMapper() {
-		// FIXME Тут не все в порядке может быть
+
 		BeanPropertyRowMapper<Role> rowMapper = new BeanPropertyRowMapper<Role>(Role.class);
 		return rowMapper;
 	}
@@ -46,12 +46,10 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 				int i = 1;
 				ps.setString(i++, object.getRoleName());
 				ps.setString(i++, object.getLayer());
-				
+
 				ps.setInt(i++, object.getId());
 			}
 		} catch (Exception e) {
-			// FIXME это не тот уровень исключения хотя и работает
-			// e.printStackTrace();
 		}
 
 	}
@@ -72,11 +70,14 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 
 	@Override
 	public List<Action> getActions4Role(Integer roleId) {
-		final String SELECT_SQL = "select a.id,a.action_name,a.duration " + "from role2action as ra "
-				+ "JOIN action as a ON (ra.action_id=a.id)";// + "where
-															// ra.role_id=?";
+		final String SELECT_SQL = "select a.id,a.".concat(Action.ACTION_ACTION_NAME_FIELD_NAME + "_")
+				.concat(LanguageContainer.LNG_PREFIX).concat(" as ").concat(Action.ACTION_ACTION_NAME_FIELD_NAME)
+				.concat(",").concat(Action.ACTION_ACTION_DESC_FIELD_NAME + "_").concat(LanguageContainer.LNG_PREFIX)
+				.concat(" as ").concat(Action.ACTION_ACTION_DESC_FIELD_NAME) + ",a.duration "
+				+ "from role2action as ra " + "JOIN " + Action.ACTION_TABLE_NAME + " as a ON (ra.action_id=a.id)";
+
 		Criteria cr = new Criteria();
-		cr.setSql(SELECT_SQL);
+		cr.setSql(SELECT_SQL.replaceAll(LanguageContainer.LNG_PREFIX, LanguageContainer.getLanguage()));
 		cr.addFilter("ra.role_id=?", "where", null);
 
 		List<Action> rs = super.getCriteriaRowMapper(cr, new Object[] { roleId },
@@ -87,12 +88,10 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
-		
-	
-		
+
 		String sql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
-		Integer rs = super.readField(sql,objects, Integer.class);
+		Integer rs = super.readField(sql, objects, Integer.class);
 
 		if (rs == 0) {
 			return false;
@@ -100,11 +99,6 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 			return true;
 		}
 	}
-
-	
-		
-	
-	
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;

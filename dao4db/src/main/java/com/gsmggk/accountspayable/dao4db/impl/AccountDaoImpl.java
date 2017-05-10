@@ -27,7 +27,7 @@ public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountD
 
 	@Override
 	public BeanPropertyRowMapper<Account> getRowMapper() {
-		// FIXME Тут не все в порядке может быть
+		
 		BeanPropertyRowMapper<Account> rowMapper = new BeanPropertyRowMapper<Account>(Account.class);
 		return rowMapper;
 	}
@@ -60,8 +60,7 @@ public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountD
 				ps.setInt(i++, object.getId());
 			}
 		} catch (Exception e) {
-			// FIXME это не тот уровень исключения хотя и работает
-			// e.printStackTrace();
+			
 		}
 
 	}

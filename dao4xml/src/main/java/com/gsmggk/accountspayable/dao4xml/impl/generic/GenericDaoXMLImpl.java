@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
-import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
 import com.gsmggk.accountspayable.dao4xml.impl.wrapper.XmlModelWrapper;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 import com.thoughtworks.xstream.XStream;

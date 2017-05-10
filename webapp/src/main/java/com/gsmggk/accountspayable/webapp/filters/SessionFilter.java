@@ -36,8 +36,6 @@ public class SessionFilter implements Filter {
 
 	private ApplicationContext appContext;
 
-	
-
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 
@@ -80,15 +78,14 @@ public class SessionFilter implements Filter {
 
 		if (storageFromCache != null) {
 			if (!chekUser2LayerAccess(req, storageFromCache.getLayer())) {
-				
 
 				res.sendError(401);
 				return;
 			}
 			UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
-				storage.setId(storageFromCache.getId());
-				storage.setLayer(storageFromCache.getLayer());
-			
+			storage.setId(storageFromCache.getId());
+			storage.setLayer(storageFromCache.getLayer());
+
 			chain.doFilter(request, res);
 			return;
 		}
@@ -111,7 +108,7 @@ public class SessionFilter implements Filter {
 		role = roleService.get(roleId);
 		String layer = role.getLayer();
 
-		// TODO get prefix if
+		
 		if (!chekUser2LayerAccess(req, layer)) {
 			res.sendError(401);
 			return;
@@ -146,7 +143,7 @@ public class SessionFilter implements Filter {
 		if (req.getMethod().toUpperCase().equals("GET") && req.getRequestURI().toLowerCase().equals("/login")) {
 			return false;
 		}
-		// TODO other variants
+		
 		return true;
 	}
 
