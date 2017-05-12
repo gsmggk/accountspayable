@@ -3,6 +3,7 @@ package com.gsmggk.accountspayable.webapp.controllers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -37,7 +38,17 @@ public class ResearchController {
 	private SoftCach cach;
 
 	// ============================================================================
-
+	@RequestMapping(value = "/long", method = RequestMethod.POST)
+	public ResponseEntity<?> longResp() {
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/cache2disk", method = RequestMethod.POST)
 	public ResponseEntity<?> cache2disk() {
 		cach.cache2disk();

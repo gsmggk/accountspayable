@@ -19,62 +19,60 @@ import org.slf4j.LoggerFactory;
  * with jconsole).
  */
 public class StartJetty {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(StartJetty.class);
-    /**
-     * Main function, starts the jetty server.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-    	
-    
-        startInstance(8081);
-       //  startInstance(8082);
-        // startInstance(8083);
-        // startInstance(8084);
-    }
 
-    private static void startInstance(int port) {
-    	
-    	
-    	System.setProperty("org.jboss.logging.provider", "slf4j");
-    	
-    	
-    	
-        Server server = new Server();
-        
-        HttpConfiguration http_config = new HttpConfiguration();
-        http_config.setOutputBufferSize(32768);
-       
-        ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
-        http.setPort(port);
-        http.setIdleTimeout(1000 * 60 * 60);
+	/**
+	 * Main function, starts the jetty server.
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
-        server.addConnector(http);
+		 startInstance(8081);// default
+		//startInstance(8082);
+		//startInstance(8083);
+		//startInstance(8084);
+		
+	}
 
-        WebAppContext bb = new WebAppContext();
-        bb.setServer(server);
-        bb.setContextPath("/");
-        bb.setWar("src/main/webapp");
-       
-        server.setHandler(bb);
+	private static void startInstance(int port) {
 
-        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-        MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
-        server.addEventListener(mBeanContainer);
-        server.addBean(mBeanContainer);
+		System.setProperty("org.jboss.logging.provider", "slf4j");
 
-        try {
-        
-        	LOGGER.info("Jetty server start");
-        
-            server.start();
-          
-        } catch (Exception e) {
-        	LOGGER.error("Jetty server error:", e.getMessage());
-            e.printStackTrace();
-            System.exit(100);
-        }
-    }
+		Server server = new Server();
+
+		HttpConfiguration http_config = new HttpConfiguration();
+		http_config.setOutputBufferSize(32768);
+
+		ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
+		http.setPort(port);
+		http.setIdleTimeout(1000 * 60 * 60);
+
+		server.addConnector(http);
+
+		WebAppContext bb = new WebAppContext();
+		bb.setServer(server);
+		bb.setContextPath("/");
+		bb.setWar("src/main/webapp");
+
+		server.setHandler(bb);
+
+		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
+		server.addEventListener(mBeanContainer);
+		server.addBean(mBeanContainer);
+
+		try {
+
+			LOGGER.info("Jetty server start");
+
+			server.start();
+
+		} catch (Exception e) {
+			LOGGER.error("Jetty server error:", e.getMessage());
+			e.printStackTrace();
+			System.exit(100);
+		}
+	}
 }
