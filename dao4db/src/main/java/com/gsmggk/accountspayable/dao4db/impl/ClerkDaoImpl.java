@@ -90,12 +90,14 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 
 	@Override
 	public Clerk loginCheck(String login) {
-		try {
+		final String sql="select * from clerk where clerk_login_name = ? ";
+		return super.read(sql,	new Object[] { login } , Clerk.class);
+		/*try {
 			return jdbcTemplate.queryForObject("select * from clerk where clerk_login_name = ? ",
 					new Object[] { login }, new BeanPropertyRowMapper<Clerk>(Clerk.class));
 		} catch (EmptyResultDataAccessException e) {
 			return null;
-		}
+		}*/
 
 	}
 
@@ -141,6 +143,7 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 
 	@Override
 	public SessionModel readSession(Integer clerkId) {
+				
 		try {
 			return jdbcTemplate.queryForObject("select * from session where id = ? ", new Object[] { clerkId },
 					new BeanPropertyRowMapper<SessionModel>(SessionModel.class));

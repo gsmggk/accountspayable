@@ -34,14 +34,14 @@
         </collectionProp>
       </HeaderManager>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ADMIN layer Roles Actions" enabled="false">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ADMIN layer Roles Actions" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">500</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1492805959000</longProp>
         <longProp name="ThreadGroup.end_time">1492805959000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -127,9 +127,9 @@
           <hashTree/>
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="ROLE_NAME" enabled="true">
             <stringProp name="variableName">ROLE_NAME</stringProp>
-            <stringProp name="outputFormat">R_NAME_000</stringProp>
+            <stringProp name="outputFormat">R_NAME_0000</stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">100</stringProp>
+            <stringProp name="maximumValue">1000</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">true</boolProp>
           </RandomVariableConfig>
@@ -333,9 +333,9 @@
           <hashTree/>
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="ACTION_NAME" enabled="true">
             <stringProp name="variableName">AC_NAME</stringProp>
-            <stringProp name="outputFormat">A_NAME_000</stringProp>
+            <stringProp name="outputFormat">A_NAME_0000</stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">100</stringProp>
+            <stringProp name="maximumValue">1000</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">true</boolProp>
           </RandomVariableConfig>
@@ -541,9 +541,9 @@
             <hashTree/>
             <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="CLERK_NAME" enabled="true">
               <stringProp name="variableName">CLERK_NAME</stringProp>
-              <stringProp name="outputFormat">C_NAME_000</stringProp>
+              <stringProp name="outputFormat">C_NAME_0000</stringProp>
               <stringProp name="minimumValue">1</stringProp>
-              <stringProp name="maximumValue">100</stringProp>
+              <stringProp name="maximumValue">1000</stringProp>
               <stringProp name="randomSeed"></stringProp>
               <boolProp name="perThread">true</boolProp>
             </RandomVariableConfig>
@@ -748,23 +748,23 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="ACTIONS_ID_ARRAY" enabled="true">
-              <stringProp name="VAR">ACTIONS_ID_ARRAY</stringProp>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="A_R2A_ID_ARRAY" enabled="true">
+              <stringProp name="VAR">A_R2A_ID_ARRAY</stringProp>
               <stringProp name="JSONPATH">$..id</stringProp>
               <stringProp name="DEFAULT"></stringProp>
               <stringProp name="VARIABLE"></stringProp>
               <stringProp name="SUBJECT">BODY</stringProp>
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="some ACTION_ID " enabled="true">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="some A_R2A_ID " enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.refname">ACTION_ID</stringProp>
+              <stringProp name="RegexExtractor.refname">A_R2A_ID</stringProp>
               <stringProp name="RegexExtractor.regex">([0-9]+)</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default">USER_NOT_FOUND</stringProp>
               <stringProp name="RegexExtractor.match_number">0</stringProp>
               <stringProp name="Sample.scope">variable</stringProp>
-              <stringProp name="Scope.variable">ACTIONS_ID_ARRAY</stringProp>
+              <stringProp name="Scope.variable">A_R2A_ID_ARRAY</stringProp>
             </RegexExtractor>
             <hashTree/>
             <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true">
@@ -785,7 +785,7 @@
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/admin/actions/add2role?roleid=${ROLE_ID}&amp;actionid=${ACTION_ID}</stringProp>
+              <stringProp name="HTTPSampler.path">/admin/actions/add2role?roleid=${ROLE_ID}&amp;actionid=${A_R2A_ID}</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -860,7 +860,7 @@
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/admin/actions/del2role?roleid=${ROLE_ID}&amp;actionid=${ACTION_ID}</stringProp>
+              <stringProp name="HTTPSampler.path">/admin/actions/del2role?roleid=${ROLE_ID}&amp;actionid=${A2R_ID}</stringProp>
               <stringProp name="HTTPSampler.method">DELETE</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -873,6 +873,16 @@
             <hashTree/>
           </hashTree>
         </hashTree>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response 500 Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="52469">500</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <boolProp name="Assertion.assume_success">true</boolProp>
+          <intProp name="Assertion.test_type">12</intProp>
+          <stringProp name="Assertion.scope">all</stringProp>
+        </ResponseAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="BOSS layer" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -880,7 +890,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1494057169000</longProp>
         <longProp name="ThreadGroup.end_time">1494057169000</longProp>
@@ -898,7 +908,7 @@
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="&lt;DEBTORS&gt; Screen" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="&lt;DEBTORS&gt; Screen" enabled="true"/>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="getDebtors4Boss with state (open | close)" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -1084,7 +1094,7 @@
             </hashTree>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="MANAGE debtors" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="MANAGE debtors" enabled="true"/>
         <hashTree>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="ALLOCATE" enabled="true"/>
           <hashTree>
@@ -1329,7 +1339,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="REPORTS" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="REPORTS" enabled="true"/>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="getDebtorsRepo" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -1377,14 +1387,24 @@
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="52469">500</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <boolProp name="Assertion.assume_success">true</boolProp>
+          <intProp name="Assertion.test_type">12</intProp>
+          <stringProp name="Assertion.scope">all</stringProp>
+        </ResponseAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="WORK layer" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">10</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1493274898000</longProp>
         <longProp name="ThreadGroup.end_time">1493274898000</longProp>
@@ -1912,7 +1932,7 @@
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Research" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Research" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>

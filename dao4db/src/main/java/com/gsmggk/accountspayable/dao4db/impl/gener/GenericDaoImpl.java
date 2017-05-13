@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
+import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDataIntegrityViolationException;
 import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDuplicateKeyException;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
@@ -183,4 +185,20 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		}
 	}
 
+	/**
+	 * Execute any sql command provided by JDB
+	 * @param sql
+	 * @param objects - sql jdbcTemplate.update
+	 */
+	@Transactional
+	public void executeUpdate(String sql,Object[] objects){
+		try {
+			jdbcTemplate.update(sql,objects);
+	} catch (DataIntegrityViolationException e) {			// TODO: handle exception
+		e.printStackTrace();
+	throw	new  MyDataIntegrityViolationException(e.getMessage());
+	
+	}
+		
+	}
 }

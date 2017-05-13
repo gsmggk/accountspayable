@@ -97,9 +97,8 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	private void insertDetale(Oper newOper) {
 		String sql = String.format("insert into oper_detail (%s,%s,%s,%s) values(?,?,?,?)",
 				(Object[]) new String[] { "oper_id", "action_date", "control_date", "oper_desc" });
-		jdbcTemplate.update(sql, newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),
-				newOper.getOperDesc());
-
+	//	jdbcTemplate.update(sql, newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc());
+super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc()});
 	}
 
 	@Override
@@ -165,8 +164,8 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	private void updateDetale(Oper newOper) {
 		String sql = String.format("update oper_detail set %s=? , %s=? , %s=? where oper_id=?",
 				(Object[]) new String[] {  "action_date", "control_date", "oper_desc","oper_id" });
-		jdbcTemplate.update(sql,  newOper.getActionDate(), newOper.getControlDate(),
-				newOper.getOperDesc(),newOper.getId());
+	//	jdbcTemplate.update(sql,  newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc(),newOper.getId());
+		super.executeUpdate(sql, new Object[]{newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc(),newOper.getId()});
 	}
 
 	@Override
@@ -194,8 +193,8 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	}
 
 	private void deleteDetale(Integer operId) {
-		String sql = String.format("delete from oper_detail where oper_id=?");
-		jdbcTemplate.update(sql, operId);
+		final String sql ="delete from oper_detail where oper_id=?";
+			super.executeUpdate(sql,new Object[] {operId} );
 	}
 	
 	

@@ -44,7 +44,7 @@ public class LocaleFilter implements Filter{
 	UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
 		storage.setLanguage(language);
 		 LanguageContainer.setLanguage(language);
-		LOGGER.info("You language is:{}",language);
+	//	LOGGER.info("You language is:{}",language);
 		
 		chain.doFilter(req, res);
 	}

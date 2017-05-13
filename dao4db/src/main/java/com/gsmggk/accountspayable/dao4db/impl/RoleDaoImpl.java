@@ -3,15 +3,10 @@ package com.gsmggk.accountspayable.dao4db.impl;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.language.LanguageContainer;
@@ -100,23 +95,21 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		}
 	}
 
-	@Inject
-	private JdbcTemplate jdbcTemplate;
+	
 
 	@Override
-	@Transactional
 	public void addAction2Role(Integer actionId, Integer roleId) {
 		final String INSERT_SQL = "insert INTO role2action VALUES(?,?)";
-		jdbcTemplate.update(INSERT_SQL, new Object[] { roleId, actionId });
+		super.executeUpdate(INSERT_SQL, new Object[] { roleId, actionId } );
 		LOGGER.info("Action:{} ADD to Role:{}", actionId, roleId);
 	}
 
 	@Override
-	@Transactional
 	public void deleteAction2Role(Integer actionId, Integer roleId) {
 		final String DELETE_SQL = "delete from role2action as ra where ra.action_id=? and ra.role_id=?";
 
-		jdbcTemplate.update(DELETE_SQL, new Object[] { actionId, roleId });
+	
+		super.executeUpdate(DELETE_SQL, new Object[] { actionId, roleId } );
 		LOGGER.warn("Action:{} DELETE from Role:{}", actionId, roleId);
 
 	}
