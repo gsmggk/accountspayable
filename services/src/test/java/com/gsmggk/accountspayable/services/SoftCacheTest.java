@@ -14,6 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
@@ -65,7 +66,7 @@ public class SoftCacheTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void calendartest() {
 		Calendar now = Calendar.getInstance();
 		DateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -73,7 +74,9 @@ public class SoftCacheTest extends AbstractTest {
 		System.out.println(dFormat.format(now.getTime()));
 		int expirePeriod = 3600;
 		now.add(Calendar.SECOND, expirePeriod);
-		System.out.println(dFormat.format(now.getTime()));
+	
+		LOGGER.debug(dFormat.format(now.getTime()));
+		Assert.isTrue(true, "for log");
 	}
 
 	private CachKey request2key(Date from, Date to, ParamsDebtor params) {

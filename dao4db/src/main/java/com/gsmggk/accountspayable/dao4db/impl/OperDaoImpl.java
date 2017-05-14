@@ -72,7 +72,7 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 		return prDao;
 	}
 
-	@Transactional
+//	@Transactional
 	@Override
 	public Oper insert(Oper oper) {
 		try {
@@ -141,7 +141,7 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public void update(Oper object) {
 		try {
 			super.update(object);
@@ -169,7 +169,7 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public void delete(Integer operId) {
 		try {
 			deleteDetale(operId);

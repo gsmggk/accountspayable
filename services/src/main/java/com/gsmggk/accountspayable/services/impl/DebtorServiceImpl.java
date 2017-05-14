@@ -13,13 +13,14 @@ import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
+import com.gsmggk.accountspayable.dao4api.exception.MyNotFoundException;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorControl;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.DebtorState;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtor;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Boss;
 import com.gsmggk.accountspayable.dao4api.params.ParamsDebtors4Clerk;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
@@ -39,7 +40,7 @@ public class DebtorServiceImpl implements IDebtorService {
 	private IRoleDao roleDao;
 	@Inject
 	private IOperDao operDao;
-
+	@MyTrans
 	@Override
 	public void save(Debtor debtor) {
 
@@ -65,7 +66,7 @@ public class DebtorServiceImpl implements IDebtorService {
 
 		return debtorDao.read(id);
 	}
-
+	@MyTrans
 	@Override
 	public void delete(Debtor debtor) {
 		debtorDao.update(debtor);
@@ -99,7 +100,7 @@ public class DebtorServiceImpl implements IDebtorService {
 
 		return debtorDao.getDebtors4Clerk(clerkId, params);
 	}
-
+	@MyTrans
 	@Override
 	public void saveDebtor(Integer clerkId, Debtor debtor) {
 		Clerk clerk = clerkDao.read(clerkId);
@@ -151,7 +152,7 @@ public class DebtorServiceImpl implements IDebtorService {
 			debtorDao.updateDebtor(debtor, oper);
 		}
 	}
-
+	@MyTrans
 	@Override
 	public void closeDedtor(Integer clerkId, Integer debtorId) {
 		if (!debtorDao.chekExist(debtorId)) {
@@ -203,7 +204,7 @@ public class DebtorServiceImpl implements IDebtorService {
 		return debtorDao.getDebtors4Boss(params);
 	}
 
-	
+	@MyTrans	
 	@Override
 	public void reopenDedtor(Integer clerkId, Integer debtorId) {
 		if (!clerkDao.checkAction4Clerk(clerkId, DefaultValue.ADD_ACTION.getCode())) {

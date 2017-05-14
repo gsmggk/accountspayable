@@ -121,7 +121,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public Debtor creareDebtor(Debtor debtor, Oper oper) {
 		try {
@@ -138,7 +138,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		return debtor;
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public void updateDebtor(Debtor debtor, Oper oper) {
 

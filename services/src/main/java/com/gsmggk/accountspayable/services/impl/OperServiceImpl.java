@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IOperDao;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
+import com.gsmggk.accountspayable.dao4api.exception.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Oper;
 import com.gsmggk.accountspayable.datamodel.defaults.DefaultValue;
 import com.gsmggk.accountspayable.services.IOperService;
@@ -30,7 +31,7 @@ public class OperServiceImpl implements IOperService {
 	@Inject
 	private IDebtorDao debtorDao;
 	
-
+	@MyTrans
 	@Override
 	public void save(Oper oper) {
 		if (oper.getId() == null) {
@@ -54,13 +55,13 @@ public class OperServiceImpl implements IOperService {
 
 		return operDao.read(id);
 	}
-
+	@MyTrans
 	@Override
 	public void delete(Oper oper) {
 		operDao.delete(oper.getId());
 
 	}
-
+@MyTrans
 	@Override
 	public void linkDebtor2Clerk(Integer conductClerkId, Integer debtorId, Integer clerkId) {
 
@@ -79,7 +80,7 @@ public class OperServiceImpl implements IOperService {
 			operDao.insert(oper);
 			return;
 		}
-		if (oper.getActionId() == DefaultValue.ALLOCATE_DEBTOR_ACTION.getCode()) {
+		if (oper.getActionId().equals(DefaultValue.ALLOCATE_DEBTOR_ACTION.getCode())) {
 			LOGGER.debug("Debtor id:{} allready allocated to Clerk id:{}", debtorId, clerkId);
 			throw new MyNotFoundException("Debtor allready allocated");
 		}
@@ -121,7 +122,7 @@ public class OperServiceImpl implements IOperService {
 		LOGGER.info("Allocate Debtor: Clerk id-{} Allocate Debtor id-{}  to clerk id-{}", conductClerkId, debtorId,
 				clerkId);
 	}
-
+@MyTrans
 	@Override
 	public void unlinkDebtor2Clerk(Integer conductClerkId, Integer debtorId, Integer clerkId) {
 
@@ -154,7 +155,7 @@ public class OperServiceImpl implements IOperService {
 				clerkId);
 		operDao.update(oper);
 	}
-
+@MyTrans
 	@Override
 	public void addOper(Oper oper) {
 		oper.setActionDate(new Timestamp(new Date().getTime()));
@@ -181,7 +182,7 @@ public class OperServiceImpl implements IOperService {
 
 		return operDao.getOper(operId);
 	}
-
+	@MyTrans
 	@Override
 	public void updateOper(Integer conductClerkId, Oper oper) {
 		Oper oldOper=operDao.read(oper.getId());
@@ -213,7 +214,7 @@ public class OperServiceImpl implements IOperService {
 
 		return operDao.getOpers4Debtor(debtorId);
 	}
-
+	@MyTrans
 	@Override
 	public void deleteOper(Integer conductClerkId, Oper oper) {
 		if (!clerkDao.checkAction4Clerk(conductClerkId, oper.getActionId())) {

@@ -20,6 +20,10 @@
 	<context:component-scan base-package="com.gsmggk.accountspayable.dao4db.impl" />
   
 
+    <bean id="proxyTarget" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
 	<!-- Load db properties from file -->
 	<context:property-placeholder
 		ignore-unresolvable="true" location="classpath:db.properties" />

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDuplicateKeyException;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
+import com.gsmggk.accountspayable.dao4api.exception.MyDuplicateKeyException;
+import com.gsmggk.accountspayable.dao4api.exception.MyNotFoundException;
 import com.gsmggk.accountspayable.services.impl.exceptions.MyAccessDeniedException;
 @ControllerAdvice
 public class MyExceptionHandler extends ResponseEntityExceptionHandler {

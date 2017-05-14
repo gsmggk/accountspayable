@@ -38,6 +38,7 @@ public class RoleDaoXMLImpl extends GenericDaoXMLImpl<Role> implements IRoleDao 
 	@Override
 	public void getPropert4Update(Role modelItem, Role object) {
 		modelItem.setRoleName(object.getRoleName());
+		modelItem.setLayer(object.getLayer());
 		
 		
 	}

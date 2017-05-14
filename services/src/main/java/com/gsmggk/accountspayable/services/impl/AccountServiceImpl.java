@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
 import com.gsmggk.accountspayable.datamodel.Account;
 import com.gsmggk.accountspayable.services.IAccountService;
 
@@ -20,7 +21,7 @@ public class AccountServiceImpl implements IAccountService {
 	
 	@Inject
 	private IAccountDao accountDao;
-
+	@MyTrans
 	@Override
 	public void save(Account account) {
 		if (account.getId() == null) {
@@ -45,7 +46,7 @@ public class AccountServiceImpl implements IAccountService {
 		
 		return accountDao.read(id);
 	}
-
+	@MyTrans
 	@Override
 	public void delete(Account account) {
 		LOGGER.warn("Delete account id:{} for debtor id{}",account.getId(),account.getDebtorId());

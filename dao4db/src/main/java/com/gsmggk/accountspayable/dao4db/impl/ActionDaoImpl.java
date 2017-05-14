@@ -90,10 +90,6 @@ public class ActionDaoImpl extends GenericDaoImpl<Action> implements IActionDao 
 		return prDao;
 	}
 
-	@Override
-	public Action insert(Action object) {
-
-		return super.insert(object);
-	}
+	
 
 }

@@ -13,13 +13,13 @@
 	<dependencies>
 
 
-		<!-- <dependency> <groupId>com.gsmggk.accountspayable</groupId> <artifactId>dao4xml</artifactId> 
-			</dependency> -->
+		<dependency> <groupId>com.gsmggk.accountspayable</groupId> <artifactId>dao4xml</artifactId> 
+			</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.gsmggk.accountspayable</groupId>
 			<artifactId>dao4db</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>junit</groupId>
