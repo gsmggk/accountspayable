@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db.impl;
+package com.gsmggk.accountspayable.dao4db.impl.transaction;
 
 import java.lang.reflect.Method;
 

@@ -17,5 +17,24 @@ public class DebtorRepo extends DebtorBase implements Serializable{
 	public String toString() {
 		return "DebtorRepo [count=" + count + ", toString()=" + super.toString() + "]";
 	}
+
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DebtorRepo other = (DebtorRepo) obj;
+		if (count == null) {
+			if (other.count != null)
+				return false;
+		} else if (!count.equals(other.count))
+			return false;
+		return true;
+	}
       
 }

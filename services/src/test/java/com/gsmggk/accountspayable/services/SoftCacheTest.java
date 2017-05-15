@@ -1,6 +1,5 @@
 package com.gsmggk.accountspayable.services;
 
-import java.lang.ref.SoftReference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +9,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,6 @@ public class SoftCacheTest extends AbstractTest {
 	private final static Integer interval = 3600;
 
 	@Test
-
 	public void cacheTest() {
 		DateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date from = null;
@@ -44,6 +41,8 @@ public class SoftCacheTest extends AbstractTest {
 		ParamsDebtor params = new ParamsDebtor();
 		params.setLimit(1000);
 		params.setOffset(0);
+		CachKey key=new CachKey();
+		List<DebtorRepo> value =null;
 		for (int i = 1; i < 6; i++) {
 			Date to = null;
 			try {
@@ -52,16 +51,16 @@ public class SoftCacheTest extends AbstractTest {
 
 				e.printStackTrace();
 			}
-			CachKey key = request2key(from, to, params); // Generate KEY
+			key = request2key(from, to, params); // Generate KEY
 
-			List<DebtorRepo> value = service.getDebtorRepo(from, to, params);
+			value= service.getDebtorRepo(from, to, params);
 			cache.putCache(key, interval, value);
 		}
 
 		cache.cache2disk();
-
-		Debtor getValue = (Debtor) cache.getCache("select debtor id-3");
-		LOGGER.debug(getValue.toString());
+		cache.disk2cache();
+		List<DebtorRepo> valueCahe = (List<DebtorRepo>) cache.getCache(key);
+	Assert.isTrue(valueCahe.equals(value), "cache wrong");
 
 	}
 
@@ -71,11 +70,12 @@ public class SoftCacheTest extends AbstractTest {
 		Calendar now = Calendar.getInstance();
 		DateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-		System.out.println(dFormat.format(now.getTime()));
+		
+		LOGGER.debug("Now={}",dFormat.format(now.getTime()));
 		int expirePeriod = 3600;
 		now.add(Calendar.SECOND, expirePeriod);
 	
-		LOGGER.debug(dFormat.format(now.getTime()));
+		LOGGER.debug("Now={}",dFormat.format(now.getTime()));
 		Assert.isTrue(true, "for log");
 	}
 

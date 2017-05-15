@@ -28,4 +28,32 @@ public class DebtorBase implements Serializable{
 	public String toString() {
 		return "DebtorBase [debtorId=" + debtorId + ", shortName=" + shortName + ", fullName=" + fullName + "]";
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DebtorBase other = (DebtorBase) obj;
+		if (debtorId == null) {
+			if (other.debtorId != null)
+				return false;
+		} else if (!debtorId.equals(other.debtorId))
+			return false;
+		if (fullName == null) {
+			if (other.fullName != null)
+				return false;
+		} else if (!fullName.equals(other.fullName))
+			return false;
+		if (shortName == null) {
+			if (other.shortName != null)
+				return false;
+		} else if (!shortName.equals(other.shortName))
+			return false;
+		return true;
+	}
+	
 }

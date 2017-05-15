@@ -17,10 +17,10 @@ import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Debtor;
 import com.gsmggk.accountspayable.datamodel.Oper;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:services-context.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = "classpath:services-context.xml")
 public class OperServiceTest
-// extends AbstractTest
+ extends AbstractTest
 {
 
 	@Inject
@@ -123,7 +123,7 @@ public class OperServiceTest
 	
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void getOpers4DebtorTest() {
 		Integer debtorId = 5;
 		List<Oper> opers = operService.getOpers4Debtor(debtorId);

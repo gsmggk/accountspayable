@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
-import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
+import com.gsmggk.accountspayable.dao4api.exception.MyUnsupportedOperationException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
@@ -15,23 +15,23 @@ public class RoleDaoXMLImpl extends GenericDaoXMLImpl<Role> implements IRoleDao 
 
 	@Override
 	public List<Action> getActions4Role(Integer roleId) {
-		 throw new NotSupportedMethodException();
+		 throw new MyUnsupportedOperationException();
 	}
 
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
-		 throw new NotSupportedMethodException();
+		 throw new MyUnsupportedOperationException();
 	}
 
 	@Override
 	public void addAction2Role(Integer actionId, Integer roleId) {
-		 throw new NotSupportedMethodException();
+		 throw new MyUnsupportedOperationException();
 		
 	}
 
 	@Override
 	public void deleteAction2Role(Integer actionId, Integer roleId) {
-		 throw new NotSupportedMethodException();
+		 throw new MyUnsupportedOperationException();
 		
 	}
 

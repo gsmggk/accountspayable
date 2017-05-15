@@ -22,7 +22,7 @@ public class ServiceXMLTest {
 	private IClerkService clerkService;
 
 	@Test
-
+	@Ignore
 	public void roleTest() {
 		// create role
 		Role role = new Role();
@@ -47,6 +47,7 @@ public class ServiceXMLTest {
 	}
 
 	@Test
+	@Ignore
 	public void clerkTest() {
 		// create clerk
 		Clerk clerk = new Clerk();
@@ -82,7 +83,7 @@ public class ServiceXMLTest {
 		
 	}
 	@Test
-	
+//	@Ignore
 	public void loginCheckTest() {
 		
 		String login="user1";

@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db.impl;
+package com.gsmggk.accountspayable.dao4db.impl.transaction;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

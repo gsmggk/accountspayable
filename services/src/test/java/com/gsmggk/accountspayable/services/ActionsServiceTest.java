@@ -58,6 +58,7 @@ public class ActionsServiceTest extends AbstractTest {
 
 	@Test
 	@Rollback(true)
+	@Ignore
 	public void insertTest() {
 		getModelFromDB();
 
@@ -75,6 +76,7 @@ public class ActionsServiceTest extends AbstractTest {
 
 	@Test
 	@Rollback(true)
+	@Ignore
 	public void updateTest() {
 		modelService.save(model);
 
@@ -99,7 +101,7 @@ public class ActionsServiceTest extends AbstractTest {
 
 	@Test
 	@Rollback(true)
-
+	@Ignore
 	public void deleteTest() {
 		modelService.save(model);
 		Integer savedModelId = model.getId();
@@ -108,17 +110,20 @@ public class ActionsServiceTest extends AbstractTest {
 		Assert.isNull(modelFromDb, "Model " + model.getClass().getSimpleName() + " must be null after delete");
 	}
 	@Test
+	@Ignore
 	public void getAllTest(){
 		List<Action> actions=modelService.getAll();
 		Assert.notEmpty(actions,"List of actions must be not empty");
 	}
 	@Test
+	@Ignore
 	public void getActions4RoleTest(){
 		Integer id=10;
 		List<Action> actions=roleService.getActions4Role(id);
 		Assert.notEmpty(actions,"List of actions must be not empty");
 	}
 	@Test
+	@Ignore
 	public void getTest(){
 		Integer id=9;
 		Action action=modelService.get(id);

@@ -43,7 +43,7 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	@Rollback(true)
 	public void insertDebtorTest() {
 		Clerk clerk = new Clerk();
@@ -138,7 +138,7 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void closeDebtorTest() {
 		Integer clerkId = 15;// boss
 		Integer debtorId = 5;
@@ -157,7 +157,7 @@ public class DebtorServiceTest extends AbstractTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void getDebtors4Boss() {
 		ParamsDebtors4Boss params = new ParamsDebtors4Boss();
 		// params.setSearchShortName("%нуш%");

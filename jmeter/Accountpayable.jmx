@@ -34,7 +34,7 @@
         </collectionProp>
       </HeaderManager>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ADMIN layer Roles Actions" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ADMIN layer Roles Actions" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1998,7 +1998,7 @@
         </ResponseAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Research" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Research" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -2013,17 +2013,17 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Authorize &lt;Boss&gt;" enabled="true">
-          <collectionProp name="HeaderManager.headers">
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Authorization</stringProp>
-              <stringProp name="Header.value">Basic Qm9zczoxMTExMTE=</stringProp>
-            </elementProp>
-          </collectionProp>
-        </HeaderManager>
-        <hashTree/>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Load balancer" enabled="true"/>
         <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Authorize &lt;Boss&gt;" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Basic Qm9zczoxMTExMTE=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="long life response" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
@@ -2044,6 +2044,8 @@
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="XML" enabled="true"/>
+        <hashTree/>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree OK" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
