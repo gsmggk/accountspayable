@@ -88,7 +88,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 		Object[] objects = new Object[] { actionId, roleId };
 		Integer rs = super.readField(sql, objects, Integer.class);
 
-		if (rs == 0) {
+		if (rs !=1) {
 			return false;
 		} else {
 			return true;

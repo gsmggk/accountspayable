@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.gsmggk.accountspayable.dao4api.IAccountDao;
-import com.gsmggk.accountspayable.dao4xml.impl.exception.NotSupportedMethodException;
+import com.gsmggk.accountspayable.dao4api.exception.MyUnsupportedOperationException;
 import com.gsmggk.accountspayable.dao4xml.impl.generic.GenericDaoXMLImpl;
 import com.gsmggk.accountspayable.datamodel.Account;
 
@@ -30,7 +30,7 @@ public class AccountDaoXMLImpl extends GenericDaoXMLImpl<Account> implements IAc
 
 	@Override
 	public List<Account> getAccounts(Integer id) {
-		throw new NotSupportedMethodException();
+		throw new MyUnsupportedOperationException();
 	}
 
 	

@@ -18,10 +18,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gsmggk.accountspayable.dao4api.exception.MyDataIntegrityViolationException;
+import com.gsmggk.accountspayable.dao4api.exception.MyDuplicateKeyException;
 import com.gsmggk.accountspayable.dao4api.filter.Criteria;
 import com.gsmggk.accountspayable.dao4api.generic.IGenericDao;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDataIntegrityViolationException;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyDuplicateKeyException;
 import com.gsmggk.accountspayable.datamodel.AbstractTable;
 
 public abstract class GenericDaoImpl<T extends AbstractTable> implements IGenericDao<T> {
@@ -81,7 +81,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 		try {
 			return jdbcTemplate.queryForObject(sql, objects, getRowMapper());
-		} catch (EmptyResultDataAccessException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -98,11 +98,16 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 	}
 
-	@Transactional
+//	@Transactional
 	@Override
 	public void delete(Integer id) {
 		final String DELETE_SQL = getPropertyDao().getDeleteSql();
-		jdbcTemplate.update(DELETE_SQL + id);
+		try {
+			jdbcTemplate.update(DELETE_SQL + id);
+		} catch (Exception e) {
+		e.printStackTrace();	
+		}
+		
 	}
 
 	@Override
@@ -116,7 +121,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 		}
 	}
 
-	@Transactional
+//	@Transactional
 	@Override
 	public T insert(T object) {
 		final String INSERT_SQL = getPropertyDao().getInsertSql();
@@ -147,7 +152,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 	}
 
-	@Transactional
+//	@Transactional
 	@Override
 	public void update(T object) {
 		PropertyDao prDao = getPropertyDao();
@@ -190,7 +195,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	 * @param sql
 	 * @param objects - sql jdbcTemplate.update
 	 */
-	@Transactional
+//	@Transactional
 	public void executeUpdate(String sql,Object[] objects){
 		try {
 			jdbcTemplate.update(sql,objects);

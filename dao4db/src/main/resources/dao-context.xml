@@ -17,8 +17,12 @@
 	<!-- Define scan places -->
 	<context:annotation-config />
 
-	<context:component-scan base-package="com.gsmggk.accountspayable.dao4db.impl" />
+	<context:component-scan base-package="com.gsmggk.accountspayable.dao4db.impl,com.gsmggk.accountspayable.dao4db.impl.transaction" />
   
+
+    <bean id="proxyTarget" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
 
 	<!-- Load db properties from file -->
 	<context:property-placeholder

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
+import com.gsmggk.accountspayable.dao4api.exception.MyDataIntegrityViolationException;
+import com.gsmggk.accountspayable.dao4api.exception.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Role;
 import com.gsmggk.accountspayable.services.IRoleService;
@@ -24,7 +26,7 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Inject
 	private IRoleDao roleDao;
-
+	@MyTrans
 	@Override
 	public void save(Role role) {
 		if (role.getId() == null) {
@@ -47,7 +49,7 @@ public class RoleServiceImpl implements IRoleService {
 
 		return roleDao.read(id);
 	}
-
+@MyTrans
 	@Override
 	public void delete(Role role) {
 		LOGGER.warn("Delete Role: .id={} .roleName={}", role.getId().toString(), role.getRoleName());
@@ -60,14 +62,20 @@ public class RoleServiceImpl implements IRoleService {
 	}
 
 	@Override
+	@MyTrans
 	public void addAction2Role(Integer actionId, Integer roleId) {
 
 		if (!chekAction2Role(actionId, roleId)) {
-			roleDao.addAction2Role(actionId, roleId);
+			try {
+				roleDao.addAction2Role(actionId, roleId);
+			} catch (MyDataIntegrityViolationException e) {
+				throw new MyNotFoundException("Action or role not exists");
+			}
+			
 		}
 
 	}
-
+	@MyTrans
 	@Override
 	public void deleteAction2Role(Integer actionId, Integer roleId) {
 		if (chekAction2Role(actionId, roleId)) {
@@ -84,6 +92,7 @@ public class RoleServiceImpl implements IRoleService {
 		if (!roleDao.chekExist(roleId)) {
 			throw new MyNotFoundException("Role not found");
 		}
+		
 		return roleDao.chekAction2role(actionId, roleId);
 	}
 

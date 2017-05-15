@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 import com.gsmggk.accountspayable.dao4api.IClerkDao;
 import com.gsmggk.accountspayable.dao4api.IDebtorDao;
 import com.gsmggk.accountspayable.dao4api.IRoleDao;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
+import com.gsmggk.accountspayable.dao4api.exception.MyNotFoundException;
 import com.gsmggk.accountspayable.dao4api.modelmap.ClerkRepo;
 import com.gsmggk.accountspayable.dao4api.modelmap.SessionModel;
-import com.gsmggk.accountspayable.dao4db.impl.exeption.MyNotFoundException;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
@@ -35,7 +36,7 @@ public class ClerkServiceImpl implements IClerkService {
 	private IDebtorDao debtorDao;
 	@Inject
 	private IRoleDao roleDao;
-
+	@MyTrans
 	@Override
 	public void save(Clerk clerk) {
 		if (clerk.getId() == null) {
@@ -59,7 +60,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 		return clerkDao.read(id);
 	}
-
+	@MyTrans
 	@Override
 	public void delete(Clerk clerk) {
 		LOGGER.warn("Delete Clerk: .id={} .clerkLoginName={}", clerk.getId().toString(), clerk.getClerkLoginName());
@@ -104,7 +105,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 		}
 	}
-
+	@MyTrans
 	@Override
 	public void addRole2Clerk(Clerk clerk, Role role) {
 		clerk.setRoleId(role.getId());
@@ -130,7 +131,7 @@ public class ClerkServiceImpl implements IClerkService {
 
 		return clerkDao.getClerkRepo();
 	}
-
+	@MyTrans
 	@Override
 	public void allocatePassword(Integer clerkId, String password) {
 		String passwordHash = null;

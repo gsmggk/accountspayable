@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db.impl.exeption;
+package com.gsmggk.accountspayable.dao4api.exception;
 
 import org.springframework.dao.DuplicateKeyException;
 

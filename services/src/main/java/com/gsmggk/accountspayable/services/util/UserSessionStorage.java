@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("serial")
 @Component
 @Scope(value = "request")
 public class UserSessionStorage implements Serializable {

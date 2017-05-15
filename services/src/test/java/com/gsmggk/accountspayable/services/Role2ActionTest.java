@@ -18,10 +18,10 @@ import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.datamodel.Clerk;
 import com.gsmggk.accountspayable.datamodel.Role;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:services-context.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = "classpath:services-context.xml")
 public class Role2ActionTest 
-//extends AbstractTest 
+extends AbstractTest 
 {
 	@Inject
 	private IRoleService roleService;
@@ -51,7 +51,7 @@ public class Role2ActionTest
 	}
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void getActions4Role() {
      Integer clerkId=15;
      Clerk clerk=clerkService.get(clerkId);
@@ -76,14 +76,12 @@ public class Role2ActionTest
 	public void addAction2RoleTest() {
 		
 		
-		//roleService.save(role);
-		//actionService.save(action);
-		//roleService.addAction2Role(action.getId(), role.getId());
-		//roleService.getActions4Role(role.getId());
+		roleService.save(role);
+		actionService.save(action);
+		roleService.addAction2Role(action.getId(), role.getId());
+		roleService.getActions4Role(role.getId());
 		
-		//FIXME return after needed
-		roleService.addAction2Role(20, 9);
-		//roleService.deleteAction2Role(20,9);
+		
 		
 	}
 

@@ -20,7 +20,7 @@ public interface IClerkService {
 
 	/**
 	 * Try Login to Application.
-	 * And save clerk id, full name into CurrentLayer property.
+	 * And save clerk id, full name into UserSessionStorage property.
 	 * @param login
 	 *            -Login name
 	 * @param password

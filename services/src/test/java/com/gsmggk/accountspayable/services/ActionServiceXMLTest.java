@@ -40,7 +40,7 @@ public class ActionServiceXMLTest {
 		service.save(action);
 	}
 	@Test
-	//@Ignore
+	@Ignore
 	public void deleteTest() {
 		Action action = new Action();
 		action.setId(2);

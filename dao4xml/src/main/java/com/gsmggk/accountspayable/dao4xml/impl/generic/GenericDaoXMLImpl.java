@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGenericDao<T> {
-	private final XStream xstream = new XStream(new DomDriver());
+	protected final XStream xstream = new XStream(new DomDriver());
 
 	public abstract void getPropert4Update(T newObject, T oldObject);
 
@@ -23,7 +23,7 @@ public abstract class GenericDaoXMLImpl<T extends AbstractTable> implements IGen
 	@Value("${root.folder}")
 	private String rootFolder;
 
-	private File getFile() {
+	protected File getFile() {
 		File file = new File(rootFolder + getXMLFileName());
 		return file;
 	}

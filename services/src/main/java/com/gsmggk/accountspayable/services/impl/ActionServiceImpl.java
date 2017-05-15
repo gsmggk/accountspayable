@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.gsmggk.accountspayable.dao4api.IActionDao;
+import com.gsmggk.accountspayable.dao4api.MyTrans;
 import com.gsmggk.accountspayable.datamodel.Action;
 import com.gsmggk.accountspayable.services.IActionService;
 
@@ -20,7 +21,7 @@ public class ActionServiceImpl implements IActionService {
 	@Inject
 	private IActionDao actionDao;
 	
-	
+	@MyTrans
 	@Override
 	public void save(Action action) {
 		if (action.getId() == null) {
@@ -42,7 +43,7 @@ public class ActionServiceImpl implements IActionService {
 	public Action get(Integer id) {
 		return actionDao.read(id);
 	}
-
+	@MyTrans
 	@Override
 	public void delete(Action action) {
 		LOGGER.warn("Delete Action: .id={} .actionName={}",action.getId().toString(),action.getActionName());

@@ -1,4 +1,4 @@
-package com.gsmggk.accountspayable.dao4db.impl.exeption;
+package com.gsmggk.accountspayable.dao4api.exception;
 
 public class MyNotFoundException extends IllegalArgumentException{
 
