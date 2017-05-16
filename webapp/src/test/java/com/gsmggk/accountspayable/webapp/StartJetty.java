@@ -29,10 +29,10 @@ public class StartJetty {
 	 */
 	public static void main(String[] args) {
 
-	 startInstance(8081);// default
-	//	startInstance(8082);
-	//	startInstance(8083);
-	//	startInstance(8084);
+	// startInstance(8081);// default
+		startInstance(8082);
+		startInstance(8083);
+		startInstance(8084);
 		
 	}
 

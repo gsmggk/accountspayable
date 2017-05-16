@@ -46,13 +46,14 @@ public class ActionController {
 
 	/**
 	 * Add link action to role. Use in Admin layer.
+	 * 
 	 * @param actionIdParam
 	 * @param roleIdParam
 	 * @return
 	 */
 	@RequestMapping(value = "/add2role", method = RequestMethod.POST)
 	public ResponseEntity<?> addAction2Role(@RequestParam("actionid") Integer actionIdParam,
-			@RequestParam("roleid") Integer roleIdParam	) {
+			@RequestParam("roleid") Integer roleIdParam) {
 
 		roleService.addAction2Role(actionIdParam, roleIdParam);
 
@@ -61,13 +62,14 @@ public class ActionController {
 
 	/**
 	 * Clear lick action to role. Use in Admin layer.
+	 * 
 	 * @param actionIdParam
 	 * @param roleIdParam
 	 * @return
 	 */
 	@RequestMapping(value = "/del2role", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteAction2Role(@RequestParam("actionid") Integer actionIdParam,
-			@RequestParam("roleid")  Integer roleIdParam
+			@RequestParam("roleid") Integer roleIdParam
 
 	) {
 
@@ -77,16 +79,17 @@ public class ActionController {
 	}
 
 	/**
-	 * Get actions for clerk.Used in Work layer. 
+	 * Get actions for clerk.Used in Work layer.
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/4clerk", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<?> getActions4Clerk() {
-	
+
 		List<Action> allActions;
 		UserSessionStorage storage = appContext.getBean(UserSessionStorage.class);
 		allActions = clerkService.getActions4Clerk(storage.getId());
-		
+
 		List<ActionModel> converterModel = new ArrayList<>();
 		for (Action action : allActions) {
 			converterModel.add(entity2model(action));
@@ -94,15 +97,17 @@ public class ActionController {
 
 		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Get actions list for role. Used in Admin layer.
-	 * @param roleIdParam role id
+	 * 
+	 * @param roleIdParam
+	 *            role id
 	 * @return
 	 */
 	@RequestMapping(value = "/4role/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getActions4Role(@PathVariable(value = "id") Integer roleIdParam	) {
-		
+	public ResponseEntity<?> getActions4Role(@PathVariable(value = "id") Integer roleIdParam) {
+
 		Role role = roleService.get(roleIdParam);
 		if (role == null) {
 			return ParameterErrorResponse.getNotFoundResponse("Role not found");
@@ -113,13 +118,11 @@ public class ActionController {
 		for (Action action : allActions) {
 			converterModel.add(entity2model(action));
 		}
-		
-	
+
 		return new ResponseEntity<List<ActionModel>>(converterModel, HttpStatus.OK);
 	}
-	
-	
-//==========================default actions===============================
+
+	// ==========================default actions===============================
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<ActionModel>> getAll() {
 

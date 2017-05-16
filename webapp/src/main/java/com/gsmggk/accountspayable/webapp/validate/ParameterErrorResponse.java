@@ -14,12 +14,5 @@ public class ParameterErrorResponse {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	public static boolean allowLayer(String prefix, String[] strings) {
 
-		if (Arrays.asList(strings).contains(prefix)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 }

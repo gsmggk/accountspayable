@@ -9,6 +9,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Target(METHOD)
 @Retention(RUNTIME)
 /**
@@ -16,6 +18,7 @@ import java.lang.annotation.Target;
  * @author Gena
  *
  */
+@Transactional
 public @interface MyTrans  {
 
 }

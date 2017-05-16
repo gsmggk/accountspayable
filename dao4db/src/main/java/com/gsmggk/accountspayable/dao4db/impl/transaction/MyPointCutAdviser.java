@@ -15,28 +15,26 @@ import com.gsmggk.accountspayable.dao4api.MyTrans;
 @SuppressWarnings("serial")
 @Component
 public class MyPointCutAdviser extends AbstractPointcutAdvisor {
-	private final StaticMethodMatcherPointcut pointcut = new
-            StaticMethodMatcherPointcut() {
-                @Override
-                public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(MyTrans.class);
-                }
+	private final StaticMethodMatcherPointcut pointcut = new StaticMethodMatcherPointcut() {
+		@Override
+		public boolean matches(Method method, Class<?> targetClass) {
+			return method.isAnnotationPresent(MyTrans.class);
+		}
 
-				
-            };
-            @Inject
-            private  MyTransAnalize interceptor;
-            
+	};
+	@Inject
+	private MyTransAnalize interceptor;
+
 	@Override
 	public Pointcut getPointcut() {
-		
+
 		return this.pointcut;
 	}
 
 	@Override
 	public Advice getAdvice() {
-		
-		return  this.interceptor;
+
+		return this.interceptor;
 	}
 
 }

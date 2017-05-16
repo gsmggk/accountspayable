@@ -10,9 +10,9 @@ public class MyTransAnalize implements MethodInterceptor {
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		System.out.println("MyTransAnalize proceed invocation");
-		// invocation.getArguments().getClass().getSimpleName();
-		Object obj = null;
+		System.out.println("MyTransAnalize XML proceed invocation");
+
+		Object obj = new Object();
 		if (lock) {
 			System.out.println("Wait...");
 			while (!lock) {
@@ -22,10 +22,16 @@ public class MyTransAnalize implements MethodInterceptor {
 
 		} else {
 			lock = true;
-			obj = invocation.proceed();
-			lock = false;
+			
+				obj = invocation.proceed();
+		
+
+				lock = false;
+
+			}
+
 			System.out.println("Proceed invocation");
-		}
+	
 
 		return obj;
 	}
