@@ -1,7 +1,10 @@
 package com.gsmggk.accountspayable.dao4db.impl.gener;
 
-import org.springframework.jdbc.core.RowMapper;
-
+/**
+ * Get sql command for generic CRUD operation
+ * @author Gena
+ *
+ */
 public class PropertyDao {
 	private String[] fieldsList;
 	private String readSql;

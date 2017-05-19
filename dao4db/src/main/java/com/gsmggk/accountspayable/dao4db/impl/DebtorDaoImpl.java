@@ -100,10 +100,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 	@Override
 	public List<Debtor> getAllocatedDebtors(Boolean allocated, ParamsDebtor params) {
 
-		String sql = "select "
-				+ "d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o "
-				+ "join debtor as d on(o.debtor_id=d.id) " + "WHERE o.action_id=9 and %s EXISTS"
-				+ "(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)";
+		String sql = "select d.id,d.short_name,d.full_name,d.address,d.phones,d.jobe,d.family,d.other from oper as o join debtor as d on(o.debtor_id=d.id) WHERE o.action_id=9 and %s EXISTS(select o1.id from oper as o1 where o1.debtor_id=o.debtor_id and o1.action_id=11)";
 		String prefix = "";
 		if (!allocated) {
 			prefix = "NOT";
@@ -117,7 +114,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 		LOGGER.debug("getAllocatedDebtor sql:{}", criteria.getCriteriaSql());
 
 		Object[] newObj = criteria.getObjects();
-		return getCriteriaRowMapper(criteria, newObj, getRowMapper());
+		return selectWithCriteria(criteria, newObj, getRowMapper());
 
 	}
 
@@ -192,14 +189,12 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 		DebtorControlRowMapper rm = new DebtorControlRowMapper();
 		Object[] newObj = criteria.getObjects();
-		return getCriteriaRowMapper(criteria, newObj, rm);
+		return selectWithCriteria(criteria, newObj, rm);
 	}
 
 	@Override
 	public List<DebtorState> getDebtors4Boss(ParamsDebtors4Boss params) {
-		final String sql = "select d.id as debtor_id,d.short_name,d.full_name," + " case "
-				+ "when o.action_id=9 then true" + " when o.action_id=1 then FALSE" + " end as active " + "from oper o"
-				+ " join debtor d on(o.debtor_id=d.id) " + "where (o.action_id=1 or o.action_id=9)";
+		final String sql = "select d.id as debtor_id,d.short_name,d.full_name, case when o.action_id=9 then true when o.action_id=1 then FALSE end as active from oper o join debtor d on(o.debtor_id=d.id) where (o.action_id=1 or o.action_id=9)";
 		Criteria criteria = new Criteria();
 		criteria.setSql(sql);
 
@@ -221,7 +216,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 		DebtorStateRowMapper rm = new DebtorStateRowMapper();
 		Object[] newObj = criteria.getObjects();
-		return getCriteriaRowMapper(criteria, newObj, rm);
+		return selectWithCriteria(criteria, newObj, rm);
 	}
 
 	private <R extends ParamsDebtor> void setCriteria4Debtor(R params, Criteria criteria) {
@@ -284,7 +279,7 @@ public class DebtorDaoImpl extends GenericDaoImpl<Debtor> implements IDebtorDao 
 
 		DebtorRepoRowMapper rm = new DebtorRepoRowMapper();
 		Object[] newObj = criteria.getObjects();
-		return getCriteriaRowMapper(criteria, newObj, rm);
+		return selectWithCriteria(criteria, newObj, rm);
 	}
 
 }

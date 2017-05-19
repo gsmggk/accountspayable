@@ -65,17 +65,19 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 
 	@Override
 	public List<Action> getActions4Role(Integer roleId) {
-		final String SELECT_SQL = "select a.id,a.".concat(Action.ACTION_ACTION_NAME_FIELD_NAME + "_")
-				.concat(LanguageContainer.LNG_PREFIX).concat(" as ").concat(Action.ACTION_ACTION_NAME_FIELD_NAME)
-				.concat(",").concat(Action.ACTION_ACTION_DESC_FIELD_NAME + "_").concat(LanguageContainer.LNG_PREFIX)
-				.concat(" as ").concat(Action.ACTION_ACTION_DESC_FIELD_NAME) + ",a.duration "
-				+ "from role2action as ra " + "JOIN " + Action.ACTION_TABLE_NAME + " as a ON (ra.action_id=a.id)";
+		final String SELECT_SQL = "select a.id,a."
+				.concat(Action.ACTION_ACTION_NAME_FIELD_NAME).concat("_").concat(LanguageContainer.LNG_PREFIX)
+				.concat(" as ").concat(Action.ACTION_ACTION_NAME_FIELD_NAME)
+				.concat(",")
+				.concat(Action.ACTION_ACTION_DESC_FIELD_NAME).concat("_").concat(LanguageContainer.LNG_PREFIX)
+				.concat(" as ").concat(Action.ACTION_ACTION_DESC_FIELD_NAME)
+				.concat(",a.duration from role2action as ra JOIN ").concat(Action.ACTION_TABLE_NAME).concat(" as a ON (ra.action_id=a.id)");
 
 		Criteria cr = new Criteria();
 		cr.setSql(SELECT_SQL.replaceAll(LanguageContainer.LNG_PREFIX, LanguageContainer.getLanguage()));
 		cr.addFilter("ra.role_id=?", "where", null);
 
-		List<Action> rs = super.getCriteriaRowMapper(cr, new Object[] { roleId },
+		List<Action> rs = super.selectWithCriteria(cr, new Object[] { roleId },
 				new BeanPropertyRowMapper<Action>(Action.class));
 		return rs;
 
@@ -84,7 +86,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements IRoleDao {
 	@Override
 	public Boolean chekAction2role(Integer actionId, Integer roleId) {
 
-		String sql = "select count(*) from role2action as ra" + " where ra.action_id=? and ra.role_id=?";
+		String sql = "select count(*) from role2action as ra  where ra.action_id=? and ra.role_id=?";
 		Object[] objects = new Object[] { actionId, roleId };
 		Integer rs = super.readField(sql, objects, Integer.class);
 

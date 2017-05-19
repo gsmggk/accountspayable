@@ -127,7 +127,7 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		Criteria criteria = new Criteria();
 		criteria.setSql(sql);
 		criteria.addFilter("o.debtor_id=?", "AND", debtorId);
-		return super.getCriteriaRowMapper(criteria, criteria.getObjects(), getRowMapper());
+		return super.selectWithCriteria(criteria, criteria.getObjects(), getRowMapper());
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class ClerkDaoImpl extends GenericDaoImpl<Clerk> implements IClerkDao {
 		criteria.setSql(sql);
 		ClerkRepoRowMapper rm = new ClerkRepoRowMapper();
 
-		return getCriteriaRowMapper(criteria, null, rm);
+		return selectWithCriteria(criteria, null, rm);
 
 	}
 

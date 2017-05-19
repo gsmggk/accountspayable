@@ -76,7 +76,7 @@ public class AccountDaoImpl extends GenericDaoImpl<Account> implements IAccountD
 		cr.addFilter("debtor_id=?", "where", "");
 
 		AccountRowMapper rm = new AccountRowMapper();
-		List<Account> accounts = getCriteriaRowMapper(cr, objects, rm);
+		List<Account> accounts = selectWithCriteria(cr, objects, rm);
 		return accounts;
 
 	}

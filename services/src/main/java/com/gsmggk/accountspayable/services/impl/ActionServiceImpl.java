@@ -27,7 +27,7 @@ public class ActionServiceImpl implements IActionService {
 		if (action.getId() == null) {
 			LOGGER.debug("insert Action");
 			actionDao.insert(action);
-	//		throw new RuntimeException("test exception trans");
+		//	throw new RuntimeException("test exception for transaction");
 		} else {
 			LOGGER.debug("update Action");
 			actionDao.update(action);

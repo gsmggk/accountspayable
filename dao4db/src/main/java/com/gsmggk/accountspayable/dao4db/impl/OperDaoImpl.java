@@ -97,7 +97,6 @@ public class OperDaoImpl extends GenericDaoImpl<Oper> implements IOperDao {
 	private void insertDetale(Oper newOper) {
 		String sql = String.format("insert into oper_detail (%s,%s,%s,%s) values(?,?,?,?)",
 				(Object[]) new String[] { "oper_id", "action_date", "control_date", "oper_desc" });
-	//	jdbcTemplate.update(sql, newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc());
 super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc()});
 	}
 
@@ -123,7 +122,7 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
 		OperRowMapper rm = new OperRowMapper();
 		List<Oper> opers = null;
 
-		opers = getCriteriaRowMapper(cr, objects, rm);
+		opers = selectWithCriteria(cr, objects, rm);
 
 		if (opers.size() > 1) {
 			//TODO change exception type
@@ -164,7 +163,6 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
 	private void updateDetale(Oper newOper) {
 		String sql = String.format("update oper_detail set %s=? , %s=? , %s=? where oper_id=?",
 				(Object[]) new String[] {  "action_date", "control_date", "oper_desc","oper_id" });
-	//	jdbcTemplate.update(sql,  newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc(),newOper.getId());
 		super.executeUpdate(sql, new Object[]{newOper.getActionDate(), newOper.getControlDate(),newOper.getOperDesc(),newOper.getId()});
 	}
 
@@ -200,11 +198,7 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
 	
 	@Override
 	public List<Oper> getOpers4Debtor(Integer debtorId) {
-		String sql = "select "
-				+ "o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc "
-				+ "from oper as o "
-				+ "join oper_detail as od ON(od.oper_id=o.id) "
-				+ "join debtor as d on (d.id=o.debtor_id) ";
+		String sql = "select o.id,o.debtor_id,o.clerk_id,o.action_id,od.action_date,od.control_date,od.oper_desc from oper as o join oper_detail as od ON(od.oper_id=o.id) join debtor as d on (d.id=o.debtor_id) ";
 
 
 		Criteria cr = new Criteria();
@@ -212,7 +206,7 @@ super.executeUpdate(sql, new Object[] {newOper.getId(), newOper.getActionDate(),
         cr.addFilter(" o.debtor_id=?", "where", debtorId);
         cr.addFilter(" od.action_date ", "order by", null);
 		OperRowMapper rm = new OperRowMapper();
-		List<Oper> opers = getCriteriaRowMapper(cr, cr.getObjects(), rm);
+		List<Oper> opers = selectWithCriteria(cr, cr.getObjects(), rm);
 
 
 		return opers;}

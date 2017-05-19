@@ -174,13 +174,15 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 
 	}
 
+	
 	/**
-	 * Select table with: order, limit, offset criteria
-	 * 
-	 * @param criteria
-	 * @return List
+	 * Select with Criteria. Criteria provide sort, filter, paginate data.
+	 * @param criteria - Criteria class provide generate select sql-string
+	 * @param objects - Objects for inject to query string, can use from Criteria class
+	 * @param rm - Result rowMapper
+	 * @return
 	 */
-	public <R> List<R> getCriteriaRowMapper(Criteria criteria, Object[] objects, RowMapper<R> rm) {
+	public <R> List<R> selectWithCriteria(Criteria criteria, Object[] objects, RowMapper<R> rm) {
 		String sql = criteria.getCriteriaSql();
 		try {
 			return jdbcTemplate.query(sql, objects, rm);
@@ -191,7 +193,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	}
 
 	/**
-	 * Execute any sql command provided by JDB
+	 * Execute any sql command provided by JdbcTemplate
 	 * @param sql
 	 * @param objects - sql jdbcTemplate.update
 	 */
@@ -199,7 +201,7 @@ public abstract class GenericDaoImpl<T extends AbstractTable> implements IGeneri
 	public void executeUpdate(String sql,Object[] objects){
 		try {
 			jdbcTemplate.update(sql,objects);
-	} catch (DataIntegrityViolationException e) {			// TODO: handle exception
+	} catch (DataIntegrityViolationException e) {		
 		e.printStackTrace();
 	throw	new  MyDataIntegrityViolationException(e.getMessage());
 	

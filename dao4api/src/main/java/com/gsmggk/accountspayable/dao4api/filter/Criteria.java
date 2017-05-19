@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Get parameter from class extended Params.class. and prepare criteria for
+ * JdbcTemplate query
+ * 
+ * @author Gena
+ *
+ */
 public class Criteria {
 	private List<Filter> filters;
 	private List<SortData> sorts;
@@ -21,8 +28,6 @@ public class Criteria {
 		this.objects = new Object[] {};
 	}
 
-	
-
 	public void addFilter(String column, String operator, Object newObj) {
 		Filter f = new Filter();
 		f.setField(column);
@@ -35,10 +40,12 @@ public class Criteria {
 	}
 
 	/**
-	 * Append into Object[] - array 
-	 * @param obj Array objects before append
+	 * Append into Object[] - array
+	 * 
+	 * @param obj
+	 *            Array objects before append
 	 * @param newObj
-	 * @return new Object[]- objects array 
+	 * @return new Object[]- objects array
 	 */
 	private Object[] appendValue(Object[] obj, Object newObj) {
 		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
